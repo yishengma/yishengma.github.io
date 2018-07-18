@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16.ico?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.前言Window 在 Android 有两种含义，一种是狭义的，一种是广义的。狭义的 Window 指的是 Window 这个抽象类，它的唯一的实现是 PhoneWindow 。广义的 Window 指的是 Android 中表示的窗口的概念，所谓的 Window 窗口机制实际上说的是广义的 Window ，在  Android 中窗口具体可以划分为 三种： 应用程序窗口：对应  Activi">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android----Window 窗口机制">
+<meta property="og:url" content="https://yishengma.github.io/2018/07/18/Android-Window窗口机制/index.html">
+<meta property="og:site_name" content="海盗的帽子的博客">
+<meta property="og:description" content="一.前言Window 在 Android 有两种含义，一种是狭义的，一种是广义的。狭义的 Window 指的是 Window 这个抽象类，它的唯一的实现是 PhoneWindow 。广义的 Window 指的是 Android 中表示的窗口的概念，所谓的 Window 窗口机制实际上说的是广义的 Window ，在  Android 中窗口具体可以划分为 三种： 应用程序窗口：对应  Activi">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://yishengma.github.io/2018/07/18/Android-Window窗口机制/Window机制.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/07/18/Android-Window窗口机制/addView.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/07/18/Android-Window窗口机制/Toast%20show.png">
+<meta property="og:updated_time" content="2018-07-18T13:46:34.457Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android----Window 窗口机制">
+<meta name="twitter:description" content="一.前言Window 在 Android 有两种含义，一种是狭义的，一种是广义的。狭义的 Window 指的是 Window 这个抽象类，它的唯一的实现是 PhoneWindow 。广义的 Window 指的是 Android 中表示的窗口的概念，所谓的 Window 窗口机制实际上说的是广义的 Window ，在  Android 中窗口具体可以划分为 三种： 应用程序窗口：对应  Activi">
+<meta name="twitter:image" content="https://yishengma.github.io/2018/07/18/Android-Window窗口机制/Window机制.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yishengma.github.io/2018/07/18/Android-Window窗口机制/"/>
+
+
+
+
+
+  <title>Android----Window 窗口机制 | 海盗的帽子的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">海盗的帽子的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/07/18/Android-Window窗口机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="海盗的帽子">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/d.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="海盗的帽子的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android----Window 窗口机制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-18T21:31:02+08:00">
+                2018-07-18
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-07-18T21:46:34+08:00">
+                2018-07-18
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h2><h5 id="Window-在-Android-有两种含义，一种是狭义的，一种是广义的。狭义的-Window-指的是-Window-这个抽象类，它的唯一的实现是-PhoneWindow-。广义的-Window-指的是-Android-中表示的窗口的概念，所谓的-Window-窗口机制实际上说的是广义的-Window-，在-Android-中窗口具体可以划分为-三种："><a href="#Window-在-Android-有两种含义，一种是狭义的，一种是广义的。狭义的-Window-指的是-Window-这个抽象类，它的唯一的实现是-PhoneWindow-。广义的-Window-指的是-Android-中表示的窗口的概念，所谓的-Window-窗口机制实际上说的是广义的-Window-，在-Android-中窗口具体可以划分为-三种：" class="headerlink" title="Window 在 Android 有两种含义，一种是狭义的，一种是广义的。狭义的 Window 指的是 Window 这个抽象类，它的唯一的实现是 PhoneWindow 。广义的 Window 指的是 Android 中表示的窗口的概念，所谓的 Window 窗口机制实际上说的是广义的 Window ，在  Android 中窗口具体可以划分为 三种："></a>Window 在 Android 有两种含义，一种是狭义的，一种是广义的。狭义的 Window 指的是 Window 这个抽象类，它的唯一的实现是 PhoneWindow 。广义的 Window 指的是 Android 中表示的窗口的概念，所谓的 Window 窗口机制实际上说的是广义的 Window ，在  Android 中窗口具体可以划分为 三种：</h5><ul>
+<li>应用程序窗口：对应  Activity 显示的视图</li>
+<li>子窗口：对应 Dialog ,PopupWindow ，Menu 等</li>
+<li>系统窗口：对应 StatusBar ，Toast ,输入法键盘等<h5 id="在-Window-窗口机制中，这三种类型就统称为-Window-，因为它们的作用就是显示某种视图，因此一般说的-Window-没有说明都指的是广义的-Window。"><a href="#在-Window-窗口机制中，这三种类型就统称为-Window-，因为它们的作用就是显示某种视图，因此一般说的-Window-没有说明都指的是广义的-Window。" class="headerlink" title="在 Window 窗口机制中，这三种类型就统称为 Window ，因为它们的作用就是显示某种视图，因此一般说的 Window 没有说明都指的是广义的 Window。"></a>在 Window 窗口机制中，这三种类型就统称为 Window ，因为它们的作用就是显示某种视图，因此一般说的 Window 没有说明都指的是广义的 Window。</h5><h2 id="二-Window-的管理"><a href="#二-Window-的管理" class="headerlink" title="二.Window 的管理"></a>二.Window 的管理</h2><h5 id="Window-的管理涉及到应用进程和系统服务进程之间的通信，这里分为两个方面进行说明。"><a href="#Window-的管理涉及到应用进程和系统服务进程之间的通信，这里分为两个方面进行说明。" class="headerlink" title="Window 的管理涉及到应用进程和系统服务进程之间的通信，这里分为两个方面进行说明。"></a>Window 的管理涉及到应用进程和系统服务进程之间的通信，这里分为两个方面进行说明。</h5><h3 id="一-在应用进程涉及的几个类"><a href="#一-在应用进程涉及的几个类" class="headerlink" title="(一).在应用进程涉及的几个类"></a>(一).在应用进程涉及的几个类</h3><h4 id="1-ViewManager"><a href="#1-ViewManager" class="headerlink" title="1.ViewManager"></a>1.ViewManager</h4><h5 id="这是一个接口，里面只有三个方法，定义了对-View-也就是所说的视图-的基本操作，添加，刷新和移除"><a href="#这是一个接口，里面只有三个方法，定义了对-View-也就是所说的视图-的基本操作，添加，刷新和移除" class="headerlink" title="这是一个接口，里面只有三个方法，定义了对 View ( 也就是所说的视图 )的基本操作，添加，刷新和移除"></a>这是一个接口，里面只有三个方法，定义了对 View ( 也就是所说的视图 )的基本操作，添加，刷新和移除</h5></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public interface ViewManager</span><br><span class="line">&#123;</span><br><span class="line">    public void addView(View view, ViewGroup.LayoutParams params);</span><br><span class="line">    public void updateViewLayout(View view, ViewGroup.LayoutParams params);</span><br><span class="line">    public void removeView(View view);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-WindowManager"><a href="#2-WindowManager" class="headerlink" title="2.WindowManager"></a>2.WindowManager</h4><h5 id="这也是一个接口，继承-ViewManager，负责对-Window-进行管理，和操作。每一个-Window-都持有这个对象，用于对自己窗口内部的-View-进行操作。这里还有一个静态的内部类-LayoutParams-这个类定义-Window-的一些属性，窗口的类别和显示顺序。属性指的是窗口大小，位置，状态等信息，而窗口的类别就是前言中说的三种，这是通过设置-type-值显示的，每个类别有一个范围的-type-值，而显示顺序也是根据-type-值来确定的，-type-值越高就越前，也就是越靠近用户。"><a href="#这也是一个接口，继承-ViewManager，负责对-Window-进行管理，和操作。每一个-Window-都持有这个对象，用于对自己窗口内部的-View-进行操作。这里还有一个静态的内部类-LayoutParams-这个类定义-Window-的一些属性，窗口的类别和显示顺序。属性指的是窗口大小，位置，状态等信息，而窗口的类别就是前言中说的三种，这是通过设置-type-值显示的，每个类别有一个范围的-type-值，而显示顺序也是根据-type-值来确定的，-type-值越高就越前，也就是越靠近用户。" class="headerlink" title="这也是一个接口，继承 ViewManager，负责对 Window 进行管理，和操作。每一个 Window 都持有这个对象，用于对自己窗口内部的 View  进行操作。这里还有一个静态的内部类 LayoutParams, 这个类定义 Window 的一些属性，窗口的类别和显示顺序。属性指的是窗口大小，位置，状态等信息，而窗口的类别就是前言中说的三种，这是通过设置 type 值显示的，每个类别有一个范围的 type 值，而显示顺序也是根据 type 值来确定的， type 值越高就越前，也就是越靠近用户。"></a>这也是一个接口，继承 ViewManager，负责对 Window 进行管理，和操作。每一个 Window 都持有这个对象，用于对自己窗口内部的 View  进行操作。这里还有一个静态的内部类 LayoutParams, 这个类定义 Window 的一些属性，窗口的类别和显示顺序。属性指的是窗口大小，位置，状态等信息，而窗口的类别就是前言中说的三种，这是通过设置 type 值显示的，每个类别有一个范围的 type 值，而显示顺序也是根据 type 值来确定的， type 值越高就越前，也就是越靠近用户。</h5><ul>
+<li>应用程序窗口的 type ：1 ~ 99</li>
+<li>子窗口的 type :  1000 ~ 1999</li>
+<li>系统窗口 type : 2000 ~ 2999<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">@SystemService(Context.WINDOW_SERVICE)</span><br><span class="line">public interface WindowManager extends ViewManager &#123;</span><br><span class="line">    ...</span><br><span class="line">     public static class LayoutParams extends ViewGroup.LayoutParams implements Parcelable &#123;</span><br><span class="line">         ...</span><br><span class="line">         // 应用程序窗口</span><br><span class="line">        public static final int FIRST_APPLICATION_WINDOW = 1;</span><br><span class="line">        public static final int TYPE_BASE_APPLICATION   = 1;</span><br><span class="line">        public static final int TYPE_APPLICATION        = 2;</span><br><span class="line">        public static final int TYPE_APPLICATION_STARTING = 3;</span><br><span class="line">        public static final int TYPE_DRAWN_APPLICATION = 4;</span><br><span class="line">        public static final int LAST_APPLICATION_WINDOW = 99;</span><br><span class="line">        </span><br><span class="line">        //子窗口</span><br><span class="line">        public static final int FIRST_SUB_WINDOW = 1000;</span><br><span class="line">        public static final int TYPE_APPLICATION_PANEL = FIRST_SUB_WINDOW;</span><br><span class="line">        public static final int TYPE_APPLICATION_MEDIA = FIRST_SUB_WINDOW + 1;</span><br><span class="line">        public static final int TYPE_APPLICATION_SUB_PANEL = FIRST_SUB_WINDOW + 2;</span><br><span class="line">        public static final int TYPE_APPLICATION_ATTACHED_DIALOG = FIRST_SUB_WINDOW + 3;</span><br><span class="line">        public static final int TYPE_APPLICATION_MEDIA_OVERLAY  = FIRST_SUB_WINDOW + 4; </span><br><span class="line">        public static final int TYPE_APPLICATION_ABOVE_SUB_PANEL = FIRST_SUB_WINDOW + 5;</span><br><span class="line">        public static final int LAST_SUB_WINDOW = 1999;</span><br><span class="line">        </span><br><span class="line">        //系统窗口</span><br><span class="line">        public static final int FIRST_SYSTEM_WINDOW     = 2000;</span><br><span class="line">        public static final int TYPE_STATUS_BAR         = FIRST_SYSTEM_WINDOW;</span><br><span class="line">        public static final int TYPE_SEARCH_BAR         = FIRST_SYSTEM_WINDOW+1;</span><br><span class="line">        public static final int TYPE_PHONE              = FIRST_SYSTEM_WINDOW+2;</span><br><span class="line">        ...</span><br><span class="line">        public static final int LAST_SYSTEM_WINDOW      = 2999;</span><br><span class="line">                 </span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="3-WindowManagerImpl"><a href="#3-WindowManagerImpl" class="headerlink" title="3.WindowManagerImpl"></a>3.WindowManagerImpl</h4><h5 id="WindowManager-的实现类，持有-Window-类型的变量，因而对-Window-的操作会在这里调用，但是对-View-的三个操作并没有在这里实现，而是由成员变量-WindowManagerGlobal-类型的-mGlobal-去执行。"><a href="#WindowManager-的实现类，持有-Window-类型的变量，因而对-Window-的操作会在这里调用，但是对-View-的三个操作并没有在这里实现，而是由成员变量-WindowManagerGlobal-类型的-mGlobal-去执行。" class="headerlink" title="WindowManager 的实现类，持有 Window 类型的变量，因而对 Window 的操作会在这里调用，但是对 View 的三个操作并没有在这里实现，而是由成员变量 WindowManagerGlobal 类型的 mGlobal   去执行。"></a>WindowManager 的实现类，持有 Window 类型的变量，因而对 Window 的操作会在这里调用，但是对 View 的三个操作并没有在这里实现，而是由成员变量 WindowManagerGlobal 类型的 mGlobal   去执行。</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void addView(@NonNull View view, @NonNull ViewGroup.LayoutParams params) &#123;</span><br><span class="line">    ...</span><br><span class="line">    mGlobal.addView(view, params, mContext.getDisplay(), mParentWindow);</span><br><span class="line">&#125;</span><br><span class="line">@Override</span><br><span class="line">public void updateViewLayout(@NonNull View view, @NonNull ViewGroup.LayoutParams params) &#123;</span><br><span class="line">    ...</span><br><span class="line">    mGlobal.updateViewLayout(view, params);</span><br><span class="line">&#125;</span><br><span class="line">@Override</span><br><span class="line">public void removeView(View view) &#123;</span><br><span class="line">    mGlobal.removeView(view, false);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-WindowManagerGlobal"><a href="#4-WindowManagerGlobal" class="headerlink" title="4.WindowManagerGlobal"></a>4.WindowManagerGlobal</h4><h5 id="这个类虽然没有实现-ViewManager-，但是它在这里同样定义了这三种操作，同时它还有几个重要的变量。而对于具体的-View-的操作，这里也没有实现而是交由-ViewRootImpl-去实现。"><a href="#这个类虽然没有实现-ViewManager-，但是它在这里同样定义了这三种操作，同时它还有几个重要的变量。而对于具体的-View-的操作，这里也没有实现而是交由-ViewRootImpl-去实现。" class="headerlink" title="这个类虽然没有实现 ViewManager ，但是它在这里同样定义了这三种操作，同时它还有几个重要的变量。而对于具体的 View  的操作，这里也没有实现而是交由 ViewRootImpl 去实现。"></a>这个类虽然没有实现 ViewManager ，但是它在这里同样定义了这三种操作，同时它还有几个重要的变量。而对于具体的 View  的操作，这里也没有实现而是交由 ViewRootImpl 去实现。</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public final class WindowManagerGlobal &#123;</span><br><span class="line">        ...</span><br><span class="line">        private final ArrayList&lt;View&gt; mViews = new ArrayList&lt;View&gt;(); 所有 Window 对应的 View </span><br><span class="line">        private final ArrayList&lt;ViewRootImpl&gt; mRoots = new ArrayList&lt;ViewRootImpl&gt;(); //所有 Window 对应的 ViewRootImpl 。</span><br><span class="line">        private final ArrayList&lt;WindowManager.LayoutParams&gt; mParams =</span><br><span class="line">            new ArrayList&lt;WindowManager.LayoutParams&gt;(); 所有 Window 的属性参数</span><br><span class="line">        private final ArraySet&lt;View&gt; mDyingViews = new ArraySet&lt;View&gt;(); //已经执行 remove 方法但是还未真正完成删除的 View 。</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">         public void addView(View view, ViewGroup.LayoutParams params,</span><br><span class="line">                    Display display, Window parentWindow) &#123;</span><br><span class="line">        ...                </span><br><span class="line">        &#125;</span><br><span class="line">                    </span><br><span class="line">        public void updateViewLayout(View view, ViewGroup.LayoutParams params) &#123;</span><br><span class="line">        ...                  </span><br><span class="line">        &#125;</span><br><span class="line">        public void removeView(View view, boolean immediate) &#123;</span><br><span class="line">        ...                   </span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="5-ViewRootImpl"><a href="#5-ViewRootImpl" class="headerlink" title="5.ViewRootImpl"></a>5.ViewRootImpl</h4><h5 id="ViewRootImpl-是连接-Window-和-View-关系的桥梁。有三个方面的作用："><a href="#ViewRootImpl-是连接-Window-和-View-关系的桥梁。有三个方面的作用：" class="headerlink" title="ViewRootImpl 是连接 Window 和 View 关系的桥梁。有三个方面的作用："></a>ViewRootImpl 是连接 Window 和 View 关系的桥梁。有三个方面的作用：</h5><ul>
+<li>一是管理 View 树，并完成 View 的绘制三大流程  </li>
+<li>二是管理 Surface 并对输入事件的的转发。</li>
+<li>三是与 WMS ( WindowManagerServer )进行进程间的通信。<h5 id="它有两个重要的变量："><a href="#它有两个重要的变量：" class="headerlink" title="它有两个重要的变量："></a>它有两个重要的变量：</h5></li>
+<li>IWindowSession mWindowSession ： Binder 对象，服进程在 应用程序进程中的代理对象，用于调用服务进程中的方法。在 WMS 中的是是实现为 Session 。</li>
+<li>W mWindow ： Binder 对象，用于服务进程的调用应用进程的方法。主要是 WMS 添加Window 成功后在 Window 进行显示或者其他操作。<h4 id="6-DecorView-，mNextView，mDecor-等"><a href="#6-DecorView-，mNextView，mDecor-等" class="headerlink" title="6.DecorView ，mNextView，mDecor 等"></a>6.DecorView ，mNextView，mDecor 等</h4><h5 id="DecorView-对于大家可能比较熟悉，这是-Activity-视图中的“根视图”，而其他两个则是-Toast-和-Dialog-的根视图。这看起来好像每种窗口类型都有自己的“根视图”，事实上的确是这样的，我们都知道-Window-实际上就是为了显示各种各样的视图，因此一个-Window-中就可能会有多个-View-而使用“根视图”则提供了结构上方便，所有的-View-都是以“根视图”来进行添加删除等的，因此便于-WindowManager-对窗口进行管理。在-Activity-中-DecorView-是PhoneWindow-的一个变量，但是并不是所有的窗口都会使用-PhoneWindow-和-抽象接口-Window。"><a href="#DecorView-对于大家可能比较熟悉，这是-Activity-视图中的“根视图”，而其他两个则是-Toast-和-Dialog-的根视图。这看起来好像每种窗口类型都有自己的“根视图”，事实上的确是这样的，我们都知道-Window-实际上就是为了显示各种各样的视图，因此一个-Window-中就可能会有多个-View-而使用“根视图”则提供了结构上方便，所有的-View-都是以“根视图”来进行添加删除等的，因此便于-WindowManager-对窗口进行管理。在-Activity-中-DecorView-是PhoneWindow-的一个变量，但是并不是所有的窗口都会使用-PhoneWindow-和-抽象接口-Window。" class="headerlink" title="DecorView 对于大家可能比较熟悉，这是 Activity 视图中的“根视图”，而其他两个则是 Toast 和 Dialog 的根视图。这看起来好像每种窗口类型都有自己的“根视图”，事实上的确是这样的，我们都知道 Window 实际上就是为了显示各种各样的视图，因此一个 Window 中就可能会有多个 View, 而使用“根视图”则提供了结构上方便，所有的 View 都是以“根视图”来进行添加删除等的，因此便于 WindowManager 对窗口进行管理。在 Activity 中 DecorView 是PhoneWindow 的一个变量，但是并不是所有的窗口都会使用 PhoneWindow 和 抽象接口 Window。"></a>DecorView 对于大家可能比较熟悉，这是 Activity 视图中的“根视图”，而其他两个则是 Toast 和 Dialog 的根视图。这看起来好像每种窗口类型都有自己的“根视图”，事实上的确是这样的，我们都知道 Window 实际上就是为了显示各种各样的视图，因此一个 Window 中就可能会有多个 View, 而使用“根视图”则提供了结构上方便，所有的 View 都是以“根视图”来进行添加删除等的，因此便于 WindowManager 对窗口进行管理。在 Activity 中 DecorView 是PhoneWindow 的一个变量，但是并不是所有的窗口都会使用 PhoneWindow 和 抽象接口 Window。</h5><h4 id="整体的体系如图："><a href="#整体的体系如图：" class="headerlink" title="整体的体系如图："></a>整体的体系如图：</h4><h5 id="点击查看大图"><a href="#点击查看大图" class="headerlink" title="点击查看大图"></a><a href="https://upload-images.jianshu.io/upload_images/9184545-b1d391b561051286.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" target="_blank" rel="noopener">点击查看大图</a></h5><img src="/2018/07/18/Android-Window窗口机制/Window机制.png" alt="Window机制.png"><h3 id="二-创建-Window-在应用进程"><a href="#二-创建-Window-在应用进程" class="headerlink" title="(二).创建 Window ( 在应用进程 )"></a>(二).创建 Window ( 在应用进程 )</h3><h5 id="在了解了上面几个概念后，下面就以实际的例子进行说明，虽然不同类型的窗口在创建-Window-的时候整体机制是一样的，即通过-WindowManager-进行管理，但是在一些具体的方面还有有差别的。"><a href="#在了解了上面几个概念后，下面就以实际的例子进行说明，虽然不同类型的窗口在创建-Window-的时候整体机制是一样的，即通过-WindowManager-进行管理，但是在一些具体的方面还有有差别的。" class="headerlink" title="在了解了上面几个概念后，下面就以实际的例子进行说明，虽然不同类型的窗口在创建 Window 的时候整体机制是一样的，即通过 WindowManager 进行管理，但是在一些具体的方面还有有差别的。"></a>在了解了上面几个概念后，下面就以实际的例子进行说明，虽然不同类型的窗口在创建 Window 的时候整体机制是一样的，即通过 WindowManager 进行管理，但是在一些具体的方面还有有差别的。</h5><h4 id="1-Activity-的窗口创建和-setContentView"><a href="#1-Activity-的窗口创建和-setContentView" class="headerlink" title="1.Activity 的窗口创建和 setContentView"></a>1.Activity 的窗口创建和 setContentView</h4><h5 id="在-Activity-启动过程中的最后一步-Activity-实例创建完后会需要调用-attach-方法关联上下文，在这里会创建-Window-对象。"><a href="#在-Activity-启动过程中的最后一步-Activity-实例创建完后会需要调用-attach-方法关联上下文，在这里会创建-Window-对象。" class="headerlink" title="在 Activity 启动过程中的最后一步 Activity 实例创建完后会需要调用 attach  方法关联上下文，在这里会创建 Window 对象。"></a>在 Activity 启动过程中的最后一步 Activity 实例创建完后会需要调用 attach  方法关联上下文，在这里会创建 Window 对象。</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">final void attach(...)&#123;</span><br><span class="line">    ...</span><br><span class="line">    mWindow = new PhoneWindow(this, window, activityConfigCallback);</span><br><span class="line">    mWindow.setWindowControllerCallback(this);</span><br><span class="line">    mWindow.setCallback(this);</span><br><span class="line">    mWindow.setOnWindowDismissedCallback(this);</span><br><span class="line">    mWindow.getLayoutInflater().setPrivateFactory(this);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h5 id="在创建完-Window-后就需要往这个-Window-添加一个最低层的-View-用于管理以后的所有的-View-没错这个-View-就是-DecorView。DecorView-实际上是一个-FrameLayout-，它里面有一个-LinearLayout-LinearLayout-有两个子元素，一个是-的-actionbar-，-一个就是-FrameLayout-的-content-。setContentView-就是在这个-FrameLayout-里添加我们的-LayoutView-在这之前需要先创建-DecorView-。"><a href="#在创建完-Window-后就需要往这个-Window-添加一个最低层的-View-用于管理以后的所有的-View-没错这个-View-就是-DecorView。DecorView-实际上是一个-FrameLayout-，它里面有一个-LinearLayout-LinearLayout-有两个子元素，一个是-的-actionbar-，-一个就是-FrameLayout-的-content-。setContentView-就是在这个-FrameLayout-里添加我们的-LayoutView-在这之前需要先创建-DecorView-。" class="headerlink" title="在创建完 Window 后就需要往这个 Window 添加一个最低层的 View 用于管理以后的所有的 View,没错这个 View 就是 DecorView。DecorView 实际上是一个 FrameLayout ，它里面有一个 LinearLayout , LinearLayout 有两个子元素，一个是  的 actionbar ， 一个就是 FrameLayout 的 content 。setContentView 就是在这个  FrameLayout 里添加我们的 LayoutView.在这之前需要先创建 DecorView 。"></a>在创建完 Window 后就需要往这个 Window 添加一个最低层的 View 用于管理以后的所有的 View,没错这个 View 就是 DecorView。DecorView 实际上是一个 FrameLayout ，它里面有一个 LinearLayout , LinearLayout 有两个子元素，一个是  的 actionbar ， 一个就是 FrameLayout 的 content 。setContentView 就是在这个  FrameLayout 里添加我们的 LayoutView.在这之前需要先创建 DecorView 。</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void setContentView(int layoutResID) &#123;</span><br><span class="line">    if (mContentParent == null) &#123;</span><br><span class="line">        installDecor();</span><br><span class="line">    &#125; else if (!hasFeature(FEATURE_CONTENT_TRANSITIONS)) &#123;</span><br><span class="line">        mContentParent.removeAllViews();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="首先这里-mContentParent-就是-FrameLayout-的-content-。因为是第一次创建为-null-就要初始化-DecorView"><a href="#首先这里-mContentParent-就是-FrameLayout-的-content-。因为是第一次创建为-null-就要初始化-DecorView" class="headerlink" title="首先这里 mContentParent 就是 FrameLayout 的 content 。因为是第一次创建为 null, 就要初始化 DecorView"></a>首先这里 mContentParent 就是 FrameLayout 的 content 。因为是第一次创建为 null, 就要初始化 DecorView</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">private void installDecor() &#123;</span><br><span class="line">    ...</span><br><span class="line">    if (mDecor == null) &#123;</span><br><span class="line">        mDecor = generateDecor(-1);</span><br><span class="line">       ...</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        mDecor.setWindow(this);</span><br><span class="line">    &#125;</span><br><span class="line">    if (mContentParent == null) &#123;</span><br><span class="line">        mContentParent = generateLayout(mDecor);</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">protected ViewGroup generateLayout(DecorView decor) &#123;</span><br><span class="line">    ...</span><br><span class="line">    ViewGroup contentParent = (ViewGroup)findViewById(ID_ANDROID_CONTENT);</span><br><span class="line">    ...</span><br><span class="line">    return contentParent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="在初始化DecorView-后就会加载-Content-View-并添加到-DecorView-这里的-ID-ANDROID-CONTENT-实际上就是-com-android-internal-R-id-content，在-layout-文件中可以看到"><a href="#在初始化DecorView-后就会加载-Content-View-并添加到-DecorView-这里的-ID-ANDROID-CONTENT-实际上就是-com-android-internal-R-id-content，在-layout-文件中可以看到" class="headerlink" title="在初始化DecorView 后就会加载 Content View ,并添加到 DecorView .这里的 ID_ANDROID_CONTENT 实际上就是 com.android.internal.R.id.content，在 layout 文件中可以看到"></a>在初始化DecorView 后就会加载 Content View ,并添加到 DecorView .这里的 ID_ANDROID_CONTENT 实际上就是 com.android.internal.R.id.content，在 layout 文件中可以看到</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;match_parent&quot;</span><br><span class="line">    android:fitsSystemWindows=&quot;true&quot;</span><br><span class="line">    android:orientation=&quot;vertical&quot;&gt;</span><br><span class="line">    &lt;ViewStub android:id=&quot;@+id/action_mode_bar_stub&quot;</span><br><span class="line">              android:inflatedId=&quot;@+id/action_mode_bar&quot;</span><br><span class="line">              android:layout=&quot;@layout/action_mode_bar&quot;</span><br><span class="line">              android:layout_width=&quot;match_parent&quot;</span><br><span class="line">              android:layout_height=&quot;wrap_content&quot;</span><br><span class="line">              android:theme=&quot;?attr/actionBarTheme&quot; /&gt;</span><br><span class="line">    &lt;FrameLayout</span><br><span class="line">         android:id=&quot;@android:id/content&quot;</span><br><span class="line">         android:layout_width=&quot;match_parent&quot;</span><br><span class="line">         android:layout_height=&quot;match_parent&quot;</span><br><span class="line">         android:foregroundInsidePadding=&quot;false&quot;</span><br><span class="line">         android:foregroundGravity=&quot;fill_horizontal|top&quot;</span><br><span class="line">         android:foreground=&quot;?android:attr/windowContentOverlay&quot; /&gt;</span><br><span class="line">&lt;/LinearLayout&gt;</span><br></pre></td></tr></table></figure>
+<h5 id="在上述步骤中只是创建了-Window-实例，-只是将-View-添加到-DecorView-，但是真正的-Window-的添加还未实现，而具体的实现在之前说过是由-WindowManager-进行操作的，这一步在-hanldeResumeActivity-中。"><a href="#在上述步骤中只是创建了-Window-实例，-只是将-View-添加到-DecorView-，但是真正的-Window-的添加还未实现，而具体的实现在之前说过是由-WindowManager-进行操作的，这一步在-hanldeResumeActivity-中。" class="headerlink" title="在上述步骤中只是创建了 Window 实例， 只是将 View 添加到 DecorView ，但是真正的 Window 的添加还未实现，而具体的实现在之前说过是由 WindowManager 进行操作的，这一步在 hanldeResumeActivity  中。"></a>在上述步骤中只是创建了 Window 实例， 只是将 View 添加到 DecorView ，但是真正的 Window 的添加还未实现，而具体的实现在之前说过是由 WindowManager 进行操作的，这一步在 hanldeResumeActivity  中。</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void makeVisible() &#123;</span><br><span class="line">    if (!mWindowAdded) &#123;</span><br><span class="line">        ViewManager wm = getWindowManager();</span><br><span class="line">        wm.addView(mDecor, getWindow().getAttributes());</span><br><span class="line">        mWindowAdded = true;</span><br><span class="line">    &#125;</span><br><span class="line">    mDecor.setVisibility(View.VISIBLE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="在-WindowManager-的-addView-方法中就会见到之前说的几个对象的层层调用，一直到-ViewRootImpl，-这个过程如图所示："><a href="#在-WindowManager-的-addView-方法中就会见到之前说的几个对象的层层调用，一直到-ViewRootImpl，-这个过程如图所示：" class="headerlink" title="在 WindowManager 的 addView 方法中就会见到之前说的几个对象的层层调用，一直到 ViewRootImpl， 这个过程如图所示："></a>在 WindowManager 的 addView 方法中就会见到之前说的几个对象的层层调用，一直到 ViewRootImpl， 这个过程如图所示：</h5><p><img src="/2018/07/18/Android-Window窗口机制/addView.png" alt="addView.png"></p>
+<h5 id="在-ViewRootImpl-会先调用-requestLayout-对View-进行绘制，然后调用-addToDisplay-添加到-Window-中。这两个方法都涉及与-WMS-的通信，具体则是由-WindowSession-实现，下面就介绍-Window-创建过程中和-WMS-的通信的部分。"><a href="#在-ViewRootImpl-会先调用-requestLayout-对View-进行绘制，然后调用-addToDisplay-添加到-Window-中。这两个方法都涉及与-WMS-的通信，具体则是由-WindowSession-实现，下面就介绍-Window-创建过程中和-WMS-的通信的部分。" class="headerlink" title="在 ViewRootImpl 会先调用 requestLayout 对View 进行绘制，然后调用 addToDisplay 添加到 Window 中。这两个方法都涉及与 WMS 的通信，具体则是由 WindowSession 实现，下面就介绍 Window 创建过程中和 WMS  的通信的部分。"></a>在 ViewRootImpl 会先调用 requestLayout 对View 进行绘制，然后调用 addToDisplay 添加到 Window 中。这两个方法都涉及与 WMS 的通信，具体则是由 WindowSession 实现，下面就介绍 Window 创建过程中和 WMS  的通信的部分。</h5><h3 id="三-在-SystemServer-进程涉及的几个类"><a href="#三-在-SystemServer-进程涉及的几个类" class="headerlink" title="(三).在 SystemServer 进程涉及的几个类"></a>(三).在 SystemServer 进程涉及的几个类</h3><h4 id="1-WindowManagerServer"><a href="#1-WindowManagerServer" class="headerlink" title="1.WindowManagerServer"></a>1.WindowManagerServer</h4><h5 id="WindowManagerServer-是-Android-系统中负责处理-Window-和-View-相关的-系统服务，主要有如下几个职责："><a href="#WindowManagerServer-是-Android-系统中负责处理-Window-和-View-相关的-系统服务，主要有如下几个职责：" class="headerlink" title="WindowManagerServer 是 Android 系统中负责处理 Window 和 View   相关的 系统服务，主要有如下几个职责："></a>WindowManagerServer 是 Android 系统中负责处理 Window 和 View   相关的 系统服务，主要有如下几个职责：</h5><ul>
+<li>对所有的 Window 进行添加，删除等管理。这部分主要涉及 DisplayContent，WindowToken 和 WindowState 这几个对象。</li>
+<li>对View 进行绘制，这里需要为每个窗口分配 Surface <blockquote>
+<p>一个 Surface 就是一个对象，该对象持有一群像素（pixels），这些像素是要被组合到一起显示到屏幕上的。每一个 window 都有唯一一个自己的 surface，window 将自己的内容绘制到该 surface 中。 Surface Flinger 根据各个 surface 在 Z 轴上的顺序 （Z-order） 将它们渲染到最终的显示屏上,z 轴就是以屏幕为平面，由里到外的一个轴向，而屏幕就是 x 和 y 轴组成的平面。</p>
+</blockquote>
+</li>
+<li>对从输入系统 InputManagerService 传过来的触摸事件寻找合适的窗口进行处理。</li>
+<li>对 Window 的动画效果的管理，这主要是由 WindowAnimator 对象进行管理。<h4 id="2-WindowState"><a href="#2-WindowState" class="headerlink" title="2.WindowState"></a>2.WindowState</h4><h5 id="用于保存窗口的信息，窗口的信息是可以随时改变的，比如窗口的位置，大小等变化，通常窗口信息的改变，就会进行相应的-View-的改变。WindowState-是保持在一个-Map-里面，这个-Map-保存着系统所有的窗口。"><a href="#用于保存窗口的信息，窗口的信息是可以随时改变的，比如窗口的位置，大小等变化，通常窗口信息的改变，就会进行相应的-View-的改变。WindowState-是保持在一个-Map-里面，这个-Map-保存着系统所有的窗口。" class="headerlink" title="用于保存窗口的信息，窗口的信息是可以随时改变的，比如窗口的位置，大小等变化，通常窗口信息的改变，就会进行相应的 View 的改变。WindowState 是保持在一个 Map  里面，这个  Map  保存着系统所有的窗口。"></a>用于保存窗口的信息，窗口的信息是可以随时改变的，比如窗口的位置，大小等变化，通常窗口信息的改变，就会进行相应的 View 的改变。WindowState 是保持在一个 Map  里面，这个  Map  保存着系统所有的窗口。</h5><h4 id="3-AppWindowToken-WindowToken"><a href="#3-AppWindowToken-WindowToken" class="headerlink" title="3.AppWindowToken/WindowToken"></a>3.AppWindowToken/WindowToken</h4><h5 id="AppWindowToken-是-WindowToken-的-子类，可以译为令牌，一个-Activity-对应一个-WindowToken-当应用进程向-WMS-发出创建-Window-的申请的时候需要出示正确的令牌。这里需要注意子窗口通常需要依赖于父窗口才能添加，比如在-Activity-上显示-Dialog-或者-Menu-因此子窗口通常使用的是父窗口的-WindowToken-，这就是为什么创建-Dialog-的时候关联的上下文不能使用-ApplicationContext-因为-application-没有-WindowToken"><a href="#AppWindowToken-是-WindowToken-的-子类，可以译为令牌，一个-Activity-对应一个-WindowToken-当应用进程向-WMS-发出创建-Window-的申请的时候需要出示正确的令牌。这里需要注意子窗口通常需要依赖于父窗口才能添加，比如在-Activity-上显示-Dialog-或者-Menu-因此子窗口通常使用的是父窗口的-WindowToken-，这就是为什么创建-Dialog-的时候关联的上下文不能使用-ApplicationContext-因为-application-没有-WindowToken" class="headerlink" title="AppWindowToken 是 WindowToken 的 子类，可以译为令牌，一个 Activity 对应一个 WindowToken, 当应用进程向 WMS 发出创建 Window 的申请的时候需要出示正确的令牌。这里需要注意子窗口通常需要依赖于父窗口才能添加，比如在 Activity 上显示 Dialog 或者 Menu ,因此子窗口通常使用的是父窗口的 WindowToken ，这就是为什么创建 Dialog 的时候关联的上下文不能使用 ApplicationContext ,因为 application 没有 WindowToken."></a>AppWindowToken 是 WindowToken 的 子类，可以译为令牌，一个 Activity 对应一个 WindowToken, 当应用进程向 WMS 发出创建 Window 的申请的时候需要出示正确的令牌。这里需要注意子窗口通常需要依赖于父窗口才能添加，比如在 Activity 上显示 Dialog 或者 Menu ,因此子窗口通常使用的是父窗口的 WindowToken ，这就是为什么创建 Dialog 的时候关联的上下文不能使用 ApplicationContext ,因为 application 没有 WindowToken.</h5><h3 id="四-创建-Window-在-Server-进程"><a href="#四-创建-Window-在-Server-进程" class="headerlink" title="(四).创建 Window ( 在 Server 进程 )"></a>(四).创建 Window ( 在 Server 进程 )</h3><h5 id="在了解了服务端几个类后，下面就是-Window-的创建在-Server-端的过程，首先回到之前的在-ViewRootImpl-的两个方法，requestLayout-方法调用后在-SystemServer-会进行一个-Surface-的创建和绘制，之后就会-view-的绘制。这里属于-Surface-的创建过程，这里就不进行展开，在绘制完成后就会执行-addWindow-方法"><a href="#在了解了服务端几个类后，下面就是-Window-的创建在-Server-端的过程，首先回到之前的在-ViewRootImpl-的两个方法，requestLayout-方法调用后在-SystemServer-会进行一个-Surface-的创建和绘制，之后就会-view-的绘制。这里属于-Surface-的创建过程，这里就不进行展开，在绘制完成后就会执行-addWindow-方法" class="headerlink" title="在了解了服务端几个类后，下面就是 Window 的创建在 Server 端的过程，首先回到之前的在 ViewRootImpl 的两个方法，requestLayout 方法调用后在 SystemServer 会进行一个 Surface 的创建和绘制，之后就会 view 的绘制。这里属于 Surface 的创建过程，这里就不进行展开，在绘制完成后就会执行 addWindow 方法."></a>在了解了服务端几个类后，下面就是 Window 的创建在 Server 端的过程，首先回到之前的在 ViewRootImpl 的两个方法，requestLayout 方法调用后在 SystemServer 会进行一个 Surface 的创建和绘制，之后就会 view 的绘制。这里属于 Surface 的创建过程，这里就不进行展开，在绘制完成后就会执行 addWindow 方法.</h5><h5 id="addWindow-的源码很长，主要是做一下几个部分："><a href="#addWindow-的源码很长，主要是做一下几个部分：" class="headerlink" title="addWindow 的源码很长，主要是做一下几个部分："></a>addWindow 的源码很长，主要是做一下几个部分：</h5><h5 id="1-对窗口的参数进行检查，比如窗口的类型，窗口的-WindowToken-输入法这种没有-WindowToken-的系统自己会创建一个-windowToken。"><a href="#1-对窗口的参数进行检查，比如窗口的类型，窗口的-WindowToken-输入法这种没有-WindowToken-的系统自己会创建一个-windowToken。" class="headerlink" title="1.对窗口的参数进行检查，比如窗口的类型，窗口的 WindowToken.输入法这种没有 WindowToken  的系统自己会创建一个 windowToken。"></a>1.对窗口的参数进行检查，比如窗口的类型，窗口的 WindowToken.输入法这种没有 WindowToken  的系统自己会创建一个 windowToken。</h5><h5 id="2-创建-WindowState-对象，将-WindowToken-和-WindowState-关联起来并添加到-HashMap。"><a href="#2-创建-WindowState-对象，将-WindowToken-和-WindowState-关联起来并添加到-HashMap。" class="headerlink" title="2.创建 WindowState 对象，将 WindowToken 和 WindowState 关联起来并添加到 HashMap。"></a>2.创建 WindowState 对象，将 WindowToken 和 WindowState 关联起来并添加到 HashMap。</h5><h5 id="3-将窗口按照-z-轴的位置添加到-DisPlayContent-的合适的位置。"><a href="#3-将窗口按照-z-轴的位置添加到-DisPlayContent-的合适的位置。" class="headerlink" title="3.将窗口按照 z 轴的位置添加到 DisPlayContent 的合适的位置。"></a>3.将窗口按照 z 轴的位置添加到 DisPlayContent 的合适的位置。</h5><h5 id="4-最后就是窗口的位置，动画等信息保存下来。这样一个窗口创建成功。"><a href="#4-最后就是窗口的位置，动画等信息保存下来。这样一个窗口创建成功。" class="headerlink" title="4.最后就是窗口的位置，动画等信息保存下来。这样一个窗口创建成功。"></a>4.最后就是窗口的位置，动画等信息保存下来。这样一个窗口创建成功。</h5><h3 id="五-Dialog-的-Window-创建"><a href="#五-Dialog-的-Window-创建" class="headerlink" title="(五).Dialog 的 Window 创建"></a>(五).Dialog 的 Window 创建</h3><h5 id="Dialog-是一个子窗口，需要依赖于父窗口才能显示。"><a href="#Dialog-是一个子窗口，需要依赖于父窗口才能显示。" class="headerlink" title="Dialog 是一个子窗口，需要依赖于父窗口才能显示。"></a>Dialog 是一个子窗口，需要依赖于父窗口才能显示。</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Dialog(@NonNull Context context, @StyleRes int themeResId, boolean createContextThemeWrapper) &#123;</span><br><span class="line">    ...</span><br><span class="line">    mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);</span><br><span class="line"></span><br><span class="line">    final Window w = new PhoneWindow(mContext);</span><br><span class="line">    mWindow = w;</span><br><span class="line">    ...</span><br><span class="line">    w.setWindowManager(mWindowManager, null, null);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">   public Object getSystemService(@ServiceName @NonNull String name) &#123;</span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">       if (WINDOW_SERVICE.equals(name)) &#123;</span><br><span class="line">           return mWindowManager;</span><br><span class="line">       &#125;</span><br><span class="line">       return super.getSystemService(name);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="Dialog-会创建自己的-Window-对象，然后就会在-Activity-的-getSystemService-方法中可以拿到-Activity-的-mWindowManager-对象-这样-Dialog-就会和-Activity-有一样的-Token-。接着看-show-方法。"><a href="#Dialog-会创建自己的-Window-对象，然后就会在-Activity-的-getSystemService-方法中可以拿到-Activity-的-mWindowManager-对象-这样-Dialog-就会和-Activity-有一样的-Token-。接着看-show-方法。" class="headerlink" title="Dialog 会创建自己的 Window 对象，然后就会在 Activity 的 getSystemService  方法中可以拿到 Activity 的 mWindowManager 对象,这样 Dialog 就会和 Activity 有一样的 Token 。接着看 show 方法。"></a>Dialog 会创建自己的 Window 对象，然后就会在 Activity 的 getSystemService  方法中可以拿到 Activity 的 mWindowManager 对象,这样 Dialog 就会和 Activity 有一样的 Token 。接着看 show 方法。</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public void show() &#123;</span><br><span class="line">    ...</span><br><span class="line">    mDecor = mWindow.getDecorView();</span><br><span class="line">    ...</span><br><span class="line">    mWindowManager.addView(mDecor, l);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="之前说过所有的-Window-都有一个“根视图”用于对-所有的View-进行管理，在-Dialog-中就对应-mDecor，可以看到同样的，mWindowManager-会调用-addView-执行窗口的添加工作。-后面的过程基本和上述的-setContentView-的过程相似。"><a href="#之前说过所有的-Window-都有一个“根视图”用于对-所有的View-进行管理，在-Dialog-中就对应-mDecor，可以看到同样的，mWindowManager-会调用-addView-执行窗口的添加工作。-后面的过程基本和上述的-setContentView-的过程相似。" class="headerlink" title="之前说过所有的  Window 都有一个“根视图”用于对 所有的View 进行管理，在 Dialog 中就对应 mDecor，可以看到同样的，mWindowManager 会调用 addView 执行窗口的添加工作。 后面的过程基本和上述的 setContentView 的过程相似。"></a>之前说过所有的  Window 都有一个“根视图”用于对 所有的View 进行管理，在 Dialog 中就对应 mDecor，可以看到同样的，mWindowManager 会调用 addView 执行窗口的添加工作。 后面的过程基本和上述的 setContentView 的过程相似。</h5><h3 id="六-Toast-的-Window-创建"><a href="#六-Toast-的-Window-创建" class="headerlink" title="(六).Toast 的 Window 创建"></a>(六).Toast 的 Window 创建</h3><h5 id="Toast-是一个系统级的窗口，因此在创建的过程中就有些不同。这里涉及到了几个新的对象"><a href="#Toast-是一个系统级的窗口，因此在创建的过程中就有些不同。这里涉及到了几个新的对象" class="headerlink" title="Toast 是一个系统级的窗口，因此在创建的过程中就有些不同。这里涉及到了几个新的对象"></a>Toast 是一个系统级的窗口，因此在创建的过程中就有些不同。这里涉及到了几个新的对象</h5><h4 id="1-涉及的几个对象"><a href="#1-涉及的几个对象" class="headerlink" title="(1)涉及的几个对象"></a>(1)涉及的几个对象</h4><h5 id="1-NotificationManagerService-NMS"><a href="#1-NotificationManagerService-NMS" class="headerlink" title="1.NotificationManagerService ( NMS )"></a>1.NotificationManagerService ( NMS )</h5><h5 id="这是一个系统服务，用于管理系统通知，因此也负责-Toast-的管理，其中有几个重要的成员"><a href="#这是一个系统服务，用于管理系统通知，因此也负责-Toast-的管理，其中有几个重要的成员" class="headerlink" title="这是一个系统服务，用于管理系统通知，因此也负责 Toast 的管理，其中有几个重要的成员"></a>这是一个系统服务，用于管理系统通知，因此也负责 Toast 的管理，其中有几个重要的成员</h5><ul>
+<li>ArrayList<toastrecord> mToastQueue ，这是保存系统中所有 Toast 的队列，每个非系统应用的 Toast 在这个队列的数量不能超过 50 个，这样做是避免网络攻击。<blockquote>
+<p>拒绝服务攻击 简称：DoS，也叫洪水攻击，是一种网络攻击手法，其目的在于使目标电脑的网络或系统资源耗尽，使服务暂时中断或停止，导致其正常用户无法访问。</p>
+</blockquote>
+</toastrecord></li>
+<li>WorkerHandler 用于处理 Toast 的显示时间，即在 Toast 显示过后发送一个 延迟的消息进行取消。<h5 id="1-TN"><a href="#1-TN" class="headerlink" title="1. TN"></a>1. TN</h5><h6 id="这是-Toast-的内部类，继承自-ITransientNotification-Stub-因此可以跨进程通信，用于处理-Toast-窗口的创建和-View-的添加。"><a href="#这是-Toast-的内部类，继承自-ITransientNotification-Stub-因此可以跨进程通信，用于处理-Toast-窗口的创建和-View-的添加。" class="headerlink" title="这是 Toast 的内部类，继承自 ITransientNotification.Stub ,因此可以跨进程通信，用于处理 Toast 窗口的创建和 View 的添加。"></a>这是 Toast 的内部类，继承自 ITransientNotification.Stub ,因此可以跨进程通信，用于处理 Toast 窗口的创建和 View 的添加。</h6><h4 id="2-Toast-的-Window-创建过程"><a href="#2-Toast-的-Window-创建过程" class="headerlink" title="(2)Toast 的 Window 创建过程"></a>(2)Toast 的 Window 创建过程</h4><h5 id="首先看-makeText-方法"><a href="#首先看-makeText-方法" class="headerlink" title="首先看 makeText 方法"></a>首先看 makeText 方法</h5></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public static Toast makeText(@NonNull Context context, @Nullable Looper looper,</span><br><span class="line">        @NonNull CharSequence text, @Duration int duration) &#123;</span><br><span class="line">    Toast result = new Toast(context, looper);</span><br><span class="line"></span><br><span class="line">    LayoutInflater inflate = (LayoutInflater)</span><br><span class="line">            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);</span><br><span class="line">    View v = inflate.inflate(com.android.internal.R.layout.transient_notification, null);</span><br><span class="line">    TextView tv = (TextView)v.findViewById(com.android.internal.R.id.message);</span><br><span class="line">    tv.setText(text);</span><br><span class="line"></span><br><span class="line">    result.mNextView = v;</span><br><span class="line">    result.mDuration = duration;</span><br><span class="line"></span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="这里的-mNextView-就是-Toast-“根视图”，可以看到这个-mNextView-有一个-TextView-用于显示-Toast-的文本信息。"><a href="#这里的-mNextView-就是-Toast-“根视图”，可以看到这个-mNextView-有一个-TextView-用于显示-Toast-的文本信息。" class="headerlink" title="这里的 mNextView 就是 Toast “根视图”，可以看到这个 mNextView 有一个 TextView 用于显示 Toast 的文本信息。"></a>这里的 mNextView 就是 Toast “根视图”，可以看到这个 mNextView 有一个 TextView 用于显示 Toast 的文本信息。</h5><h5 id="接着看-show-方法"><a href="#接着看-show-方法" class="headerlink" title="接着看 show 方法"></a>接着看 show 方法</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public void show() &#123;</span><br><span class="line">    ...</span><br><span class="line">    INotificationManager service = getService();</span><br><span class="line">    String pkg = mContext.getOpPackageName();</span><br><span class="line">    TN tn = mTN;</span><br><span class="line">    tn.mNextView = mNextView;</span><br><span class="line"></span><br><span class="line">    try &#123;</span><br><span class="line">        service.enqueueToast(pkg, tn, mDuration);</span><br><span class="line">    &#125; catch (RemoteException e) &#123;</span><br><span class="line">        // Empty</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="在-Toast-方法中会调用-NMS-的-enqueueToast-，这就到-NMS-服务中。在-NMS-服务中会将-Toast-封装为-ToastRecord-并添加到-mToastQueue-队列中。一直到-从队列中取出进行显示的时候就会调用-TN-的-show-方法，并发送一个延迟的消息。"><a href="#在-Toast-方法中会调用-NMS-的-enqueueToast-，这就到-NMS-服务中。在-NMS-服务中会将-Toast-封装为-ToastRecord-并添加到-mToastQueue-队列中。一直到-从队列中取出进行显示的时候就会调用-TN-的-show-方法，并发送一个延迟的消息。" class="headerlink" title="在 Toast 方法中会调用 NMS 的 enqueueToast ，这就到 NMS 服务中。在 NMS 服务中会将 Toast 封装为 ToastRecord ,并添加到 mToastQueue 队列中。一直到 从队列中取出进行显示的时候就会调用 TN 的 show 方法，并发送一个延迟的消息。"></a>在 Toast 方法中会调用 NMS 的 enqueueToast ，这就到 NMS 服务中。在 NMS 服务中会将 Toast 封装为 ToastRecord ,并添加到 mToastQueue 队列中。一直到 从队列中取出进行显示的时候就会调用 TN 的 show 方法，并发送一个延迟的消息。</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@GuardedBy(&quot;mToastQueue&quot;)</span><br><span class="line">   private void scheduleTimeoutLocked(ToastRecord r)</span><br><span class="line">   &#123;</span><br><span class="line">       mHandler.removeCallbacksAndMessages(r);</span><br><span class="line">       Message m = Message.obtain(mHandler, MESSAGE_TIMEOUT, r);</span><br><span class="line">       long delay = r.duration == Toast.LENGTH_LONG ? LONG_DELAY : SHORT_DELAY;</span><br><span class="line">       mHandler.sendMessageDelayed(m, delay);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>SHORT_DELAY = 2 s</li>
+<li>LONG_DELAY = 3.5 s<h5 id="接着先看-TN-的-show-方法"><a href="#接着先看-TN-的-show-方法" class="headerlink" title="接着先看 TN 的 show 方法"></a>接着先看 TN 的 show 方法</h5></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    @Override</span><br><span class="line">    public void show(IBinder windowToken) &#123;</span><br><span class="line">        if (localLOGV) Log.v(TAG, &quot;SHOW: &quot; + this);</span><br><span class="line">        mHandler.obtainMessage(SHOW, windowToken).sendToTarget();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">mHandler = new Handler(looper, null) &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void handleMessage(Message msg) &#123;</span><br><span class="line">            switch (msg.what) &#123;</span><br><span class="line">                case SHOW: &#123;</span><br><span class="line">                    IBinder token = (IBinder) msg.obj;</span><br><span class="line">                    handleShow(token);</span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">    public void handleShow(IBinder windowToken) &#123;</span><br><span class="line">        ...</span><br><span class="line">        mWM = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);</span><br><span class="line">        ...</span><br><span class="line">        mWM.addView(mView, mParams);</span><br><span class="line">        ...</span><br><span class="line">        &#125; catch (WindowManager.BadTokenException e) &#123;</span><br><span class="line">                /* ignore */</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="依次从三个方法看下来就可以知道-TN-的-show-最后会调用-WindowManager-的-addView-方法，这里可以看到-为了调用-handleShow-方法这里使用了-Handler-。这是因为-NMS-调用-TN-的方法是一种跨跨进程的方式，show-方法就运行在-Binder-线程池中，因此需要使用-Handler-回到-Toast-的线程去调用-addView-方法。"><a href="#依次从三个方法看下来就可以知道-TN-的-show-最后会调用-WindowManager-的-addView-方法，这里可以看到-为了调用-handleShow-方法这里使用了-Handler-。这是因为-NMS-调用-TN-的方法是一种跨跨进程的方式，show-方法就运行在-Binder-线程池中，因此需要使用-Handler-回到-Toast-的线程去调用-addView-方法。" class="headerlink" title="依次从三个方法看下来就可以知道 TN 的 show 最后会调用 WindowManager 的 addView 方法，这里可以看到 为了调用 handleShow 方法这里使用了 Handler 。这是因为 NMS 调用 TN 的方法是一种跨跨进程的方式，show 方法就运行在 Binder 线程池中，因此需要使用 Handler 回到 Toast 的线程去调用 addView 方法。"></a>依次从三个方法看下来就可以知道 TN 的 show 最后会调用 WindowManager 的 addView 方法，这里可以看到 为了调用 handleShow 方法这里使用了 Handler 。这是因为 NMS 调用 TN 的方法是一种跨跨进程的方式，show 方法就运行在 Binder 线程池中，因此需要使用 Handler 回到 Toast 的线程去调用 addView 方法。</h5><h5 id="现在回到-NMS-中，之前发送了个延迟的消息，然后过了相应的时间后就会对这个消息进行处理，也就是将-Toast-窗口删除。"><a href="#现在回到-NMS-中，之前发送了个延迟的消息，然后过了相应的时间后就会对这个消息进行处理，也就是将-Toast-窗口删除。" class="headerlink" title="现在回到 NMS 中，之前发送了个延迟的消息，然后过了相应的时间后就会对这个消息进行处理，也就是将 Toast 窗口删除。"></a>现在回到 NMS 中，之前发送了个延迟的消息，然后过了相应的时间后就会对这个消息进行处理，也就是将 Toast 窗口删除。</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">      public void handleMessage(Message msg)</span><br><span class="line">      &#123;</span><br><span class="line">          switch (msg.what)</span><br><span class="line">          &#123;</span><br><span class="line">              case MESSAGE_TIMEOUT:</span><br><span class="line">                  handleTimeout((ToastRecord)msg.obj); //跳到下面</span><br><span class="line">          ...</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">private void handleTimeout(ToastRecord record)</span><br><span class="line">&#123;</span><br><span class="line">    if (DBG) Slog.d(TAG, &quot;Timeout pkg=&quot; + record.pkg + &quot; callback=&quot; + record.callback);</span><br><span class="line">    synchronized (mToastQueue) &#123;</span><br><span class="line">        int index = indexOfToastLocked(record.pkg, record.callback);</span><br><span class="line">        if (index &gt;= 0) &#123;</span><br><span class="line">            cancelToastLocked(index);//跳到下面</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@GuardedBy(&quot;mToastQueue&quot;)</span><br><span class="line">   void cancelToastLocked(int index) &#123;</span><br><span class="line">       ToastRecord record = mToastQueue.get(index);</span><br><span class="line">       try &#123;</span><br><span class="line">           record.callback.hide(); // 执行 hide </span><br><span class="line">       &#125; catch (RemoteException e) &#123;</span><br><span class="line">       ...</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       ToastRecord lastToast = mToastQueue.remove(index);//移除队列</span><br><span class="line">       mWindowManagerInternal.removeWindowToken(lastToast.token, true,  DEFAULT_DISPLAY);//删除对应 窗口</span><br><span class="line">       </span><br><span class="line">       keepProcessAliveIfNeededLocked(record.pid);</span><br><span class="line">       if (mToastQueue.size() &gt; 0) &#123;</span><br><span class="line">       ...</span><br><span class="line">           showNextToastLocked(); // 如果队列中还有就继续执行</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="在延迟的消息到达后就会执行-hide-方法，这个过程和添加实际上是相似的，这里就不再说明。接着将-Toast-从队列中删除，并进行窗口的删除，接着判断队列中是否还有-Toast-，如果就继续执行。具体的过程可看下图："><a href="#在延迟的消息到达后就会执行-hide-方法，这个过程和添加实际上是相似的，这里就不再说明。接着将-Toast-从队列中删除，并进行窗口的删除，接着判断队列中是否还有-Toast-，如果就继续执行。具体的过程可看下图：" class="headerlink" title="在延迟的消息到达后就会执行 hide 方法，这个过程和添加实际上是相似的，这里就不再说明。接着将 Toast 从队列中删除，并进行窗口的删除，接着判断队列中是否还有 Toast ，如果就继续执行。具体的过程可看下图："></a>在延迟的消息到达后就会执行 hide 方法，这个过程和添加实际上是相似的，这里就不再说明。接着将 Toast 从队列中删除，并进行窗口的删除，接着判断队列中是否还有 Toast ，如果就继续执行。具体的过程可看下图：</h5><p><a href="https://upload-images.jianshu.io/upload_images/9184545-2e81999c269b6491.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" target="_blank" rel="noopener">点击查看大图</a><br><img src="/2018/07/18/Android-Window窗口机制/Toast show.png" alt="Toast show.png"></p>
+<h5 id="最后再补充一点，前面提到过-为了使-TN-的-show-方法切换到-对应的线程而使用了-Hanler-而其中-Handler-的-Looper-是这样的"><a href="#最后再补充一点，前面提到过-为了使-TN-的-show-方法切换到-对应的线程而使用了-Hanler-而其中-Handler-的-Looper-是这样的" class="headerlink" title="最后再补充一点，前面提到过 为了使 TN 的 show 方法切换到 对应的线程而使用了 Hanler ,而其中 Handler 的 Looper 是这样的"></a>最后再补充一点，前面提到过 为了使 TN 的 show 方法切换到 对应的线程而使用了 Hanler ,而其中 Handler 的 Looper 是这样的</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">if (looper == null) &#123;</span><br><span class="line">        // Use Looper.myLooper() if looper is not specified.</span><br><span class="line">        looper = Looper.myLooper();</span><br><span class="line">        if (looper == null) &#123;</span><br><span class="line">            throw new RuntimeException(</span><br><span class="line">                    &quot;Can&apos;t toast on a thread that has not called Looper.prepare()&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="这就说明当不指定-looper-的时候，默认的是主线程-Looper-。但是如果在-子线程中指定该线程的-Looper-，并调用-Looper-prepare-方法，就可以在子线程中调用-Toast-的-show-方法。"><a href="#这就说明当不指定-looper-的时候，默认的是主线程-Looper-。但是如果在-子线程中指定该线程的-Looper-，并调用-Looper-prepare-方法，就可以在子线程中调用-Toast-的-show-方法。" class="headerlink" title="这就说明当不指定 looper 的时候，默认的是主线程 Looper 。但是如果在 子线程中指定该线程的 Looper ，并调用 Looper.prepare() 方法，就可以在子线程中调用 Toast 的 show 方法。"></a>这就说明当不指定 looper 的时候，默认的是主线程 Looper 。但是如果在 子线程中指定该线程的 Looper ，并调用 Looper.prepare() 方法，就可以在子线程中调用 Toast 的 show 方法。</h5><h5 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h5><h5 id="《Android-开发艺术探索》"><a href="#《Android-开发艺术探索》" class="headerlink" title="《Android 开发艺术探索》"></a>《Android 开发艺术探索》</h5><h5 id="Android解析WindowManager"><a href="#Android解析WindowManager" class="headerlink" title="Android解析WindowManager"></a><a href="http://liuwangshu.cn/framework/wm/1-windowmanager.html" target="_blank" rel="noopener">Android解析WindowManager</a></h5><h5 id="Android解析WindowManagerService"><a href="#Android解析WindowManagerService" class="headerlink" title="Android解析WindowManagerService"></a><a href="http://liuwangshu.cn/framework/wms/1-wms-produce.html" target="_blank" rel="noopener">Android解析WindowManagerService</a></h5>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/d.jpg"
+                alt="海盗的帽子" />
+            
+              <p class="site-author-name" itemprop="name">海盗的帽子</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yishengma" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/m0_38089373" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-copyright"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-前言"><span class="nav-number">1.</span> <span class="nav-text">一.前言</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Window-在-Android-有两种含义，一种是狭义的，一种是广义的。狭义的-Window-指的是-Window-这个抽象类，它的唯一的实现是-PhoneWindow-。广义的-Window-指的是-Android-中表示的窗口的概念，所谓的-Window-窗口机制实际上说的是广义的-Window-，在-Android-中窗口具体可以划分为-三种："><span class="nav-number">1.0.0.1.</span> <span class="nav-text">Window 在 Android 有两种含义，一种是狭义的，一种是广义的。狭义的 Window 指的是 Window 这个抽象类，它的唯一的实现是 PhoneWindow 。广义的 Window 指的是 Android 中表示的窗口的概念，所谓的 Window 窗口机制实际上说的是广义的 Window ，在  Android 中窗口具体可以划分为 三种：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在-Window-窗口机制中，这三种类型就统称为-Window-，因为它们的作用就是显示某种视图，因此一般说的-Window-没有说明都指的是广义的-Window。"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">在 Window 窗口机制中，这三种类型就统称为 Window ，因为它们的作用就是显示某种视图，因此一般说的 Window 没有说明都指的是广义的 Window。</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-Window-的管理"><span class="nav-number">2.</span> <span class="nav-text">二.Window 的管理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Window-的管理涉及到应用进程和系统服务进程之间的通信，这里分为两个方面进行说明。"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">Window 的管理涉及到应用进程和系统服务进程之间的通信，这里分为两个方面进行说明。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一-在应用进程涉及的几个类"><span class="nav-number">2.1.</span> <span class="nav-text">(一).在应用进程涉及的几个类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-ViewManager"><span class="nav-number">2.1.1.</span> <span class="nav-text">1.ViewManager</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#这是一个接口，里面只有三个方法，定义了对-View-也就是所说的视图-的基本操作，添加，刷新和移除"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">这是一个接口，里面只有三个方法，定义了对 View ( 也就是所说的视图 )的基本操作，添加，刷新和移除</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-WindowManager"><span class="nav-number">2.1.2.</span> <span class="nav-text">2.WindowManager</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#这也是一个接口，继承-ViewManager，负责对-Window-进行管理，和操作。每一个-Window-都持有这个对象，用于对自己窗口内部的-View-进行操作。这里还有一个静态的内部类-LayoutParams-这个类定义-Window-的一些属性，窗口的类别和显示顺序。属性指的是窗口大小，位置，状态等信息，而窗口的类别就是前言中说的三种，这是通过设置-type-值显示的，每个类别有一个范围的-type-值，而显示顺序也是根据-type-值来确定的，-type-值越高就越前，也就是越靠近用户。"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">这也是一个接口，继承 ViewManager，负责对 Window 进行管理，和操作。每一个 Window 都持有这个对象，用于对自己窗口内部的 View  进行操作。这里还有一个静态的内部类 LayoutParams, 这个类定义 Window 的一些属性，窗口的类别和显示顺序。属性指的是窗口大小，位置，状态等信息，而窗口的类别就是前言中说的三种，这是通过设置 type 值显示的，每个类别有一个范围的 type 值，而显示顺序也是根据 type 值来确定的， type 值越高就越前，也就是越靠近用户。</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-WindowManagerImpl"><span class="nav-number">2.1.3.</span> <span class="nav-text">3.WindowManagerImpl</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#WindowManager-的实现类，持有-Window-类型的变量，因而对-Window-的操作会在这里调用，但是对-View-的三个操作并没有在这里实现，而是由成员变量-WindowManagerGlobal-类型的-mGlobal-去执行。"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">WindowManager 的实现类，持有 Window 类型的变量，因而对 Window 的操作会在这里调用，但是对 View 的三个操作并没有在这里实现，而是由成员变量 WindowManagerGlobal 类型的 mGlobal   去执行。</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-WindowManagerGlobal"><span class="nav-number">2.1.4.</span> <span class="nav-text">4.WindowManagerGlobal</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#这个类虽然没有实现-ViewManager-，但是它在这里同样定义了这三种操作，同时它还有几个重要的变量。而对于具体的-View-的操作，这里也没有实现而是交由-ViewRootImpl-去实现。"><span class="nav-number">2.1.4.1.</span> <span class="nav-text">这个类虽然没有实现 ViewManager ，但是它在这里同样定义了这三种操作，同时它还有几个重要的变量。而对于具体的 View  的操作，这里也没有实现而是交由 ViewRootImpl 去实现。</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-ViewRootImpl"><span class="nav-number">2.1.5.</span> <span class="nav-text">5.ViewRootImpl</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ViewRootImpl-是连接-Window-和-View-关系的桥梁。有三个方面的作用："><span class="nav-number">2.1.5.1.</span> <span class="nav-text">ViewRootImpl 是连接 Window 和 View 关系的桥梁。有三个方面的作用：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#它有两个重要的变量："><span class="nav-number">2.1.5.2.</span> <span class="nav-text">它有两个重要的变量：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-DecorView-，mNextView，mDecor-等"><span class="nav-number">2.1.6.</span> <span class="nav-text">6.DecorView ，mNextView，mDecor 等</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#DecorView-对于大家可能比较熟悉，这是-Activity-视图中的“根视图”，而其他两个则是-Toast-和-Dialog-的根视图。这看起来好像每种窗口类型都有自己的“根视图”，事实上的确是这样的，我们都知道-Window-实际上就是为了显示各种各样的视图，因此一个-Window-中就可能会有多个-View-而使用“根视图”则提供了结构上方便，所有的-View-都是以“根视图”来进行添加删除等的，因此便于-WindowManager-对窗口进行管理。在-Activity-中-DecorView-是PhoneWindow-的一个变量，但是并不是所有的窗口都会使用-PhoneWindow-和-抽象接口-Window。"><span class="nav-number">2.1.6.1.</span> <span class="nav-text">DecorView 对于大家可能比较熟悉，这是 Activity 视图中的“根视图”，而其他两个则是 Toast 和 Dialog 的根视图。这看起来好像每种窗口类型都有自己的“根视图”，事实上的确是这样的，我们都知道 Window 实际上就是为了显示各种各样的视图，因此一个 Window 中就可能会有多个 View, 而使用“根视图”则提供了结构上方便，所有的 View 都是以“根视图”来进行添加删除等的，因此便于 WindowManager 对窗口进行管理。在 Activity 中 DecorView 是PhoneWindow 的一个变量，但是并不是所有的窗口都会使用 PhoneWindow 和 抽象接口 Window。</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#整体的体系如图："><span class="nav-number">2.1.7.</span> <span class="nav-text">整体的体系如图：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#点击查看大图"><span class="nav-number">2.1.7.1.</span> <span class="nav-text">点击查看大图</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-创建-Window-在应用进程"><span class="nav-number">2.2.</span> <span class="nav-text">(二).创建 Window ( 在应用进程 )</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#在了解了上面几个概念后，下面就以实际的例子进行说明，虽然不同类型的窗口在创建-Window-的时候整体机制是一样的，即通过-WindowManager-进行管理，但是在一些具体的方面还有有差别的。"><span class="nav-number">2.2.0.1.</span> <span class="nav-text">在了解了上面几个概念后，下面就以实际的例子进行说明，虽然不同类型的窗口在创建 Window 的时候整体机制是一样的，即通过 WindowManager 进行管理，但是在一些具体的方面还有有差别的。</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Activity-的窗口创建和-setContentView"><span class="nav-number">2.2.1.</span> <span class="nav-text">1.Activity 的窗口创建和 setContentView</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#在-Activity-启动过程中的最后一步-Activity-实例创建完后会需要调用-attach-方法关联上下文，在这里会创建-Window-对象。"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">在 Activity 启动过程中的最后一步 Activity 实例创建完后会需要调用 attach  方法关联上下文，在这里会创建 Window 对象。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在创建完-Window-后就需要往这个-Window-添加一个最低层的-View-用于管理以后的所有的-View-没错这个-View-就是-DecorView。DecorView-实际上是一个-FrameLayout-，它里面有一个-LinearLayout-LinearLayout-有两个子元素，一个是-的-actionbar-，-一个就是-FrameLayout-的-content-。setContentView-就是在这个-FrameLayout-里添加我们的-LayoutView-在这之前需要先创建-DecorView-。"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">在创建完 Window 后就需要往这个 Window 添加一个最低层的 View 用于管理以后的所有的 View,没错这个 View 就是 DecorView。DecorView 实际上是一个 FrameLayout ，它里面有一个 LinearLayout , LinearLayout 有两个子元素，一个是  的 actionbar ， 一个就是 FrameLayout 的 content 。setContentView 就是在这个  FrameLayout 里添加我们的 LayoutView.在这之前需要先创建 DecorView 。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#首先这里-mContentParent-就是-FrameLayout-的-content-。因为是第一次创建为-null-就要初始化-DecorView"><span class="nav-number">2.2.1.3.</span> <span class="nav-text">首先这里 mContentParent 就是 FrameLayout 的 content 。因为是第一次创建为 null, 就要初始化 DecorView</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在初始化DecorView-后就会加载-Content-View-并添加到-DecorView-这里的-ID-ANDROID-CONTENT-实际上就是-com-android-internal-R-id-content，在-layout-文件中可以看到"><span class="nav-number">2.2.1.4.</span> <span class="nav-text">在初始化DecorView 后就会加载 Content View ,并添加到 DecorView .这里的 ID_ANDROID_CONTENT 实际上就是 com.android.internal.R.id.content，在 layout 文件中可以看到</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在上述步骤中只是创建了-Window-实例，-只是将-View-添加到-DecorView-，但是真正的-Window-的添加还未实现，而具体的实现在之前说过是由-WindowManager-进行操作的，这一步在-hanldeResumeActivity-中。"><span class="nav-number">2.2.1.5.</span> <span class="nav-text">在上述步骤中只是创建了 Window 实例， 只是将 View 添加到 DecorView ，但是真正的 Window 的添加还未实现，而具体的实现在之前说过是由 WindowManager 进行操作的，这一步在 hanldeResumeActivity  中。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在-WindowManager-的-addView-方法中就会见到之前说的几个对象的层层调用，一直到-ViewRootImpl，-这个过程如图所示："><span class="nav-number">2.2.1.6.</span> <span class="nav-text">在 WindowManager 的 addView 方法中就会见到之前说的几个对象的层层调用，一直到 ViewRootImpl， 这个过程如图所示：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在-ViewRootImpl-会先调用-requestLayout-对View-进行绘制，然后调用-addToDisplay-添加到-Window-中。这两个方法都涉及与-WMS-的通信，具体则是由-WindowSession-实现，下面就介绍-Window-创建过程中和-WMS-的通信的部分。"><span class="nav-number">2.2.1.7.</span> <span class="nav-text">在 ViewRootImpl 会先调用 requestLayout 对View 进行绘制，然后调用 addToDisplay 添加到 Window 中。这两个方法都涉及与 WMS 的通信，具体则是由 WindowSession 实现，下面就介绍 Window 创建过程中和 WMS  的通信的部分。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-在-SystemServer-进程涉及的几个类"><span class="nav-number">2.3.</span> <span class="nav-text">(三).在 SystemServer 进程涉及的几个类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-WindowManagerServer"><span class="nav-number">2.3.1.</span> <span class="nav-text">1.WindowManagerServer</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#WindowManagerServer-是-Android-系统中负责处理-Window-和-View-相关的-系统服务，主要有如下几个职责："><span class="nav-number">2.3.1.1.</span> <span class="nav-text">WindowManagerServer 是 Android 系统中负责处理 Window 和 View   相关的 系统服务，主要有如下几个职责：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-WindowState"><span class="nav-number">2.3.2.</span> <span class="nav-text">2.WindowState</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#用于保存窗口的信息，窗口的信息是可以随时改变的，比如窗口的位置，大小等变化，通常窗口信息的改变，就会进行相应的-View-的改变。WindowState-是保持在一个-Map-里面，这个-Map-保存着系统所有的窗口。"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">用于保存窗口的信息，窗口的信息是可以随时改变的，比如窗口的位置，大小等变化，通常窗口信息的改变，就会进行相应的 View 的改变。WindowState 是保持在一个 Map  里面，这个  Map  保存着系统所有的窗口。</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-AppWindowToken-WindowToken"><span class="nav-number">2.3.3.</span> <span class="nav-text">3.AppWindowToken/WindowToken</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#AppWindowToken-是-WindowToken-的-子类，可以译为令牌，一个-Activity-对应一个-WindowToken-当应用进程向-WMS-发出创建-Window-的申请的时候需要出示正确的令牌。这里需要注意子窗口通常需要依赖于父窗口才能添加，比如在-Activity-上显示-Dialog-或者-Menu-因此子窗口通常使用的是父窗口的-WindowToken-，这就是为什么创建-Dialog-的时候关联的上下文不能使用-ApplicationContext-因为-application-没有-WindowToken"><span class="nav-number">2.3.3.1.</span> <span class="nav-text">AppWindowToken 是 WindowToken 的 子类，可以译为令牌，一个 Activity 对应一个 WindowToken, 当应用进程向 WMS 发出创建 Window 的申请的时候需要出示正确的令牌。这里需要注意子窗口通常需要依赖于父窗口才能添加，比如在 Activity 上显示 Dialog 或者 Menu ,因此子窗口通常使用的是父窗口的 WindowToken ，这就是为什么创建 Dialog 的时候关联的上下文不能使用 ApplicationContext ,因为 application 没有 WindowToken.</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四-创建-Window-在-Server-进程"><span class="nav-number">2.4.</span> <span class="nav-text">(四).创建 Window ( 在 Server 进程 )</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#在了解了服务端几个类后，下面就是-Window-的创建在-Server-端的过程，首先回到之前的在-ViewRootImpl-的两个方法，requestLayout-方法调用后在-SystemServer-会进行一个-Surface-的创建和绘制，之后就会-view-的绘制。这里属于-Surface-的创建过程，这里就不进行展开，在绘制完成后就会执行-addWindow-方法"><span class="nav-number">2.4.0.1.</span> <span class="nav-text">在了解了服务端几个类后，下面就是 Window 的创建在 Server 端的过程，首先回到之前的在 ViewRootImpl 的两个方法，requestLayout 方法调用后在 SystemServer 会进行一个 Surface 的创建和绘制，之后就会 view 的绘制。这里属于 Surface 的创建过程，这里就不进行展开，在绘制完成后就会执行 addWindow 方法.</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#addWindow-的源码很长，主要是做一下几个部分："><span class="nav-number">2.4.0.2.</span> <span class="nav-text">addWindow 的源码很长，主要是做一下几个部分：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-对窗口的参数进行检查，比如窗口的类型，窗口的-WindowToken-输入法这种没有-WindowToken-的系统自己会创建一个-windowToken。"><span class="nav-number">2.4.0.3.</span> <span class="nav-text">1.对窗口的参数进行检查，比如窗口的类型，窗口的 WindowToken.输入法这种没有 WindowToken  的系统自己会创建一个 windowToken。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-创建-WindowState-对象，将-WindowToken-和-WindowState-关联起来并添加到-HashMap。"><span class="nav-number">2.4.0.4.</span> <span class="nav-text">2.创建 WindowState 对象，将 WindowToken 和 WindowState 关联起来并添加到 HashMap。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-将窗口按照-z-轴的位置添加到-DisPlayContent-的合适的位置。"><span class="nav-number">2.4.0.5.</span> <span class="nav-text">3.将窗口按照 z 轴的位置添加到 DisPlayContent 的合适的位置。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-最后就是窗口的位置，动画等信息保存下来。这样一个窗口创建成功。"><span class="nav-number">2.4.0.6.</span> <span class="nav-text">4.最后就是窗口的位置，动画等信息保存下来。这样一个窗口创建成功。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五-Dialog-的-Window-创建"><span class="nav-number">2.5.</span> <span class="nav-text">(五).Dialog 的 Window 创建</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Dialog-是一个子窗口，需要依赖于父窗口才能显示。"><span class="nav-number">2.5.0.1.</span> <span class="nav-text">Dialog 是一个子窗口，需要依赖于父窗口才能显示。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Dialog-会创建自己的-Window-对象，然后就会在-Activity-的-getSystemService-方法中可以拿到-Activity-的-mWindowManager-对象-这样-Dialog-就会和-Activity-有一样的-Token-。接着看-show-方法。"><span class="nav-number">2.5.0.2.</span> <span class="nav-text">Dialog 会创建自己的 Window 对象，然后就会在 Activity 的 getSystemService  方法中可以拿到 Activity 的 mWindowManager 对象,这样 Dialog 就会和 Activity 有一样的 Token 。接着看 show 方法。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#之前说过所有的-Window-都有一个“根视图”用于对-所有的View-进行管理，在-Dialog-中就对应-mDecor，可以看到同样的，mWindowManager-会调用-addView-执行窗口的添加工作。-后面的过程基本和上述的-setContentView-的过程相似。"><span class="nav-number">2.5.0.3.</span> <span class="nav-text">之前说过所有的  Window 都有一个“根视图”用于对 所有的View 进行管理，在 Dialog 中就对应 mDecor，可以看到同样的，mWindowManager 会调用 addView 执行窗口的添加工作。 后面的过程基本和上述的 setContentView 的过程相似。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六-Toast-的-Window-创建"><span class="nav-number">2.6.</span> <span class="nav-text">(六).Toast 的 Window 创建</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Toast-是一个系统级的窗口，因此在创建的过程中就有些不同。这里涉及到了几个新的对象"><span class="nav-number">2.6.0.1.</span> <span class="nav-text">Toast 是一个系统级的窗口，因此在创建的过程中就有些不同。这里涉及到了几个新的对象</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-涉及的几个对象"><span class="nav-number">2.6.1.</span> <span class="nav-text">(1)涉及的几个对象</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-NotificationManagerService-NMS"><span class="nav-number">2.6.1.1.</span> <span class="nav-text">1.NotificationManagerService ( NMS )</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#这是一个系统服务，用于管理系统通知，因此也负责-Toast-的管理，其中有几个重要的成员"><span class="nav-number">2.6.1.2.</span> <span class="nav-text">这是一个系统服务，用于管理系统通知，因此也负责 Toast 的管理，其中有几个重要的成员</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-TN"><span class="nav-number">2.6.1.3.</span> <span class="nav-text">1. TN</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#这是-Toast-的内部类，继承自-ITransientNotification-Stub-因此可以跨进程通信，用于处理-Toast-窗口的创建和-View-的添加。"><span class="nav-number">2.6.1.3.1.</span> <span class="nav-text">这是 Toast 的内部类，继承自 ITransientNotification.Stub ,因此可以跨进程通信，用于处理 Toast 窗口的创建和 View 的添加。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Toast-的-Window-创建过程"><span class="nav-number">2.6.2.</span> <span class="nav-text">(2)Toast 的 Window 创建过程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#首先看-makeText-方法"><span class="nav-number">2.6.2.1.</span> <span class="nav-text">首先看 makeText 方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#这里的-mNextView-就是-Toast-“根视图”，可以看到这个-mNextView-有一个-TextView-用于显示-Toast-的文本信息。"><span class="nav-number">2.6.2.2.</span> <span class="nav-text">这里的 mNextView 就是 Toast “根视图”，可以看到这个 mNextView 有一个 TextView 用于显示 Toast 的文本信息。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#接着看-show-方法"><span class="nav-number">2.6.2.3.</span> <span class="nav-text">接着看 show 方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在-Toast-方法中会调用-NMS-的-enqueueToast-，这就到-NMS-服务中。在-NMS-服务中会将-Toast-封装为-ToastRecord-并添加到-mToastQueue-队列中。一直到-从队列中取出进行显示的时候就会调用-TN-的-show-方法，并发送一个延迟的消息。"><span class="nav-number">2.6.2.4.</span> <span class="nav-text">在 Toast 方法中会调用 NMS 的 enqueueToast ，这就到 NMS 服务中。在 NMS 服务中会将 Toast 封装为 ToastRecord ,并添加到 mToastQueue 队列中。一直到 从队列中取出进行显示的时候就会调用 TN 的 show 方法，并发送一个延迟的消息。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#接着先看-TN-的-show-方法"><span class="nav-number">2.6.2.5.</span> <span class="nav-text">接着先看 TN 的 show 方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#依次从三个方法看下来就可以知道-TN-的-show-最后会调用-WindowManager-的-addView-方法，这里可以看到-为了调用-handleShow-方法这里使用了-Handler-。这是因为-NMS-调用-TN-的方法是一种跨跨进程的方式，show-方法就运行在-Binder-线程池中，因此需要使用-Handler-回到-Toast-的线程去调用-addView-方法。"><span class="nav-number">2.6.2.6.</span> <span class="nav-text">依次从三个方法看下来就可以知道 TN 的 show 最后会调用 WindowManager 的 addView 方法，这里可以看到 为了调用 handleShow 方法这里使用了 Handler 。这是因为 NMS 调用 TN 的方法是一种跨跨进程的方式，show 方法就运行在 Binder 线程池中，因此需要使用 Handler 回到 Toast 的线程去调用 addView 方法。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#现在回到-NMS-中，之前发送了个延迟的消息，然后过了相应的时间后就会对这个消息进行处理，也就是将-Toast-窗口删除。"><span class="nav-number">2.6.2.7.</span> <span class="nav-text">现在回到 NMS 中，之前发送了个延迟的消息，然后过了相应的时间后就会对这个消息进行处理，也就是将 Toast 窗口删除。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在延迟的消息到达后就会执行-hide-方法，这个过程和添加实际上是相似的，这里就不再说明。接着将-Toast-从队列中删除，并进行窗口的删除，接着判断队列中是否还有-Toast-，如果就继续执行。具体的过程可看下图："><span class="nav-number">2.6.2.8.</span> <span class="nav-text">在延迟的消息到达后就会执行 hide 方法，这个过程和添加实际上是相似的，这里就不再说明。接着将 Toast 从队列中删除，并进行窗口的删除，接着判断队列中是否还有 Toast ，如果就继续执行。具体的过程可看下图：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#最后再补充一点，前面提到过-为了使-TN-的-show-方法切换到-对应的线程而使用了-Hanler-而其中-Handler-的-Looper-是这样的"><span class="nav-number">2.6.2.9.</span> <span class="nav-text">最后再补充一点，前面提到过 为了使 TN 的 show 方法切换到 对应的线程而使用了 Hanler ,而其中 Handler 的 Looper 是这样的</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#这就说明当不指定-looper-的时候，默认的是主线程-Looper-。但是如果在-子线程中指定该线程的-Looper-，并调用-Looper-prepare-方法，就可以在子线程中调用-Toast-的-show-方法。"><span class="nav-number">2.6.2.10.</span> <span class="nav-text">这就说明当不指定 looper 的时候，默认的是主线程 Looper 。但是如果在 子线程中指定该线程的 Looper ，并调用 Looper.prepare() 方法，就可以在子线程中调用 Toast 的 show 方法。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#参考"><span class="nav-number">2.6.2.11.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#《Android-开发艺术探索》"><span class="nav-number">2.6.2.12.</span> <span class="nav-text">《Android 开发艺术探索》</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Android解析WindowManager"><span class="nav-number">2.6.2.13.</span> <span class="nav-text">Android解析WindowManager</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Android解析WindowManagerService"><span class="nav-number">2.6.2.14.</span> <span class="nav-text">Android解析WindowManagerService</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-[object Object]"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">海盗的帽子</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
