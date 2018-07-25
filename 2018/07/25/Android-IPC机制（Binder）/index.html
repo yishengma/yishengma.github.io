@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16.ico?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android 基础," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.简介IPC (Inter-Process Communication),意为进程间的通信。一个操作系统不同的进程，有自己的进程内存空间，其中的数据不共享，因此进程间的通信就需要采用一定的机制，传统的进程通信的方式有 Socket，管道，内存共享，消息队列等，在 Linux 系统中同样存在这些方式。Android 系统是基于 Linux 系统的，但是 Android 系统却采用了另一种进程通信机">
+<meta name="keywords" content="Android 基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android----IPC机制（Binder）">
+<meta property="og:url" content="https://yishengma.github.io/2018/07/25/Android-IPC机制（Binder）/index.html">
+<meta property="og:site_name" content="海盗的帽子的博客">
+<meta property="og:description" content="一.简介IPC (Inter-Process Communication),意为进程间的通信。一个操作系统不同的进程，有自己的进程内存空间，其中的数据不共享，因此进程间的通信就需要采用一定的机制，传统的进程通信的方式有 Socket，管道，内存共享，消息队列等，在 Linux 系统中同样存在这些方式。Android 系统是基于 Linux 系统的，但是 Android 系统却采用了另一种进程通信机">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://yishengma.github.io/2018/07/25/Android-IPC机制（Binder）/Binder1.png">
+<meta property="og:updated_time" content="2018-07-25T09:37:11.459Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android----IPC机制（Binder）">
+<meta name="twitter:description" content="一.简介IPC (Inter-Process Communication),意为进程间的通信。一个操作系统不同的进程，有自己的进程内存空间，其中的数据不共享，因此进程间的通信就需要采用一定的机制，传统的进程通信的方式有 Socket，管道，内存共享，消息队列等，在 Linux 系统中同样存在这些方式。Android 系统是基于 Linux 系统的，但是 Android 系统却采用了另一种进程通信机">
+<meta name="twitter:image" content="https://yishengma.github.io/2018/07/25/Android-IPC机制（Binder）/Binder1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yishengma.github.io/2018/07/25/Android-IPC机制（Binder）/"/>
+
+
+
+
+
+  <title>Android----IPC机制（Binder） | 海盗的帽子的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">海盗的帽子的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/07/25/Android-IPC机制（Binder）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="海盗的帽子">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/d.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="海盗的帽子的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android----IPC机制（Binder）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-25T17:33:05+08:00">
+                2018-07-25
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-07-25T17:37:11+08:00">
+                2018-07-25
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一.简介"></a>一.简介</h2><p>IPC (Inter-Process Communication),意为进程间的通信。一个操作系统不同的进程，有自己的进程内存空间，其中的数据不共享，因此进程间的通信就需要采用一定的机制，传统的进程通信的方式有 Socket，管道，内存共享，消息队列等，在 Linux 系统中同样存在这些方式。Android 系统是基于 Linux 系统的，但是 Android 系统却采用了另一种进程通信机制 Binder ，主要有以下两点原因：</p>
+<ul>
+<li>性能，传统的通信的方式，要么开销大且效率里，比如 Socket ,或者数据需要进行多次拷贝，性能较低。</li>
+<li>安全，在 Android 系统中，获取系统操作很简单比如连接无线网络，访问文件等，如果不对进程进行标识，一些程序就很容易进行频繁地进行底层操作。传统 IPC 没有任何安全措施，不能识别用户进程，比如 Socket ，用户完全可以指定自己的端口。</li>
+</ul>
+<p>而使用 Binder 可以做到只对数据进行一次拷贝，并在每次通信的时候问每个用户进程添加标识。因此相对传统的 IPC 机制性能和安全性都相对较高。</p>
+<h2 id="二-基础概念"><a href="#二-基础概念" class="headerlink" title="二.基础概念"></a>二.基础概念</h2><h3 id="1-Parcel-Serializable-Parcelable"><a href="#1-Parcel-Serializable-Parcelable" class="headerlink" title="1.Parcel/Serializable/Parcelable"></a>1.Parcel/Serializable/Parcelable</h3><blockquote>
+<p>Serializable ：[sɪərɪrlaɪ’zəbl]</p>
+</blockquote>
+<p>1.Parcel 是一个容器，可以包含数据或者是对象引用，支持序列化以及跨进程之后进行反序列化，里面有很多 native 方法，在底层实现中都是用于将数据写入内存，和从内存中。</p>
+<p>2.Serializable 和 Parcelable 都是实现序列化的接口，Parcelable 是在内存中直接进行读写,中间结合需要 Parcel 类去做一些低层的工作 （C/C++ 实现）而 Serializable 是通过使用 IO 流的形式将数据读写入在硬盘上， Parcelable 的性能要强于 Serializable, 但是 Parcelable 无法将数据进行持久化。</p>
+<h3 id="2-IBinder-Binder"><a href="#2-IBinder-Binder" class="headerlink" title="2.IBinder/Binder"></a>2.IBinder/Binder</h3><p>1.IBinder 是 Binder 的接口，。这个接口定义了与远程对象交互的协议。不仅用于远程调用，也用于进程内调用</p>
+<p>2.Binder 实现了 Binder 接口，这是 Binder 机制的通信的媒介，进程 A 调用进程 B 的方法，具体就是由这个 Binder 实现。</p>
+<h3 id="3-Binder-驱动"><a href="#3-Binder-驱动" class="headerlink" title="3.Binder 驱动"></a>3.Binder 驱动</h3><h4 id="1-运行空间（内核空间-用户空间）"><a href="#1-运行空间（内核空间-用户空间）" class="headerlink" title="(1).运行空间（内核空间/用户空间）"></a>(1).运行空间（内核空间/用户空间）</h4><p>在 Android 系统中负责调用系统一切资源的是 Linux 的内核空间，而用户程序运行的空间是用户空间，每个进程有属于自己的用户空间，当用户空间需要调用系统资源的时候，只能通过内核空间提供的 System call ,系统调用，去访问内核空间。</p>
+<h4 id="2-Binder-驱动"><a href="#2-Binder-驱动" class="headerlink" title="(2).Binder 驱动"></a>(2).Binder 驱动</h4><p>传统的 IPC 机制是 Linux 内核支持的，但是 Binder 并不是 Linux 支持的，但是 Linux 可以动态添加内核模块，这个模块在内核中有自己的内核空间，因此 Android 就在系统中添加一个模块，这个模块就叫 Binder 驱动。Binder 驱动会自动完成进程 A 和 进程 B 的 Binder 对象的转换；而相应的方法参数就会在用户空间通过 mmap ,ioctl ，open  等 方法就可以调用 Binder 驱动里的方法，然后这样两个不同进程的用户空间就可以通过这个 Binder 驱动的内核空间进行通信。</p>
+<h3 id="4-Binder-框架"><a href="#4-Binder-框架" class="headerlink" title="4.Binder 框架"></a>4.Binder 框架</h3><p>1.Client，客户进程，这是相对的说法，只要是发起进程请求的一方都可以为客户进程</p>
+<p>2.Server，服务进程，这也是相对的说法，被请求执行某种服务的进程都可以称为服务端进程</p>
+<p>3.ServiceManager，SM，对服务进程的管理，每个服务进程都要在这里注册所拥有的跨进程的 Binder, 并保存对应的 Binder  的引用，Client 可以通过名字在这里查询想要的服务的名字，最后 SM 就会返回该 Server 的一个 Binder 的引用。SM 也是一个进程，但是每个需要和 SM 通信的进程都知道 SM 的引用，这是提前就固定的。</p>
+<p>4.Binder 驱动，在具体的通信过程中做中转，比如需要传递的数据，Binder 对象在两个进程间的转换等.<br><img src="/2018/07/25/Android-IPC机制（Binder）/Binder1.png" alt="Binder1"></p>
+<h3 id="5-Java-层的-Binder"><a href="#5-Java-层的-Binder" class="headerlink" title="5.Java 层的 Binder"></a>5.Java 层的 Binder</h3><h4 id="1-AIDL"><a href="#1-AIDL" class="headerlink" title="1.AIDL"></a>1.AIDL</h4><p>AIDL (Android 接口定义语言),用于跨进程通信，通过定义 ADIL ,AS 会自动生成 Binder 类。比如，定义一个如下的接口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import com.example.asus.testdemo.Book;//即使在一个包下也要 import</span><br><span class="line">interface IBookManager &#123;</span><br><span class="line">  </span><br><span class="line">    List&lt;Book&gt; getBookList();</span><br><span class="line"></span><br><span class="line">    void addBook(in Book book);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>aidl 支持的数据类型有如下</p>
+<ul>
+<li>基本数据类型</li>
+<li>String 和 CharSequence</li>
+<li>List，只支持 ArrayList，每个元素都支持 AIDL</li>
+<li>Map，只支持 Map,每个key，value,都支持 AIDL</li>
+<li>Parcelable,所有实现 Parcelable 接口</li>
+<li>AIDL,所有定义为 AIDL 的接口，比如上面的 IBookManager ，也可以作为一个接口对象 </li>
+</ul>
+<p>生成的 aidl 文件为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br></pre></td><td class="code"><pre><span class="line">public interface IBookManager extends android.os.IInterface &#123;</span><br><span class="line">   public interface IBookManager extends android.os.IInterface &#123;</span><br><span class="line">    /**</span><br><span class="line">     * Local-side IPC implementation stub class.</span><br><span class="line">     */</span><br><span class="line">    public static abstract class Stub extends android.os.Binder implements com.example.asus.testdemo.IBookManager &#123;</span><br><span class="line">        private static final java.lang.String DESCRIPTOR = &quot;com.example.asus.testdemo.IBookManager&quot;;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * Construct the stub at attach it to the interface.</span><br><span class="line">         */</span><br><span class="line">        public Stub() &#123;</span><br><span class="line">            this.attachInterface(this, DESCRIPTOR);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * Cast an IBinder object into an com.example.asus.testdemo.IBookManager interface,</span><br><span class="line">         * generating a proxy if needed.</span><br><span class="line">         */</span><br><span class="line">        public static com.example.asus.testdemo.IBookManager asInterface(android.os.IBinder obj) &#123;</span><br><span class="line">            if ((obj == null)) &#123;</span><br><span class="line">                return null;</span><br><span class="line">            &#125;</span><br><span class="line">            android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);</span><br><span class="line">            if (((iin != null) &amp;&amp; (iin instanceof com.example.asus.testdemo.IBookManager))) &#123;</span><br><span class="line">                return ((com.example.asus.testdemo.IBookManager) iin);</span><br><span class="line">            &#125;</span><br><span class="line">            return new com.example.asus.testdemo.IBookManager.Stub.Proxy(obj);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public android.os.IBinder asBinder() &#123;</span><br><span class="line">            return this;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteException &#123;</span><br><span class="line">            switch (code) &#123;</span><br><span class="line">                case INTERFACE_TRANSACTION: &#123;</span><br><span class="line">                    reply.writeString(DESCRIPTOR);</span><br><span class="line">                    return true;</span><br><span class="line">                &#125;</span><br><span class="line">                case TRANSACTION_getBookList: &#123;</span><br><span class="line">                    data.enforceInterface(DESCRIPTOR);</span><br><span class="line">                    java.util.List&lt;com.example.asus.testdemo.Book&gt; _result = this.getBookList();</span><br><span class="line">                    reply.writeNoException();</span><br><span class="line">                    reply.writeTypedList(_result);</span><br><span class="line">                    return true;</span><br><span class="line">                &#125;</span><br><span class="line">                case TRANSACTION_addBook: &#123;</span><br><span class="line">                    data.enforceInterface(DESCRIPTOR);</span><br><span class="line">                    com.example.asus.testdemo.Book _arg0;</span><br><span class="line">                    if ((0 != data.readInt())) &#123;</span><br><span class="line">                        _arg0 = com.example.asus.testdemo.Book.CREATOR.createFromParcel(data);</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        _arg0 = null;</span><br><span class="line">                    &#125;</span><br><span class="line">                    this.addBook(_arg0);</span><br><span class="line">                    reply.writeNoException();</span><br><span class="line">                    return true;</span><br><span class="line">                &#125;</span><br><span class="line">             </span><br><span class="line">            &#125;</span><br><span class="line">            return super.onTransact(code, data, reply, flags);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        private static class Proxy implements com.example.asus.testdemo.IBookManager &#123;</span><br><span class="line">            private android.os.IBinder mRemote;</span><br><span class="line"></span><br><span class="line">            Proxy(android.os.IBinder remote) &#123;</span><br><span class="line">                mRemote = remote;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public android.os.IBinder asBinder() &#123;</span><br><span class="line">                return mRemote;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            public java.lang.String getInterfaceDescriptor() &#123;</span><br><span class="line">                return DESCRIPTOR;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            /**</span><br><span class="line">             * Demonstrates some basic types that you can use as parameters</span><br><span class="line">             * and return values in AIDL.</span><br><span class="line">             */</span><br><span class="line">            @Override</span><br><span class="line">            public java.util.List&lt;com.example.asus.testdemo.Book&gt; getBookList() throws android.os.RemoteException &#123;</span><br><span class="line">                android.os.Parcel _data = android.os.Parcel.obtain();</span><br><span class="line">                android.os.Parcel _reply = android.os.Parcel.obtain();</span><br><span class="line">                java.util.List&lt;com.example.asus.testdemo.Book&gt; _result;</span><br><span class="line">                try &#123;</span><br><span class="line">                    _data.writeInterfaceToken(DESCRIPTOR);</span><br><span class="line">                    mRemote.transact(Stub.TRANSACTION_getBookList, _data, _reply, 0);</span><br><span class="line">                    _reply.readException();</span><br><span class="line">                    _result = _reply.createTypedArrayList(com.example.asus.testdemo.Book.CREATOR);</span><br><span class="line">                &#125; finally &#123;</span><br><span class="line">                    _reply.recycle();</span><br><span class="line">                    _data.recycle();</span><br><span class="line">                &#125;</span><br><span class="line">                return _result;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void addBook(com.example.asus.testdemo.Book book) throws android.os.RemoteException &#123;</span><br><span class="line">                android.os.Parcel _data = android.os.Parcel.obtain();</span><br><span class="line">                android.os.Parcel _reply = android.os.Parcel.obtain();</span><br><span class="line">                try &#123;</span><br><span class="line">                    _data.writeInterfaceToken(DESCRIPTOR);</span><br><span class="line">                    if ((book != null)) &#123;</span><br><span class="line">                        _data.writeInt(1);</span><br><span class="line">                        book.writeToParcel(_data, 0);</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        _data.writeInt(0);</span><br><span class="line">                    &#125;</span><br><span class="line">                    mRemote.transact(Stub.TRANSACTION_addBook, _data, _reply, 0);</span><br><span class="line">                    _reply.readException();</span><br><span class="line">                &#125; finally &#123;</span><br><span class="line">                    _reply.recycle();</span><br><span class="line">                    _data.recycle();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">           </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        static final int TRANSACTION_getBookList = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);</span><br><span class="line">        static final int TRANSACTION_addBook = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);</span><br><span class="line">      </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Demonstrates some basic types that you can use as parameters</span><br><span class="line">     * and return values in AIDL.</span><br><span class="line">     */</span><br><span class="line">    public java.util.List&lt;com.example.asus.testdemo.Book&gt; getBookList() throws android.os.RemoteException;</span><br><span class="line"></span><br><span class="line">    public void addBook(com.example.asus.testdemo.Book book) throws android.os.RemoteException;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个接口的内部结构就是有一个 Stub 的内部类，这 Stub 内部类还有一个内部类 Proxy。先看 Stub 类，Binder 的 java 层采用的是代理模式，其中 Stub 类代表是 Binder 的本地对象，而 Proxy 则是 Binder 在另一个进程的代理对象。先看 Stub</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">public static abstract class Stub extends android.os.Binder implements com.example.asus.testdemo.IBookManager &#123;</span><br><span class="line">        private static final java.lang.String DESCRIPTOR = &quot;com.example.asus.testdemo.IBookManager&quot;;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * Construct the stub at attach it to the interface.</span><br><span class="line">         */</span><br><span class="line">        public Stub() &#123;</span><br><span class="line">            this.attachInterface(this, DESCRIPTOR);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * Cast an IBinder object into an com.example.asus.testdemo.IBookManager interface,</span><br><span class="line">         * generating a proxy if needed.</span><br><span class="line">         */</span><br><span class="line">        public static com.example.asus.testdemo.IBookManager asInterface(android.os.IBinder obj) &#123;</span><br><span class="line">            if ((obj == null)) &#123;</span><br><span class="line">                return null;</span><br><span class="line">            &#125;</span><br><span class="line">            android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);</span><br><span class="line">            if (((iin != null) &amp;&amp; (iin instanceof com.example.asus.testdemo.IBookManager))) &#123;</span><br><span class="line">                return ((com.example.asus.testdemo.IBookManager) iin);</span><br><span class="line">            &#125;</span><br><span class="line">            return new com.example.asus.testdemo.IBookManager.Stub.Proxy(obj);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public android.os.IBinder asBinder() &#123;</span><br><span class="line">            return this;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteException &#123;</span><br><span class="line">            switch (code) &#123;</span><br><span class="line">                case INTERFACE_TRANSACTION: &#123;</span><br><span class="line">                   ...</span><br><span class="line">                &#125;</span><br><span class="line">                case TRANSACTION_getBookList: &#123;</span><br><span class="line">                   ...</span><br><span class="line">                &#125;</span><br><span class="line">                case TRANSACTION_addBook: &#123;</span><br><span class="line">                    ...</span><br><span class="line">                &#125;</span><br><span class="line">             </span><br><span class="line">            &#125;</span><br><span class="line">            return super.onTransact(code, data, reply, flags);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>DESCRIPTOR，Binder 的唯一标识</li>
+<li>asInterface，用于 Binder 到转换，如果客户服务端都在同一进程，就会返回一个 Binder  对象本身，如果是在不同进程就返回其代理 Proxy.</li>
+<li>asBinder,返回当前的Binder 对象</li>
+<li>onTransact，这个方法在服务端的线程池中，通过标识判断客户端调用的是什么方法，data 就是方法的参数。</li>
+</ul>
+<p>这是一个抽象类，因此具体的是实现就在 Service 中,通过onBinder 方法返回具体的实现。<br>接着看 Proxy</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">private static class Proxy implements com.example.asus.testdemo.IBookManager &#123;</span><br><span class="line">    private android.os.IBinder mRemote;</span><br><span class="line"></span><br><span class="line">    Proxy(android.os.IBinder remote) &#123;</span><br><span class="line">        mRemote = remote;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public android.os.IBinder asBinder() &#123;</span><br><span class="line">        return mRemote;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public java.lang.String getInterfaceDescriptor() &#123;</span><br><span class="line">        return DESCRIPTOR;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Demonstrates some basic types that you can use as parameters</span><br><span class="line">     * and return values in AIDL.</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public java.util.List&lt;com.example.asus.testdemo.Book&gt; getBookList() throws android.os.RemoteException &#123;</span><br><span class="line">        android.os.Parcel _data = android.os.Parcel.obtain();</span><br><span class="line">        android.os.Parcel _reply = android.os.Parcel.obtain();</span><br><span class="line">        java.util.List&lt;com.example.asus.testdemo.Book&gt; _result;</span><br><span class="line">        try &#123;</span><br><span class="line">            _data.writeInterfaceToken(DESCRIPTOR);</span><br><span class="line">            mRemote.transact(Stub.TRANSACTION_getBookList, _data, _reply, 0);</span><br><span class="line">            _reply.readException();</span><br><span class="line">            _result = _reply.createTypedArrayList(com.example.asus.testdemo.Book.CREATOR);</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            _reply.recycle();</span><br><span class="line">            _data.recycle();</span><br><span class="line">        &#125;</span><br><span class="line">        return _result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void addBook(com.example.asus.testdemo.Book book) throws android.os.RemoteException &#123;</span><br><span class="line">        android.os.Parcel _data = android.os.Parcel.obtain();</span><br><span class="line">        android.os.Parcel _reply = android.os.Parcel.obtain();</span><br><span class="line">        try &#123;</span><br><span class="line">            _data.writeInterfaceToken(DESCRIPTOR);</span><br><span class="line">            if ((book != null)) &#123;</span><br><span class="line">                _data.writeInt(1);</span><br><span class="line">                book.writeToParcel(_data, 0);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                _data.writeInt(0);</span><br><span class="line">            &#125;</span><br><span class="line">            mRemote.transact(Stub.TRANSACTION_addBook, _data, _reply, 0);</span><br><span class="line">            _reply.readException();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            _reply.recycle();</span><br><span class="line">            _data.recycle();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>客户进程得到的对象通常为这个类的实例，_data 就是参数，_reply 就是相应的返回值，而在这里封装了具体的数据写入的底层实现，而这对客户进程是透明的。</p>
+<h2 id="三-工作流程"><a href="#三-工作流程" class="headerlink" title="三.工作流程"></a>三.工作流程</h2><h3 id="1-大致流程"><a href="#1-大致流程" class="headerlink" title="1.大致流程"></a>1.大致流程</h3><p>1.当有一个应用进程提供一个可跨进程访问的的服务的时候，就会通过默认的通信地址向 ServiceManager 注册服务相应的线程就进入等待，这时 ServiceManager 就会通过 ioctl 方法让 Binder 驱动在内核空间保存相应的信息，然后 ServiceManager 就会唤醒线程通知应用进程注册成功。</p>
+<p>2.客户进程查询服务，SM 会通过和 Binder 驱动交互，查询已注册的服务，查询到就返回相应的对象，这时就会返回一个代理对象。</p>
+<p>3.通过调用代理对象的方法这时客户进程的这个线程进入等待状态，按之前的 Proxy 的方法的实现可以知道，在客户进程只是对一些数据进行包装，然后写入Binder 驱动和 SM 的共享内存，这是一次拷贝也是唯一的一次， 而服务进程的用户空间的地址和这个内存已经做了映射，所以 服务进程可以直接获取内存中的数据， 对于Binder Proxy 对象，就又转化为 Binder 的 Stub 的具体实现，等执行完后就返回，这同样也是一次通信，最后客户的进程的线程就会被唤醒。</p>
+<h3 id="2-跨进程的接口"><a href="#2-跨进程的接口" class="headerlink" title="2.跨进程的接口"></a>2.跨进程的接口</h3><p>同样的通过定义一个接口，让客户进程实现相应的方法，可以做到在服务进程回调所有客户进程的方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">interface IOnNewBookListenerArrivedListener &#123;</span><br><span class="line">     void onNewBookArrvied(in Book newBook);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">interface IBookManager &#123;</span><br><span class="line">    /**</span><br><span class="line">     * Demonstrates some basic types that you can use as parameters</span><br><span class="line">     * and return values in AIDL.</span><br><span class="line">     */</span><br><span class="line">    List&lt;Book&gt; getBookList();</span><br><span class="line"></span><br><span class="line">    void addBook(in Book book);</span><br><span class="line"></span><br><span class="line">    void registerListener(IOnNewBookListenerArrivedListener listener);</span><br><span class="line"></span><br><span class="line">    void unregisterListener(IOnNewBookListenerArrivedListener listener);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在服务进程有一个用于对所有接口保存的类，RemoteCallbackList 是系统用于跨进程接口通信的，内部有一个 HasMap ,key 是 IBinder ，value 是 listener, 因此可以根据 Binder 找到客户端，因为每个客户端的 Proxy 都是不一样的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private RemoteCallbackList&lt;IOnNewBookListenerArrivedListener&gt; mListeners = new RemoteCallbackList&lt;&gt;();</span><br></pre></td></tr></table></figure></p>
+<p>在重写的方法中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">       public void registerListener(IOnNewBookListenerArrivedListener listener) throws RemoteException &#123;</span><br><span class="line">          mListeners.register(listener);</span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       @Override</span><br><span class="line">       public void unregisterListener(IOnNewBookListenerArrivedListener listener) throws RemoteException &#123;</span><br><span class="line">              mListeners.unregister(listener);</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure></p>
+<p>回调的具体使用可以看以下例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">private void onNewBookArrived(Book book) throws RemoteException&#123;</span><br><span class="line">       for (int i=0;i&lt;mListeners.beginBroadcast();i++)&#123;</span><br><span class="line">           IOnNewBookListenerArrivedListener listenerArrivedListener  = mListeners.getBroadcastItem(i);</span><br><span class="line">           listenerArrivedListener.onNewBookArrvied(book);</span><br><span class="line">       &#125;</span><br><span class="line">       mListeners.finishBroadcast();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>在客户端只要这样使用就可以</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">private IOnNewBookListenerArrivedListener mListener = new IOnNewBookListenerArrivedListener.Stub() &#123;</span><br><span class="line">      @Override</span><br><span class="line">      public void onNewBookArrvied(Book newBook) throws RemoteException &#123;</span><br><span class="line">          Log.e(TAG, &quot;onNewBookArrvied: &quot;+newBook.toString());</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"> ....</span><br><span class="line">mBookManager.registerListener(mListener);</span><br></pre></td></tr></table></figure>
+<h2 id="四-其他方式"><a href="#四-其他方式" class="headerlink" title="四.其他方式"></a>四.其他方式</h2><h3 id="1-Intent-Bundle"><a href="#1-Intent-Bundle" class="headerlink" title="1.Intent/Bundle"></a>1.Intent/Bundle</h3><p>Intent 和 Bundle 都实现了 Parcelable 接口，因为 Intent 常常用于组件的通信，因此在跨进程中，这也只是适合于组件间的跨进程通信，低层也是 Binder  机制。</p>
+<h3 id="2-文件共享"><a href="#2-文件共享" class="headerlink" title="2.文件共享"></a>2.文件共享</h3><p>两个应用进程使用同一个共享文件并结合序列化可实现对数据的传递，但是在 Linux 系统中对文件的读写并没有处理并发情况，因此在高并发访问的情况可能会产生一些问题。</p>
+<h3 id="3-Messenger"><a href="#3-Messenger" class="headerlink" title="3.Messenger"></a>3.Messenger</h3><p>和 Messege 共同使用，但是服务对 Messege 的处理时串行的，因此也不适合高并发情况，且不能获取返回的结果,不适合 Remote Procedure Call （RPC 跨进程调用）。这是对 AIDL 封装后的是使用，也就是内部是 Binder 机制。</p>
+<h3 id="4-ContentProvider"><a href="#4-ContentProvider" class="headerlink" title="4.ContentProvider"></a>4.ContentProvider</h3><p>用于一对多的进程间的数据共享，支持并发操作，因为内部的数据库实际上是可以做到同步的，在底层仍然是 Binder 机制</p>
+<h3 id="5-Socket"><a href="#5-Socket" class="headerlink" title="5.Socket"></a>5.Socket</h3><p>常用于不同网络的进程间的通信，因此不适合 RPC 。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android-基础/" rel="tag"># Android 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/23/Android-Handler消息机制/" rel="next" title="Android----Handler消息机制">
+                <i class="fa fa-chevron-left"></i> Android----Handler消息机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/d.jpg"
+                alt="海盗的帽子" />
+            
+              <p class="site-author-name" itemprop="name">海盗的帽子</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yishengma" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/m0_38089373" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-copyright"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-简介"><span class="nav-text">一.简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-基础概念"><span class="nav-text">二.基础概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Parcel-Serializable-Parcelable"><span class="nav-text">1.Parcel/Serializable/Parcelable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-IBinder-Binder"><span class="nav-text">2.IBinder/Binder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Binder-驱动"><span class="nav-text">3.Binder 驱动</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-运行空间（内核空间-用户空间）"><span class="nav-text">(1).运行空间（内核空间/用户空间）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Binder-驱动"><span class="nav-text">(2).Binder 驱动</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Binder-框架"><span class="nav-text">4.Binder 框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Java-层的-Binder"><span class="nav-text">5.Java 层的 Binder</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-AIDL"><span class="nav-text">1.AIDL</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-工作流程"><span class="nav-text">三.工作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-大致流程"><span class="nav-text">1.大致流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-跨进程的接口"><span class="nav-text">2.跨进程的接口</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-其他方式"><span class="nav-text">四.其他方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Intent-Bundle"><span class="nav-text">1.Intent/Bundle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-文件共享"><span class="nav-text">2.文件共享</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Messenger"><span class="nav-text">3.Messenger</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-ContentProvider"><span class="nav-text">4.ContentProvider</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Socket"><span class="nav-text">5.Socket</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-[object Object]"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">海盗的帽子</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
