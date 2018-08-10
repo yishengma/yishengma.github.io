@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16.ico?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java 虚拟机," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.简介Java 虚拟机和字节码的存储格式是实现语言的平台无关性的基础，也就是说 Java 虚拟机并不是 Java 语言所特有的，虚拟机可以和任何能编译成 Class 文件的语言关联，因此只要遵循 Class  文件的语法和结构化的约束，就可以在 虚拟机上运行。  二.Class 文件1.简介不管是哪一种语言，Java 虚拟机最终执行的都是 “Class 文件”，任何一个 “Class 文件” 都">
+<meta name="keywords" content="Java 虚拟机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM----执行子系统">
+<meta property="og:url" content="https://yishengma.github.io/2018/08/10/JVM-执行子系统/index.html">
+<meta property="og:site_name" content="海盗的帽子的博客">
+<meta property="og:description" content="一.简介Java 虚拟机和字节码的存储格式是实现语言的平台无关性的基础，也就是说 Java 虚拟机并不是 Java 语言所特有的，虚拟机可以和任何能编译成 Class 文件的语言关联，因此只要遵循 Class  文件的语法和结构化的约束，就可以在 虚拟机上运行。  二.Class 文件1.简介不管是哪一种语言，Java 虚拟机最终执行的都是 “Class 文件”，任何一个 “Class 文件” 都">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://yishengma.github.io/2018/08/10/JVM-执行子系统/image1.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/08/10/JVM-执行子系统/image2.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/08/10/JVM-执行子系统/image3.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/08/10/JVM-执行子系统/image4.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/08/10/JVM-执行子系统/image5.png">
+<meta property="og:updated_time" content="2018-08-10T12:53:29.459Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM----执行子系统">
+<meta name="twitter:description" content="一.简介Java 虚拟机和字节码的存储格式是实现语言的平台无关性的基础，也就是说 Java 虚拟机并不是 Java 语言所特有的，虚拟机可以和任何能编译成 Class 文件的语言关联，因此只要遵循 Class  文件的语法和结构化的约束，就可以在 虚拟机上运行。  二.Class 文件1.简介不管是哪一种语言，Java 虚拟机最终执行的都是 “Class 文件”，任何一个 “Class 文件” 都">
+<meta name="twitter:image" content="https://yishengma.github.io/2018/08/10/JVM-执行子系统/image1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yishengma.github.io/2018/08/10/JVM-执行子系统/"/>
+
+
+
+
+
+  <title>JVM----执行子系统 | 海盗的帽子的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">海盗的帽子的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/08/10/JVM-执行子系统/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="海盗的帽子">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/d.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="海盗的帽子的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JVM----执行子系统</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-10T20:42:08+08:00">
+                2018-08-10
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-08-10T20:53:29+08:00">
+                2018-08-10
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/08/10/JVM-执行子系统/" class="leancloud_visitors" data-flag-title="JVM----执行子系统">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一.简介"></a>一.简介</h2><p>Java 虚拟机和字节码的存储格式是实现语言的平台无关性的基础，也就是说 Java 虚拟机并不是 Java 语言所特有的，虚拟机可以和任何能编译成 Class 文件的语言关联，因此只要遵循 Class  文件的语法和结构化的约束，就可以在 虚拟机上运行。</p>
+<p><img src="/2018/08/10/JVM-执行子系统/image1.png" alt="image.png"></p>
+<h2 id="二-Class-文件"><a href="#二-Class-文件" class="headerlink" title="二.Class 文件"></a>二.Class 文件</h2><h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h3><p>不管是哪一种语言，Java 虚拟机最终执行的都是 “Class 文件”，任何一个 “Class 文件” 都对应着唯一一个类或者接口的定义的信息，这个” class 文件” 可以是编译器生成的，也可以是通过类加载器直接生成的。这里的双引号要表明的是 “Class 文件”并不一定是以常见文件的形式存在，因为一个类或者接口可以从类加载器生成，但是所有的类和接口最终都会在方法区保存。</p>
+<h3 id="2-文件结构"><a href="#2-文件结构" class="headerlink" title="2.文件结构"></a>2.文件结构</h3><p>Class 文件的中采用一种伪结构来存储数据，这种结构只有两种数据类型：</p>
+<ul>
+<li>无符号数，用于代表基本的数据类型，可以描述数字，UTF-8 字符等，以 u1 ，u2 , u4 ，u8 代表 1 个字节，2 个字节，4 个字节， 8 个字节的无符号数。</li>
+<li>表，由多个无符号数组成，或者由其他表构成的复合数据类型，常以 “_info” 结尾。</li>
+</ul>
+<p>Class 文件的格式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">ClassFile &#123;</span><br><span class="line">    u4             magic;               //魔数，固定值 0xCAFEBABE</span><br><span class="line">    u2             minor_version;       //次版本号</span><br><span class="line">    u2             major_version;       //主版本号</span><br><span class="line">    u2             constant_pool_count; //常量的个数</span><br><span class="line">    cp_info        constant_pool[constant_pool_count-1];  //具体的常量池内容</span><br><span class="line">    u2             access_flags;        //访问标识</span><br><span class="line">    u2             this_class;          //当前类索引</span><br><span class="line">    u2             super_class;         //父类索引</span><br><span class="line">    u2             interfaces_count;    //接口的个数</span><br><span class="line">    u2             interfaces[interfaces_count];          //具体的接口内容</span><br><span class="line">    u2             fields_count;        //字段的个数</span><br><span class="line">    field_info     fields[fields_count];                  //具体的字段内容</span><br><span class="line">    u2             methods_count;       //方法的个数</span><br><span class="line">    method_info    methods[methods_count];                //具体的方法内容</span><br><span class="line">    u2             attributes_count;    //属性的个数</span><br><span class="line">    attribute_info attributes[attributes_count];          //具体的属性内容</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-魔数"><a href="#1-魔数" class="headerlink" title="(1)魔数"></a>(1)魔数</h4><p>确定一个文件是否为一个能被虚拟机接受的 Class 文件。固定值是 0xCAFEBABE，CafeBabe  咖啡宝贝，Java 咖啡 …</p>
+<h4 id="2-主次版本号"><a href="#2-主次版本号" class="headerlink" title="(2)主次版本号"></a>(2)主次版本号</h4><p>Java 的版本号。高版本的JDK 能向下兼容以前版本的 Class 文件。</p>
+<h4 id="3-常量池"><a href="#3-常量池" class="headerlink" title="(3)常量池"></a>(3)常量池</h4><p>常量池是 Class 文件中最重要的资源，占据的文件空间最大，长度不固定。<br>主要存放两大类的常量，字面量，和符号引用。</p>
+<ul>
+<li>字面量，通常一个类中引用的一些字符串，或者声明为final 的常量值。</li>
+<li><p>符号引用，一个类中的方法或者字段都有一个对应的内存入口地址，但是 Class 文件并不会直接保存这些地址，而是在运行时通过符号引用去解析定位到具体的内存入口地址，因而 Java 就可以产生运行时类型等一些动态特性，符号引用主要有三种产量：</p>
+<p>1.类和接口的全限定名，java.lang.Object 对应的全限定名为 java/lang/Object<br>2.字段的简单名称和字段的描述符，简单名称就是名字，比如 int i ,那么简单名就是 i,字段的描述符就是描述字段的数据类型，通过一种简略的方式，比如 byte 就用 B 代替，char 就用 C 代替，对象类型就用 “L+classname +;    ”  ，数组类型就 “[+ 元素类型”<br>3.方法的简单名称和方法的描述符，简单名同样是名字，比如 get(), 简单名就是 get ,方法的描述符就是方法的参数列表(数量、类型以及顺序)和返回值，比如 ++Object m(byte i, char d, Thread t) {..} ==&gt; BCLjava/lang/Thread;)Ljava/lang/Object;++</p>
+</li>
+</ul>
+<h4 id="4-访问标志"><a href="#4-访问标志" class="headerlink" title="(4)访问标志"></a>(4)访问标志</h4><p>用于识别一些类或者接口层次的访问信息，包括这个class 是类还是接口，<br>是否有public , abstract ，final 等标识。</p>
+<h4 id="5-类索引，父类索引，接口索引集合"><a href="#5-类索引，父类索引，接口索引集合" class="headerlink" title="(5)类索引，父类索引，接口索引集合"></a>(5)类索引，父类索引，接口索引集合</h4><ul>
+<li>类索引,确定这个类的全限定名</li>
+<li>父类索引,确定父类的全限定名</li>
+<li>接口索引集合,即接口的个数和具体的接口内容，描述实现了哪些接口</li>
+</ul>
+<h4 id="6-字段表集合"><a href="#6-字段表集合" class="headerlink" title="(6)字段表集合"></a>(6)字段表集合</h4><p>用于描述接口或者类中声明的变量，不包括从父类继承的，字段包括类变量和实例变量字段，所有的字段通过字段个数，和字段表集合表示，一个字段表的结构如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">field_info &#123;</span><br><span class="line">    u2             access_flags;  //访问标识</span><br><span class="line">    u2             name_index;   //字段简单名索引，</span><br><span class="line">    u2             descriptor_index; //字段描述描述符索引</span><br><span class="line">    u2             attributes_count; //属性个数</span><br><span class="line">    attribute_info attributes[attributes_count];  //属性表的具体内容</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>访问标识，字段表确定的是字段有什么修饰，public ,private 等</li>
+<li>字段简单名索引，字段描述描述符索引就是对常量池中字段的简单名和字段描述符的引用</li>
+<li>属性（通过属性个数和属性表集合表示），包含字段的一些额外信息，比如 ConstantValue 属性就是赋予字段的初始值，没有就默认为 0 .</li>
+</ul>
+<h4 id="7-方法表集合"><a href="#7-方法表集合" class="headerlink" title="(7)方法表集合"></a>(7)方法表集合</h4><p>用于描述接口或者类中声明的变量，不包括从父类继承的，字段包括类变量和实例变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">method_info &#123;</span><br><span class="line">    u2             access_flags; //访问标识</span><br><span class="line">    u2             name_index;  //方法简单名称索引</span><br><span class="line">    u2             descriptor_index;  //方法描述符符索引</span><br><span class="line">    u2             attributes_count;  //属性个数</span><br><span class="line">    attribute_info attributes[attributes_count]; //属性表的具体内容</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>访问标识，字段表确定的是字段有什么修饰，public ,private 等</li>
+<li>方法简单名索引，方法描述描述符索引就是对常量池中方法的简单名和方法描述符的引用</li>
+<li>属性表，包含方法的一些额外信息，比如 Code 属性就是方法中代码的具体内容。Exceptions 属性是方法抛出的异常。</li>
+</ul>
+<h4 id="8-属性表集合"><a href="#8-属性表集合" class="headerlink" title="(8)属性表集合"></a>(8)属性表集合</h4><p>一个字段中有 ConstantValue 属性，一个方法中有 Code，Exceptions 等属性，同样在一个类或者接口中也有一些额外的信息。</p>
+<h2 id="三-类加载机制"><a href="#三-类加载机制" class="headerlink" title="三.类加载机制"></a>三.类加载机制</h2><p>类加载机制就是 虚拟机把描述类或接口的数据从 Class 文件记载到内存，并对数据进行校验，转换解析和初始化最终形成可以被虚拟机直接使用的 Java 类型。有了类加载，在运行期间通过类型的动态加载和动态链接就可以实现了 Java  语言的动态扩展。</p>
+<h3 id="1-类加载的过程"><a href="#1-类加载的过程" class="headerlink" title="1.类加载的过程"></a>1.类加载的过程</h3><p>类加载包括七个阶段</p>
+<p><img src="/2018/08/10/JVM-执行子系统/image2.png" alt="image.png"></p>
+<p>类加载的过程并不是严格按照上面的顺序进行，有可能一个过程未全部完成就可以进入下一个过程，并且解析阶段能在初始化前也可能在初始化后，但是初始化的时候，加载验证准备是一定完成了的。</p>
+<h4 id="1-加载"><a href="#1-加载" class="headerlink" title="(1)加载"></a>(1)加载</h4><ol>
+<li><p>通过一个类的全限定名来获取这个类的二进制流，一个 “Class 文件”可以从多个渠道获取，不一定是编写的 Java 程序，通常由一下渠道：</p>
+<ul>
+<li>从 zip ，jar, 等包读取</li>
+<li>从网络获取</li>
+<li>运行时计算生成，动态代理技术</li>
+<li>由其他文件生成</li>
+<li>从数据库中读取等</li>
+</ul>
+</li>
+<li><p>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构</p>
+</li>
+<li><p>在内存中生成一个代表这个类的 java.lang.class 对象，作为方法区这个类的各种数据的访问接口，这个对象是存放在方法区的，不是 Java 堆。</p>
+</li>
+<li><p>对于数组，数组的元素是通过类加载器创建的，但是对于数组对象本身，是由虚拟机创建的。</p>
+</li>
+</ol>
+<h4 id="2-连接-验证"><a href="#2-连接-验证" class="headerlink" title="(2)连接-验证"></a>(2)连接-验证</h4><p>class 文件可以从各个途径而来，因此仅仅靠编译器验证是不够的，大致的验证的类型有;</p>
+<ol>
+<li>文件格式验证,检查 Class 文件格式的规范</li>
+<li>元数据验证,主要检查类的继承关系，修饰等</li>
+<li>字节码验证，检查程序语法，逻辑等。</li>
+<li>符号引用验证，对类引用到的本类以外的信息进行匹配校验<br>确保解析动作能够正常执行。</li>
+</ol>
+<h4 id="3-连接-准备"><a href="#3-连接-准备" class="headerlink" title="(3)连接-准备"></a>(3)连接-准备</h4><p>构造与这个类相关联的一个方法表，每个元素都是当前类和父类非私有实例方法的引用。</p>
+<p>为类的静态变量分配内存并设置初始值的阶段，这些变量使用的内存都在方法区。对于 static 修饰的，初始化为 0 ，false ,null 等，而对于 static final  则可以初始化为 前面所说的字段表中的属性 ConstantValue ,也就是指定的初始值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public static int i; 初始化为 0 </span><br><span class="line">public static final int j = 1; 初始为 1 ，1 存放在字段表中的 ConstantValue 属性。</span><br></pre></td></tr></table></figure></p>
+<h4 id="4-连接-解析"><a href="#4-连接-解析" class="headerlink" title="(4)连接-解析"></a>(4)连接-解析</h4><p>解析阶段将常量池中的符号引用替换为直接引用的过程。符号引用是以一组符号来描述所引用的目标，就是前面说的类和接口，字段，方法的符号引用。直接引用是可以直接指向目标的指针。之前说过解析可能在初始化前也可能初始化后，就是因为对于一些需要呈现多态特性的类型比如重写方法，有可能在运行的时候才能确定其最终的目标类或者目标方法，这个过程就是通过解析完成的，将未确定的变为确定的。</p>
+<h5 id="1-类或接口解析"><a href="#1-类或接口解析" class="headerlink" title="1.类或接口解析"></a>1.类或接口解析</h5><ul>
+<li>是数组类型，先加载数组元素的类型，然后虚拟机再生成一个数组对象</li>
+<li>不是数组类型将需要解析的类的全限定名传递给当前类的类加载器去加载这个类</li>
+</ul>
+<p>解析完成之前还需要进行符号引用验证确定是否有访问权限。</p>
+<h5 id="2-字段解析"><a href="#2-字段解析" class="headerlink" title="2.字段解析"></a>2.字段解析</h5><ul>
+<li>先解析字段所属的类</li>
+<li>先对字段所属的类进行查找，是否包含简单名称和字段描述匹配的字段</li>
+<li>没有就从实现的接口按继承关系查找</li>
+<li>没有就按继承关系从 父类查找</li>
+</ul>
+<p>查找失败就抛出异常，查找成功就放回引用，对这个字段进行权限验证。</p>
+<h5 id="3-方法解析"><a href="#3-方法解析" class="headerlink" title="3.方法解析"></a>3.方法解析</h5><h6 id="类方法解析"><a href="#类方法解析" class="headerlink" title="类方法解析"></a>类方法解析</h6><ul>
+<li>先解析方法所属的类</li>
+<li>判断方法是不是类中方法，不是就抛出异常</li>
+<li>在方法所属的类中查找</li>
+<li>没有就从父类中查找</li>
+<li>没有就从继承接口中查找，找到就证明这是一个抽象类，并抛出异常</li>
+</ul>
+<p>查找失败同样抛出异常，成功就直接返回引用。</p>
+<h6 id="接口方法解析"><a href="#接口方法解析" class="headerlink" title="接口方法解析"></a>接口方法解析</h6><ul>
+<li>先解析方法所属的接口</li>
+<li>判断方法是不是接口方法，不是就抛出异常</li>
+<li>在方法所属的接口中查找</li>
+<li>没有就从父接口中查找</li>
+</ul>
+<p>查找失败同样抛出异常，成功就直接返回引用。</p>
+<h4 id="5-初始化"><a href="#5-初始化" class="headerlink" title="(5)初始化"></a>(5)初始化</h4><p>初始化就是就职执行一些静态变量的赋值或者静态语句块中的语句，也就是 &lt; clinit &gt; 方法 “class init”。编译器会收集类变量赋值和静态语句块语句，按顺序执行，因此在这个过程中静态语句块但是可以对后定义 static 变量赋值,但是不能访问。</p>
+<ul>
+<li>虚拟机保证子类的&lt; clinit &gt; 执行之前，父类的&lt; clinit &gt;已经执行 </li>
+<li>执行接口的 &lt; clinit &gt;不会执行父接口的&lt; clinit &gt;，接口的实现类也不会执行接口的 &lt; clinit &gt; </li>
+<li>如果一个类或者接口没有静态语句块或者类变量赋值操作可以不生成 &lt; clinit &gt;</li>
+<li>虚拟机保证<clinit>  在多线程的环境下能被正确的加锁，同步 </clinit></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class Test&#123;</span><br><span class="line">    static &#123;</span><br><span class="line">        i = 0;//可以赋值</span><br><span class="line">        System.out.println(i); //不能访问</span><br><span class="line">    &#125;</span><br><span class="line">    static int i = 1; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-类加载器"><a href="#2-类加载器" class="headerlink" title="2.类加载器"></a>2.类加载器</h3><p>类加载器的作用就是通过一个类的全限定名，来获取描述此类的二进制字节流。</p>
+<h4 id="类加载器的种类"><a href="#类加载器的种类" class="headerlink" title="类加载器的种类"></a>类加载器的种类</h4><ul>
+<li>启动类加载器，负责加载lib 库中，或者指定路径中的类，启动类加载器无法被 java 程序直接应用。</li>
+<li>扩展类加载器，负责加载lib/ext 或者指定的路径。</li>
+<li>应用程序类加载器，系统类加载器，负责加载用户路径上指定的类库。</li>
+</ul>
+<p>对于这三种类加载器的使用使用了双亲委派模式:</p>
+<ul>
+<li>如果一个类加载器收到类加载的请求，首先不会尝试加载这个类，而是交给父类，如果父加载器无法完成，子加载器才会尝试自己加载. </li>
+<li>类随着加载器一起具备了一种有优先级的层次关系，因此  Object 总是同一个类的加载器加载，因此在各个环境中都是同一个类.</li>
+</ul>
+<p><img src="/2018/08/10/JVM-执行子系统/image3.png" alt="image.png"></p>
+<p>对于同一个类的比较，只有在同一个类的加载器前提下才能讨论是不是同一个类。也就是两个类即使名字一样，来自同一个 Class 文件，只要是被不同的类加载器加载，那么这两个类就一定不相等。</p>
+<h2 id="四-执行子系统"><a href="#四-执行子系统" class="headerlink" title="四.执行子系统"></a>四.执行子系统</h2><p>java 程序的执行实际上也就是一个个方法的执行过程，从 main 方法开始，运行，输出结果，对于虚拟机也是如此，Java 虚拟机的执行引擎就是输入字节码文件，处理字节码过程，输出执行的过程。方法的执行相关的数据结构就是虚拟机栈（或本地方法栈）。</p>
+<h3 id="1-运行时栈帧结构"><a href="#1-运行时栈帧结构" class="headerlink" title="1.运行时栈帧结构"></a>1.运行时栈帧结构</h3><p>栈帧是用于支持虚拟机进行方法调用和方法执行的数据结构<br>是虚拟机栈的栈元素，方法的开始到执行完成都对应着一个栈帧的入栈和出栈。</p>
+<p><img src="/2018/08/10/JVM-执行子系统/image4.png" alt="image.png"></p>
+<ul>
+<li>局部变量表，用于存放方法参数和方法内部定义的局部变量，以变量槽（Slot）为单位,一个变量槽可以存放一个 32 位的数据类型，boolean ,byte，char  等。在方法执行的时候，虚拟机使用局部变量表完成参数值到参数变量表的传递。</li>
+<li>操作数栈，是一个后入先出的结构，在方法执行的时候各种指令字节码会往这个操作数栈入栈或者出栈。</li>
+<li>动态链接，每个栈帧包含了一个指向运行时常量池中该方法符号引用的引用，这个引用是为了方法调用的动态连接。一个符号引用在运行时被转换为直接引用，因此通过动态连接就可以找到具体的方法。</li>
+<li>方法返回地址，当一个方法正常返回时有可能有或者返回值，返回地址可以是程序计数器的值。当有异常抛出的时候不会产生返回值，返回地址由异常处理器确定。</li>
+</ul>
+<h3 id="2-方法的调用"><a href="#2-方法的调用" class="headerlink" title="2.方法的调用"></a>2.方法的调用</h3><p>方法调用的过程就是确定被调用方法的具体版本，因为 java 中存在着重写，重载，因此有可能在运行期间才能确定一个目标方法的直接引用。可以将方法的直接引用的确定划分为两个中情况：解析和分派。</p>
+<ul>
+<li>解析，指的是在编译器就可以确定直接引用的方法，该方法在 java 程序中可以唯一确定，即不是重载，重写方法。</li>
+<li>分派，可分为两种静态分派和动态分派</li>
+<li><ul>
+<li>静态分派，对应重载方法，虽然是重载方法，但是该方法的直接引用可以根据传递的参数就直接确定目标方法，因此，对于重载方法，静态分派的过程实际也是在编译器就可以确定直接引用的方法的过程。</li>
+</ul>
+</li>
+<li><ul>
+<li>动态分配，对于重写的方法，因为对调用者进行类型判断，所以只有在方法执行的时候根据实际类型去确定方法的引用。</li>
+</ul>
+</li>
+</ul>
+<p>对于解析和静态指派也叫做静态绑定，而动态分配也叫动态绑定。</p>
+<h4 id="1-方法的指令"><a href="#1-方法的指令" class="headerlink" title="1.方法的指令"></a>1.方法的指令</h4><p>在 Java 虚拟机中，一共有 5 条方法调用的字节码指令：<br><img src="/2018/08/10/JVM-执行子系统/image5.png" alt="image.png"></p>
+<p>虚方法：除了静态方法，私有实例方法，实例构造器，父类方法，final 修饰的方法以外的方法称为虚方法。</p>
+<h4 id="2-解析"><a href="#2-解析" class="headerlink" title="2.解析"></a>2.解析</h4><p>只要能被 invokestatic，invokespecial 调用的方法都可以在解析过程中完成将符号引用解析为直接引用，除此之外还有被 final 修饰的方法，虽然 final 修饰的方法是通过 invokesvirtual 指令调用的，但是 final 方法不能被继承，因此也是可以唯一确定的。总的来说，解析过程的方法包括：<br>静态方法，私有实例方法，实例构造器，super 父类方法 以及final 修饰的方法。</p>
+<h4 id="3-静态分派（确定重载方法）"><a href="#3-静态分派（确定重载方法）" class="headerlink" title="3.静态分派（确定重载方法）"></a>3.静态分派（确定重载方法）</h4><blockquote>
+<p>重载即同一个类中或者子类中多个名字相同，但参数类型不同相同的方法</p>
+</blockquote>
+<p>重载的方法在编译过程中即可完成识别。具体到每一个方法调用，Java 编译器会根据所传入的参数的声明的类型来选取重载方法。具体规则如下：</p>
+<ul>
+<li>1.在重载方法中，不考虑基本类型的自动装拆箱和可变长参数，进行选取；</li>
+<li>2.如果没有，就允许自动装拆箱但不允许可变长参数下选取；</li>
+<li>3.如果没有，就允许自动装拆箱以及可变长参数下选取。</li>
+</ul>
+<p>如果在同一阶段有多个适配方法方法就根据继承关系选取最为贴切的方法。</p>
+<h4 id="4-动态分派（确定重写方法）"><a href="#4-动态分派（确定重写方法）" class="headerlink" title="4.动态分派（确定重写方法）"></a>4.动态分派（确定重写方法）</h4><p>Java 中非私有实例方法会被编译成 invokevirtual 指令，而接口方法被编译成 invokeinterface  指令，对于这两种指令，java 虚拟机都要确定调用者的动态类型，来确定目标方法。对于静态绑定，直接引用指向的是一个具体的目标方法，而对于动态绑定，直接引用指向的是一个方法表的索引。</p>
+<p>在前面类加载中连接 -准备过程说过，在类加载时会构造一个方法表，在这个方法表中，子类的方法表包含父类方法表中所有方法，且子类方法表中的索引值与重写的父类方法中的索引相同，对于重写的方法的入口地址，子类中重写的方法的地址是子类实现的方法的入口地址。例如：</p>
+<p>父类 A 中的方法表<br>| 索引 | 方法                     | 地址 |<br>| —- | ———————— | —- |<br>| 0    | A.toString()             | 0000 |<br>| 1    | A. name() 这是个抽象方法 | 0001 |</p>
+<p>子类 a1  中的方法表<br>| 索引 | 方法         | 地址 |<br>| —- | ———— | —- |<br>| 0    | A.toString() | 0000 |<br>| 1    | a1. name()   | 0002 |</p>
+<p>子类 a2 中的方法表<br>| 索引 | 方法            | 地址 |<br>| —- | ————— | —- |<br>| 0    | A.toString()    | 0000 |<br>| 1    | a2. name()      | 0003 |<br>| 2    | a2.changeName() | 0004 |</p>
+<p>对于重写方法的确定实际上就是在执行指令的时候访问栈上的调用者，读取调用者的动态类型，读取该类型的方法表，读取方法表中某个索引值对应的目标方法。进而将符号引用替换为对应的索引，根据索引和对应的调用类型，就可以确定方法的地址。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java-虚拟机/" rel="tag"># Java 虚拟机</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/08/JVM-自动内存管理机制/" rel="next" title="JVM----自动内存管理机制">
+                <i class="fa fa-chevron-left"></i> JVM----自动内存管理机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+ <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/d.jpg"
+                alt="海盗的帽子" />
+            
+              <p class="site-author-name" itemprop="name">海盗的帽子</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yishengma" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/m0_38089373" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-copyright"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-简介"><span class="nav-text">一.简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-Class-文件"><span class="nav-text">二.Class 文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-简介"><span class="nav-text">1.简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-文件结构"><span class="nav-text">2.文件结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-魔数"><span class="nav-text">(1)魔数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-主次版本号"><span class="nav-text">(2)主次版本号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-常量池"><span class="nav-text">(3)常量池</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-访问标志"><span class="nav-text">(4)访问标志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-类索引，父类索引，接口索引集合"><span class="nav-text">(5)类索引，父类索引，接口索引集合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-字段表集合"><span class="nav-text">(6)字段表集合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-方法表集合"><span class="nav-text">(7)方法表集合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-属性表集合"><span class="nav-text">(8)属性表集合</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-类加载机制"><span class="nav-text">三.类加载机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-类加载的过程"><span class="nav-text">1.类加载的过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-加载"><span class="nav-text">(1)加载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-连接-验证"><span class="nav-text">(2)连接-验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-连接-准备"><span class="nav-text">(3)连接-准备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-连接-解析"><span class="nav-text">(4)连接-解析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-类或接口解析"><span class="nav-text">1.类或接口解析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-字段解析"><span class="nav-text">2.字段解析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-方法解析"><span class="nav-text">3.方法解析</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#类方法解析"><span class="nav-text">类方法解析</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#接口方法解析"><span class="nav-text">接口方法解析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-初始化"><span class="nav-text">(5)初始化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-类加载器"><span class="nav-text">2.类加载器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#类加载器的种类"><span class="nav-text">类加载器的种类</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-执行子系统"><span class="nav-text">四.执行子系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-运行时栈帧结构"><span class="nav-text">1.运行时栈帧结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-方法的调用"><span class="nav-text">2.方法的调用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-方法的指令"><span class="nav-text">1.方法的指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-解析"><span class="nav-text">2.解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-静态分派（确定重载方法）"><span class="nav-text">3.静态分派（确定重载方法）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-动态分派（确定重写方法）"><span class="nav-text">4.动态分派（确定重写方法）</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-[object Object]"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">海盗的帽子</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://rawgit.com/yishengma/147d4f60feb7cdc79c355ad2da83d513/raw/d624cffa8a67b4da07048d59ba0031e2860b1b2b/md5.min.js"></script>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '15e7b5ecca662534768c',
+          clientSecret: '26dc23d2d7a013bbcce94772f42f2e434247c6ba',
+          repo: 'yishengma.github.io',
+          owner: 'yishengma',
+          admin: ['yishengma'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2LveBulvcfzvQ6MBGz9b3URY-gzGzoHsz", "7mcKtxSVSDUSpSxFfdxBmyaP");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
