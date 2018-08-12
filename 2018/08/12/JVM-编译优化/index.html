@@ -64,7 +64,7 @@
 
 
 
-  <meta name="keywords" content="Android 基础," />
+  <meta name="keywords" content="Java 虚拟机," />
 
 
 
@@ -75,23 +75,20 @@
 
 
 
-<meta name="description" content="一.简介 Context 翻译为上下文环境，是一个应用程序环境信息的接口。  如果以 Android 系统角度来看可以理解为某一与操作系统的交互的具体场景，比如 Activity 的具体功能，Service 的后台运行等。如果以程序的角度看，Context 是一个抽象类，维持 Android 程序中各组件能够正常工作的一个核心功能类。通过 Context 可以获取应用程序的资源和类，也可以进行一些">
-<meta name="keywords" content="Android 基础">
+<meta name="description" content="一.简介Java 语言的编译期大致可以分为三种：  前端编译器，把.java 文件编译成class 文件 后端运行期编译器 JIT 编译器，把字节码转变为机器码的过程 静态提前编译器 AOT ，直接把 .java 文件编译成 机器码  不同的编译时期，为了提高代码的运行效率，JVM 会进行一定的编译优化。 二.早期优化早期编译主要是第一种编译，即把 .java 文件编译成 class 文件，这个过">
+<meta name="keywords" content="Java 虚拟机">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android----Context">
-<meta property="og:url" content="https://yishengma.github.io/2018/08/02/Android-Context/index.html">
+<meta property="og:title" content="JVM----编译优化">
+<meta property="og:url" content="https://yishengma.github.io/2018/08/12/JVM-编译优化/index.html">
 <meta property="og:site_name" content="海盗的帽子的博客">
-<meta property="og:description" content="一.简介 Context 翻译为上下文环境，是一个应用程序环境信息的接口。  如果以 Android 系统角度来看可以理解为某一与操作系统的交互的具体场景，比如 Activity 的具体功能，Service 的后台运行等。如果以程序的角度看，Context 是一个抽象类，维持 Android 程序中各组件能够正常工作的一个核心功能类。通过 Context 可以获取应用程序的资源和类，也可以进行一些">
+<meta property="og:description" content="一.简介Java 语言的编译期大致可以分为三种：  前端编译器，把.java 文件编译成class 文件 后端运行期编译器 JIT 编译器，把字节码转变为机器码的过程 静态提前编译器 AOT ，直接把 .java 文件编译成 机器码  不同的编译时期，为了提高代码的运行效率，JVM 会进行一定的编译优化。 二.早期优化早期编译主要是第一种编译，即把 .java 文件编译成 class 文件，这个过">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://yishengma.github.io/2018/08/02/Android-Context/Context1.png">
-<meta property="og:image" content="https://yishengma.github.io/2018/08/02/Android-Context/Context2.png">
-<meta property="og:image" content="https://yishengma.github.io/2018/08/02/Android-Context/Context3.png">
-<meta property="og:image" content="https://yishengma.github.io/2018/08/02/Android-Context/Context4.png">
-<meta property="og:updated_time" content="2018-08-02T14:28:29.636Z">
+<meta property="og:image" content="https://yishengma.github.io/2018/08/12/JVM-编译优化/image1.png">
+<meta property="og:updated_time" content="2018-08-12T12:24:12.361Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android----Context">
-<meta name="twitter:description" content="一.简介 Context 翻译为上下文环境，是一个应用程序环境信息的接口。  如果以 Android 系统角度来看可以理解为某一与操作系统的交互的具体场景，比如 Activity 的具体功能，Service 的后台运行等。如果以程序的角度看，Context 是一个抽象类，维持 Android 程序中各组件能够正常工作的一个核心功能类。通过 Context 可以获取应用程序的资源和类，也可以进行一些">
-<meta name="twitter:image" content="https://yishengma.github.io/2018/08/02/Android-Context/Context1.png">
+<meta name="twitter:title" content="JVM----编译优化">
+<meta name="twitter:description" content="一.简介Java 语言的编译期大致可以分为三种：  前端编译器，把.java 文件编译成class 文件 后端运行期编译器 JIT 编译器，把字节码转变为机器码的过程 静态提前编译器 AOT ，直接把 .java 文件编译成 机器码  不同的编译时期，为了提高代码的运行效率，JVM 会进行一定的编译优化。 二.早期优化早期编译主要是第一种编译，即把 .java 文件编译成 class 文件，这个过">
+<meta name="twitter:image" content="https://yishengma.github.io/2018/08/12/JVM-编译优化/image1.png">
 
 
 
@@ -121,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="https://yishengma.github.io/2018/08/02/Android-Context/"/>
+  <link rel="canonical" href="https://yishengma.github.io/2018/08/12/JVM-编译优化/"/>
 
 
 
 
 
-  <title>Android----Context | 海盗的帽子的博客</title>
+  <title>JVM----编译优化 | 海盗的帽子的博客</title>
   
 
 
@@ -278,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/08/02/Android-Context/">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/08/12/JVM-编译优化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="海盗的帽子">
@@ -295,7 +292,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Android----Context</h1>
+          <h1 class="post-title" itemprop="name headline">JVM----编译优化</h1>
         
 
         <div class="post-meta">
@@ -307,8 +304,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-02T22:25:35+08:00">
-                2018-08-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-12T20:22:31+08:00">
+                2018-08-12
               </time>
             
 
@@ -323,8 +320,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-08-02T22:28:29+08:00">
-                2018-08-02
+              <time title="更新于" itemprop="dateModified" datetime="2018-08-12T20:24:12+08:00">
+                2018-08-12
               </time>
             
           </span>
@@ -337,7 +334,7 @@
 
           
           
-             <span id="/2018/08/02/Android-Context/" class="leancloud_visitors" data-flag-title="Android----Context">
+             <span id="/2018/08/12/JVM-编译优化/" class="leancloud_visitors" data-flag-title="JVM----编译优化">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -368,45 +365,95 @@
       
 
       
-        <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一.简介"></a>一.简介</h2><p> Context 翻译为上下文环境，是一个应用程序环境信息的接口。</p>
-<p> 如果以 Android 系统角度来看可以理解为某一与操作系统的交互的具体场景，比如 Activity 的具体功能，Service 的后台运行等。如果以程序的角度看，Context 是一个抽象类，维持 Android 程序中各组件能够正常工作的一个核心功能类。通过 Context 可以获取应用程序的资源和类，也可以进行一些应用程序的操作。</p>
-<p> Context 的设计采用了代理模式，它的功能的具体实现类是 ContextImpl ，而间接的实现类是 Activity ，Service 和 Application。因此一个应用程序 Context 的实例的对象的个数就是 Activity ， Service 和一个 Application 这三者的总数。它们的具体关系如图:</p>
-<p><img src="/2018/08/02/Android-Context/Context1.png" alt="image.png"><br> 可以看到在代理模式中 ContextWrapper 的变量 mBase 是一个 ContextImpl 类型，通常Activity ， Service 和  Application 中的操作最终都会通过 mBase 交给 ContextImpl 去实现，最后在通过 mOuterContext 对结果进行放回，显然这个变量实际上就是Context 的三个具体的实现。下面就看这三种 Context 是如何创建并与 ContextImpl 关联的。</p>
-<h2 id="二-创建-Context"><a href="#二-创建-Context" class="headerlink" title="二.创建 Context"></a>二.创建 Context</h2><h3 id="1-Application-Context"><a href="#1-Application-Context" class="headerlink" title="1.Application Context"></a>1.Application Context</h3><p>一个应用程序启动时候总是会创建 Application，具体是由 LoadedApk 实现。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Application app = r.loadedApk.makeApplication(false, mInstrumentation);</span><br><span class="line"></span><br><span class="line">// LoadedApk 中</span><br><span class="line">public Application makeApplication(boolean forceDefaultAppClass,</span><br><span class="line">         Instrumentation instrumentation) &#123;</span><br><span class="line">    </span><br><span class="line">     ...</span><br><span class="line">     Application app = null;</span><br><span class="line"></span><br><span class="line">     ...</span><br><span class="line">     ContextImpl appContext = ContextImpl.createAppContext(mActivityThread, this);</span><br><span class="line">     app = mActivityThread.mInstrumentation.newApplication(</span><br><span class="line">                 cl, appClass, appContext);</span><br><span class="line">     appContext.setOuterContext(app);</span><br></pre></td></tr></table></figure>
-<p>在这里可以看到一个大致的框架，这里可以分为三个步骤去看;</p>
+        <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一.简介"></a>一.简介</h2><p>Java 语言的编译期大致可以分为三种：</p>
 <ul>
-<li>首先会去创建 Application 的 ContextImpl </li>
-<li>然后把这个 ContextImpl 作为一个参数传到 newApplcation 方法中去创建 Application </li>
-<li>最后将 ContextImpl 和 Application 关联。</li>
+<li>前端编译器，把.java 文件编译成class 文件</li>
+<li>后端运行期编译器 JIT 编译器，把字节码转变为机器码的过程</li>
+<li>静态提前编译器 AOT ，直接把 .java 文件编译成 机器码</li>
 </ul>
-<p>第一步想看 ContextImpl 的静态方法 createAppContext<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">static ContextImpl createAppContext(ActivityThread mainThread, LoadedApk loadedApk) &#123;</span><br><span class="line">        ...</span><br><span class="line">        ContextImpl context = new ContextImpl(null, mainThread, loadedApk, null, null, null, 0,</span><br><span class="line">                null);</span><br><span class="line">        context.setResources(loadedApk.getResources());</span><br><span class="line">        return context;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>很明显就是创建 ContextImp,并设置应用的资源。接着看第二步，创建 Application。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> //在 Instrumentation 类中</span><br><span class="line"> static public Application newApplication(Class&lt;?&gt; clazz, Context context)</span><br><span class="line">       ...</span><br><span class="line">       Application app = (Application)clazz.newInstance();</span><br><span class="line">       app.attach(context);//这里的Context 就是ContextImpl </span><br><span class="line">       return app;</span><br><span class="line">   &#125;</span><br><span class="line"> // 在 Application 中</span><br><span class="line">/* package */ final void attach(Context context) &#123;</span><br><span class="line">       attachBaseContext(context);</span><br><span class="line">       mLoadedApk = ContextImpl.getImpl(context).mLoadedApk;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"> // 在 ContextWrapper 类中</span><br><span class="line">protected void attachBaseContext(Context base) &#123;</span><br><span class="line">       if (mBase != null) &#123;</span><br><span class="line">           throw new IllegalStateException(&quot;Base context already set&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       mBase = base;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<p>可以看到首先就是通过类加载去创建 Application，然后就将 ContextImpl 赋值给 mBase ，这样 Application 和 ContextImpl 的关联就建立。<br>最后看第三步。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    appContext.setOuterContext(app);</span><br><span class="line">    //在 ContextImpl 中</span><br><span class="line">final void setOuterContext(Context context) &#123;</span><br><span class="line">        mOuterContext = context;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>将返回的 Application 赋值给 ContextImpl 的变量 mOuterContext，这样 Context 的代理模式完成关联，Application Context 也创建完毕。</p>
-<p>流程如图：<br><img src="/2018/08/02/Android-Context/Context2.png" alt="image.png"></p>
-<h3 id="2-Activity-Context"><a href="#2-Activity-Context" class="headerlink" title="2.Activity Context"></a>2.Activity Context</h3><p>Activity Context 的创建可以定位到 Activity 启动过程，在 ActivityThread  中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">    private Activity performLaunchActivity(ActivityClientRecord r, Intent customIntent) &#123;</span><br><span class="line">        </span><br><span class="line">        ...</span><br><span class="line">        ContextImpl appContext = ContextImpl 作为参数</span><br><span class="line">关联ContextImpl(r);</span><br><span class="line">        Activity activity = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            java.lang.ClassLoader cl = appContext.getClassLoader();</span><br><span class="line">            activity = mInstrumentation.newActivity(</span><br><span class="line">                    cl, component.getClassName(), r.intent);</span><br><span class="line">            StrictMode.incrementExpectedActivityCount(activity.getClass());</span><br><span class="line">        </span><br><span class="line">        ...</span><br><span class="line">        appContext.setOuterContext(activity);</span><br><span class="line">            </span><br><span class="line">        activity.attach(appContext, this, getInstrumentation(), r.token,r.ident, app, r.intent, r.activityInfo, title, r.parent,r.embeddedID, r.lastNonConfigurationInstances, config,r.referrer, r.voiceInteractor, window, r.configCallback);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>整个过程和 Application 比较相似，不过有一点不同，这里分为 4 步来看:</p>
+<p>不同的编译时期，为了提高代码的运行效率，JVM 会进行一定的编译优化。</p>
+<h2 id="二-早期优化"><a href="#二-早期优化" class="headerlink" title="二.早期优化"></a>二.早期优化</h2><p>早期编译主要是第一种编译，即把 .java 文件编译成 class 文件，这个过程的编译可以分为三个部分;</p>
 <ul>
-<li>创建 ContextImpl 对象</li>
-<li>创建 Activity 实例</li>
-<li>ContextImpl 关联 Activity</li>
-<li>Activity 关联 ContextImpl</li>
+<li>解析与填充符号表.</li>
+<li>插入式注解处理器的注解处理过程.</li>
+<li>分析与字节码生成过程</li>
 </ul>
-<p>先看第一步过程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">private ContextImpl createBaseContextForActivity(ActivityClientRecord r) &#123;</span><br><span class="line">   ...</span><br><span class="line">    ContextImpl appContext = ContextImpl.createActivityContext(</span><br><span class="line">            this, r.loadedApk, r.activityInfo, r.token, displayId, r.overrideConfig);</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> static ContextImpl createActivityContext(ActivityThread mainThread,</span><br><span class="line">    ...</span><br><span class="line">    ContextImpl context = new ContextImpl(null, mainThread, loadedApk, activityInfo.splitName,</span><br><span class="line">            activityToken, null, 0, classLoader);</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure></p>
-<p>与 application 不同的是，这里创建的是对应的 Activity 的 ContextImpl ，具有不一样的功能实现。接着实例化 Activity</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public Activity newActivity(ClassLoader cl, String className,</span><br><span class="line">           Intent intent)</span><br><span class="line">           throws InstantiationException, IllegalAccessException,</span><br><span class="line">           ClassNotFoundException &#123;</span><br><span class="line">       return (Activity)cl.loadClass(className).newInstance();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<p>同样也是通过类加载创建 Activity。在第三四步中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">//第三步，在ContextImpl 中</span><br><span class="line">final void setOuterContext(Context context) &#123;</span><br><span class="line">    mOuterContext = context;</span><br><span class="line">&#125;</span><br><span class="line">//第四步，在 Activity中</span><br><span class="line"> final void attach(Context context, ActivityThread aThread,</span><br><span class="line">        Instrumentation instr, IBinder token, int ident,</span><br><span class="line">        Application application, Intent intent, ActivityInfo info,</span><br><span class="line">        CharSequence title, Activity parent, String id,</span><br><span class="line">        NonConfigurationInstances lastNonConfigurationInstances,</span><br><span class="line">        Configuration config, String referrer, IVoiceInteractor voiceInteractor,</span><br><span class="line">        Window window, ActivityConfigCallback activityConfigCallback) &#123;</span><br><span class="line">    ...</span><br><span class="line">    attachBaseContext(context);</span><br><span class="line">    ...    </span><br><span class="line">            </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line">protected void attachBaseContext(Context newBase) &#123;</span><br><span class="line">    super.attachBaseContext(newBase);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//在 ContextWrapper 中</span><br><span class="line"> protected void attachBaseContext(Context base) &#123;</span><br><span class="line">    if (mBase != null) &#123;</span><br><span class="line">        throw new IllegalStateException(&quot;Base context already set&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    mBase = base;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>通过 ContextImpl 和 Activity 的相互关联，Activity Context 的创建也就完成了，以后 Activity 的任务大多就是通过 ContextImpl 实现。</p>
-<p>流程如图：<br><img src="/2018/08/02/Android-Context/Context3.png" alt="image.png"></p>
-<h3 id="3-Service-Context"><a href="#3-Service-Context" class="headerlink" title="3.Service Context"></a>3.Service Context</h3><p>Service 的Context 的创建和 Activity 的十分相似.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">private void handleCreateService(CreateServiceData data) &#123;</span><br><span class="line">         LoadedApk loadedApk = getLoadedApkNoCheck(</span><br><span class="line">              data.info.applicationInfo, data.compatInfo);</span><br><span class="line">      Service service = null;</span><br><span class="line">      try &#123;</span><br><span class="line">          java.lang.ClassLoader cl = loadedApk.getClassLoader();</span><br><span class="line">          service = (Service) cl.loadClass(data.info.name).newInstance();</span><br><span class="line">      &#125; catch (Exception e) &#123;</span><br><span class="line">         ...</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      ContextImpl context = ContextImpl.createAppContext(this, loadedApk);</span><br><span class="line">      </span><br><span class="line">      context.setOuterContext(service);</span><br><span class="line"></span><br><span class="line">      ...</span><br><span class="line">      service.attach(context, this, data.info.name, data.token, app,</span><br><span class="line">              ActivityManager.getService());</span><br></pre></td></tr></table></figure></p>
-<p>整个流程没有大的变化，只是 Service 会先实例在去创建 ContextImpl ，而且这里的 ContextImpl  和 Activity 是不一样的。</p>
-<p>流程如图：<br><img src="/2018/08/02/Android-Context/Context4.png" alt="image.png"></p>
-<h2 id="三-Context-的使用"><a href="#三-Context-的使用" class="headerlink" title="三.Context 的使用"></a>三.Context 的使用</h2><p>前面说过 Context 的实现就是 Activity ，Service 和 Application ,因此如果对 Context 使用不当的话很容易发生内存泄漏，比如下面这两段代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public class A</span><br><span class="line">&#123;</span><br><span class="line">	private static Context mContext;</span><br><span class="line"> </span><br><span class="line">	public static void setContext(Context context)&#123;</span><br><span class="line">	    mContext = context;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class B</span><br><span class="line">&#123;</span><br><span class="line">    private static B sInstance;</span><br><span class="line">	private Context mContext;</span><br><span class="line"> </span><br><span class="line">	private B(Context context)</span><br><span class="line">	&#123;</span><br><span class="line">		this.mContext = context;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	public static synchronized B getInstance(Context context)</span><br><span class="line">	&#123;</span><br><span class="line">		if (sInstance == null)</span><br><span class="line">		&#123;</span><br><span class="line">			sInstance = new B(context);</span><br><span class="line">		&#125;</span><br><span class="line">		return sInstance;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在第一段代码中有一个静态的 Context ,在第二段是一个单例模式，一个静态实例拥有一个 Context 变量。在这两种情况下，Context 的周期就和应用程序一样，这是如果赋值时 Activity 或者 Service 就会使得 Activity 和 Service 在退出后不能正常被回收，因为还有 Context 引用。因此建议尽量 Application Context ，因为 Application Context  的周期就是整个应用程序，所以不用担心内存泄漏。但是在某些情况比如创建 Dialog, 或者启动组建的时候就只能使用 Activity Context 或者 Service Context ,这个时候就要注意内存泄漏问题了。</p>
+<h3 id="1-解析与填充符号表"><a href="#1-解析与填充符号表" class="headerlink" title="1.解析与填充符号表"></a>1.解析与填充符号表</h3><p>解析分为词法解析，和语法解析</p>
+<h4 id="1-词法解析"><a href="#1-词法解析" class="headerlink" title="(1).词法解析"></a>(1).词法解析</h4><p>将源代码中的字符流转变为标记<token>集合，一个标记就是一个关键字，变量名，字面量，或者运算符. 比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int a = 1 + b;</span><br></pre></td></tr></table></figure></token></p>
+<p>这部分的标记集合的元素就是：int , a , = ,1 , + ,b</p>
+<h4 id="2-语法分析"><a href="#2-语法分析" class="headerlink" title="(2).语法分析"></a>(2).语法分析</h4><p>将标记集合构造成抽象语法树的过程，抽象语法树就是程序代码语法结构的树形表示，每个节点都是一种语法的结构。</p>
+<h4 id="3-填充符号表"><a href="#3-填充符号表" class="headerlink" title="(3)填充符号表"></a>(3)填充符号表</h4><p>符号表，是一组符号地址和符号信息构成的表格.</p>
+<h3 id="2-插入式注解处理器的注解处理过程"><a href="#2-插入式注解处理器的注解处理过程" class="headerlink" title="2.插入式注解处理器的注解处理过程"></a>2.插入式注解处理器的注解处理过程</h3><p>注解处理器可以读取，修改，添加抽象语法树种的任何元素，如果修改了编译器就回到解析过程重新开始处理直到没有注解处理器对语法树进行修改，每次循环称为一个 Round,通过注解处理器就可以干涉编译器的行为.</p>
+<h3 id="3-分析与字节码生成过程"><a href="#3-分析与字节码生成过程" class="headerlink" title="3.分析与字节码生成过程"></a>3.分析与字节码生成过程</h3><p>分析主要是程序的语义分析，对抽象语法树中进行上下文性质的审查，如类型审查等。包括下面三种;</p>
+<ul>
+<li>标注检查</li>
+<li>数据及控制流分析</li>
+<li>解语法糖</li>
+</ul>
+<h4 id="1-标注检查"><a href="#1-标注检查" class="headerlink" title="(1)标注检查"></a>(1)标注检查</h4><p>检查变量是否被声明，赋值之间的数据类型等，还有变量折叠 比如 int a = 1 + 2 ; 就会折叠成 int a = 3;</p>
+<h4 id="2-数据及控制流分析"><a href="#2-数据及控制流分析" class="headerlink" title="(2)数据及控制流分析"></a>(2)数据及控制流分析</h4><p>对程序上下文逻辑进行更进一步的验证，使用前是否赋值，方法是否有返回值等.</p>
+<h4 id="3-解语法糖"><a href="#3-解语法糖" class="headerlink" title="(3)解语法糖"></a>(3)解语法糖</h4><p>语法糖，也称糖衣语法.语法糖虽然不会提供实际性的功能改进，但是可以提高效率，提升语法的严谨性，减少编码出错的机会.虚拟机运行时不支持这些语法在编译阶段会还原简单的基础语法结构，并在相应的地方插入强制类型转换.Java 中的语法糖常见的有泛型，集合的遍历，变长参数，自动装箱和拆箱，条件编译等。</p>
+<ul>
+<li>泛型，java 语言中泛型实现方法称为类型擦除，这种泛型称为伪泛型，因此对于 List<string> 和 List<integer> 是同一个类。</integer></string></li>
+<li>自动装箱拆箱，转换为对应的包装方法和还原方法。</li>
+<li>遍历循环，则把代码还原成了迭代器的实现。</li>
+<li>条件编译，对于 if while 等条件分支中不成立的代码块消除掉。</li>
+</ul>
+<h4 id="4-字节码生成"><a href="#4-字节码生成" class="headerlink" title="(4)字节码生成"></a>(4)字节码生成</h4><p>这一步就是把前面的步骤生成的信息转化为字节码写到磁盘中并进行少量的代码添加和转换工作，比如实力构造器 <init> 和类构造器 <clinit> </clinit></init></p>
+<h2 id="三-晚期优化"><a href="#三-晚期优化" class="headerlink" title="三.晚期优化"></a>三.晚期优化</h2><p>晚期优化主要是对一些热点代码进行优化。当虚拟机发现某个方法或代码块运行特别频繁时就会把这些代码认定为热点代码。在运行时候虚拟机会将这些代码编译成与本地平台相关的机器码，这个编译器叫即时编译器。而对于之前的一般的编译是通过解释器进行解释执行。两个各有区别，但也会相互配合工作。</p>
+<h3 id="1-解释器和即时编译器"><a href="#1-解释器和即时编译器" class="headerlink" title="1.解释器和即时编译器"></a>1.解释器和即时编译器</h3><p>当程序需要迅速启动和执行的时候，解释器可以省去编译时间，立即执行，解释执行可以节约内存。<br>在程序运行的时候，编译器可以把越来越多的代码编译成本地代码，提高执行效率。</p>
+<p>解释器和编译器可以配合工作，可以从解释器转到即时编译器，<br>也可以从编译器逆优化到解释器。程序的执行一般先是解释器执行编译，在某些情况下解释器可启动即时编译器来进行一些优化编译，通常会为即时编译设置一个“逃生门”，这个逃生门的作用就是一旦一些优化不可执行编译的时候，即时编可以退回到解释器编译器，也叫逆优化。</p>
+<h4 id="1-即时编译器"><a href="#1-即时编译器" class="headerlink" title="1.即时编译器"></a>1.即时编译器</h4><p>即时编译器 （JIT 编译器），可以分为 Client 编译器和 Server 编译器，简称 C1 编译器和 C2 编译器。JVM 会根据不同的平台选取不同的编译器，以实现效率的提高。</p>
+<h4 id="2-分层编译"><a href="#2-分层编译" class="headerlink" title="2.分层编译"></a>2.分层编译</h4><p>为了让解释器和即时编译器能够实现效率最大化，一般将代码分为几个层次进行编译。</p>
+<ul>
+<li>第 0 层，程序解释执行。</li>
+<li>第 1 层 C1 编译将字节码编译为本地代码，进行简单的优化。</li>
+<li>第 2 层或以上 称 C2 编译，将字节码编译为 本地代码，会启用一些编译时较长的优化。</li>
+</ul>
+<h4 id="3-热点代码"><a href="#3-热点代码" class="headerlink" title="3.热点代码"></a>3.热点代码</h4><p>热点代码通常由两种;</p>
+<ul>
+<li>被多次调用的方法,编译时以整个方法做为编译对象，属于 JIT 编译方式。</li>
+<li>被多次执行的循环体，以循环体所在方法为对象，因为发生在方法中，所以称为栈上替换编译，OSP 编译。</li>
+</ul>
+<p>判断是否为热点代码也有两种方式：</p>
+<ul>
+<li>基于采样的热点探测，周期性检查各个线程的栈顶</li>
+<li>基于计数器热点探测，使用方法调用计数器和回边计数器，当超过一定值时就出发 JIT 编译。</li>
+</ul>
+<p>方法调用计数器，计数不是方法调用的绝对值，而是一段时间中的次数，<br>且这个次数没有超过阈值的时候会衰减。</p>
+<p>回边计数器（循环体执行次数），计数的是执行的绝对次数。</p>
+<p>这个是否进行热点代码优化判断过程如图：<br><img src="/2018/08/12/JVM-编译优化/image1.png" alt="image.png"></p>
+<p>提交编译请求后，解释方式会继续执行，而编译器的执行会在一个子线程中进行。</p>
+<p>对于 C1，编译的过程可分为三个阶段：</p>
+<ul>
+<li>第一阶段，将字节码狗造成高级中间代码 HIR,以静态分配的形式存在<br> SSA,进行一个方法内联，常量传播优化。</li>
+<li>第二阶段，从 HIR 产生低级中间代码 LIR。</li>
+<li>最后使用线性算法在 LIR 上分配寄存器，并在 LIR 上做窥孔优化，后产生机器代码。</li>
+</ul>
+<h3 id="2-编译优化"><a href="#2-编译优化" class="headerlink" title="2.编译优化"></a>2.编译优化</h3><p>对于这部分的优化实际上有很多方式，经典的有有如下几种：</p>
+<h4 id="1-公共子表达式消除"><a href="#1-公共子表达式消除" class="headerlink" title="(1).公共子表达式消除"></a>(1).公共子表达式消除</h4><p>如果一个表达式 A 已经计算过了，并且从先前的计算到现在的 A 中所有的变量的值都没有变化，那么这个 A 就可以成为子表达式。比如;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int a = b * c + (3 + b * c );</span><br><span class="line">//优化</span><br><span class="line">int a = A + (3 + A);</span><br><span class="line">//优化</span><br><span class="line">int a = 2 * A + 3;</span><br></pre></td></tr></table></figure>
+<h4 id="2-数组边界检查消除"><a href="#2-数组边界检查消除" class="headerlink" title="(2)数组边界检查消除"></a>(2)数组边界检查消除</h4><p>当访问一个数组的时候，经常会对数组的边界进行检查。而可以采取的优化就是在数据流分析时确定对数组的访问不会超过 数组范围就不再每次进行数组越界检查。</p>
+<h4 id="3-方法内联"><a href="#3-方法内联" class="headerlink" title="(3)方法内联"></a>(3)方法内联</h4><p>就是将一些没用的代码剔除，或者对于没有必要的方法跳转，将目标方法中的代码 “复制”到发起调用的方法之中，避免真实的方法调用。因为 Java 中的多态性的存在因此，内联有时不能确定目标方法，对应的情况如下：</p>
+<ul>
+<li>如果是非虚方法，直接进行内联。</li>
+<li>如果是虚方法</li>
+<li><ul>
+<li>只有一个版本，进行守护内联属于激进优化，要设置”逃生门“，没有变化时继续内联，若是加载了一个有变化的新类就直接抛弃退回解释执行。</li>
+</ul>
+</li>
+<li><ul>
+<li>如果有多个版本，就做内联缓存，在未发生内联的时候，缓存为空，第一次调用方法时，记录方法的调用者，后面每次调用就进行判断，一致就继续进行，不一致就取消内联。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-逃逸分析"><a href="#3-逃逸分析" class="headerlink" title="(3).逃逸分析"></a>(3).逃逸分析</h4><p>分析对象的动态作用域，当一个对象在方法中被定义后可能被外部方法所引用，例如传参，这称为方法逃逸，还有被其他线程访问的线程逃逸。</p>
+<p>如果一个对象不会逃逸那么可以进行如下优化;</p>
+<ul>
+<li>栈上分配,在栈上分配内存.</li>
+<li>同步消除,消除没有必要的线程同步。</li>
+<li>标量替换，标量是指一个数据不能再分解，比如数据类型，而聚合量就是由多个标量组成的，如果一个对象可以被分解，且不会逃逸，就直接使用标量代替对对象的成员变量，而不直接创建这个对象。</li>
+</ul>
 
       
     </div>
@@ -424,7 +471,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Android-基础/" rel="tag"># Android 基础</a>
+            <a href="/tags/Java-虚拟机/" rel="tag"># Java 虚拟机</a>
           
         </div>
       
@@ -437,8 +484,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/25/Android-IPC机制（Binder）/" rel="next" title="Android----IPC机制（Binder）">
-                <i class="fa fa-chevron-left"></i> Android----IPC机制（Binder）
+              <a href="/2018/08/10/JVM-执行子系统/" rel="next" title="JVM----执行子系统">
+                <i class="fa fa-chevron-left"></i> JVM----执行子系统
               </a>
             
           </div>
@@ -446,10 +493,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/08/JVM-自动内存管理机制/" rel="prev" title="JVM----自动内存管理机制">
-                JVM----自动内存管理机制 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -594,7 +637,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-简介"><span class="nav-text">一.简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-创建-Context"><span class="nav-text">二.创建 Context</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Application-Context"><span class="nav-text">1.Application Context</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Activity-Context"><span class="nav-text">2.Activity Context</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Service-Context"><span class="nav-text">3.Service Context</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-Context-的使用"><span class="nav-text">三.Context 的使用</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-简介"><span class="nav-text">一.简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-早期优化"><span class="nav-text">二.早期优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-解析与填充符号表"><span class="nav-text">1.解析与填充符号表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-词法解析"><span class="nav-text">(1).词法解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-语法分析"><span class="nav-text">(2).语法分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-填充符号表"><span class="nav-text">(3)填充符号表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-插入式注解处理器的注解处理过程"><span class="nav-text">2.插入式注解处理器的注解处理过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-分析与字节码生成过程"><span class="nav-text">3.分析与字节码生成过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-标注检查"><span class="nav-text">(1)标注检查</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-数据及控制流分析"><span class="nav-text">(2)数据及控制流分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-解语法糖"><span class="nav-text">(3)解语法糖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-字节码生成"><span class="nav-text">(4)字节码生成</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-晚期优化"><span class="nav-text">三.晚期优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-解释器和即时编译器"><span class="nav-text">1.解释器和即时编译器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-即时编译器"><span class="nav-text">1.即时编译器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-分层编译"><span class="nav-text">2.分层编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-热点代码"><span class="nav-text">3.热点代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-编译优化"><span class="nav-text">2.编译优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-公共子表达式消除"><span class="nav-text">(1).公共子表达式消除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-数组边界检查消除"><span class="nav-text">(2)数组边界检查消除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-方法内联"><span class="nav-text">(3)方法内联</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-逃逸分析"><span class="nav-text">(3).逃逸分析</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
