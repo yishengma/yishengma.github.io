@@ -64,7 +64,7 @@
 
 
 
-  <meta name="keywords" content="设计模式," />
+  <meta name="keywords" content="Android 框架," />
 
 
 
@@ -75,18 +75,20 @@
 
 
 
-<meta name="description" content="一.简介单例模式是一个十分常见的设计模式，一个对象实例如果在创建的过程十分消耗资源，且整个 app 系统只需要拥有一个对象的时候，就可以使用单例模式，在单例模式下，一个类只有一个实例并且在实例化后可以向系统的各个地方提供这个实例，不再创建新的实例。 二.面对的问题单例模式的实现关键就是确保这个类在整个系统运行过程中有且只有一个实例，因为在 Android 系统中存在者多线程，序列化等情况，在这些情">
-<meta name="keywords" content="设计模式">
+<meta name="description" content="一.前言在 Android 开发中经常会遇到的一个小功能就是加载图片，然后显示在我们指定的 View 上，我们知道对于 Android 应用程序，显示图片的 View 不会太大，而图片则有不同的大小，况且应用程序的也都有一定的内存限制，如果不对图片进行一定的处理，当加载大量图片的时候很容易就 产生 OOM,因此对图片进行压缩达到需要显示的大小左右，在视觉上的差别不会太大，但是可以节约大量的内存空间">
+<meta name="keywords" content="Android 框架">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式----单例模式的实现以及实现原理">
-<meta property="og:url" content="https://yishengma.github.io/2018/08/28/设计模式-单例模式的实现以及实现原理/index.html">
+<meta property="og:title" content="图片加载与图片加载框架 Glide">
+<meta property="og:url" content="https://yishengma.github.io/2018/09/07/图片加载与图片加载框架-Glide/index.html">
 <meta property="og:site_name" content="海盗的帽子的博客">
-<meta property="og:description" content="一.简介单例模式是一个十分常见的设计模式，一个对象实例如果在创建的过程十分消耗资源，且整个 app 系统只需要拥有一个对象的时候，就可以使用单例模式，在单例模式下，一个类只有一个实例并且在实例化后可以向系统的各个地方提供这个实例，不再创建新的实例。 二.面对的问题单例模式的实现关键就是确保这个类在整个系统运行过程中有且只有一个实例，因为在 Android 系统中存在者多线程，序列化等情况，在这些情">
+<meta property="og:description" content="一.前言在 Android 开发中经常会遇到的一个小功能就是加载图片，然后显示在我们指定的 View 上，我们知道对于 Android 应用程序，显示图片的 View 不会太大，而图片则有不同的大小，况且应用程序的也都有一定的内存限制，如果不对图片进行一定的处理，当加载大量图片的时候很容易就 产生 OOM,因此对图片进行压缩达到需要显示的大小左右，在视觉上的差别不会太大，但是可以节约大量的内存空间">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-28T14:50:47.541Z">
+<meta property="og:image" content="https://yishengma.github.io/2018/09/07/图片加载与图片加载框架-Glide/图片加载流程.png">
+<meta property="og:updated_time" content="2018-09-07T14:51:04.226Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="设计模式----单例模式的实现以及实现原理">
-<meta name="twitter:description" content="一.简介单例模式是一个十分常见的设计模式，一个对象实例如果在创建的过程十分消耗资源，且整个 app 系统只需要拥有一个对象的时候，就可以使用单例模式，在单例模式下，一个类只有一个实例并且在实例化后可以向系统的各个地方提供这个实例，不再创建新的实例。 二.面对的问题单例模式的实现关键就是确保这个类在整个系统运行过程中有且只有一个实例，因为在 Android 系统中存在者多线程，序列化等情况，在这些情">
+<meta name="twitter:title" content="图片加载与图片加载框架 Glide">
+<meta name="twitter:description" content="一.前言在 Android 开发中经常会遇到的一个小功能就是加载图片，然后显示在我们指定的 View 上，我们知道对于 Android 应用程序，显示图片的 View 不会太大，而图片则有不同的大小，况且应用程序的也都有一定的内存限制，如果不对图片进行一定的处理，当加载大量图片的时候很容易就 产生 OOM,因此对图片进行压缩达到需要显示的大小左右，在视觉上的差别不会太大，但是可以节约大量的内存空间">
+<meta name="twitter:image" content="https://yishengma.github.io/2018/09/07/图片加载与图片加载框架-Glide/图片加载流程.png">
 
 
 
@@ -116,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="https://yishengma.github.io/2018/08/28/设计模式-单例模式的实现以及实现原理/"/>
+  <link rel="canonical" href="https://yishengma.github.io/2018/09/07/图片加载与图片加载框架-Glide/"/>
 
 
 
 
 
-  <title>设计模式----单例模式的实现以及实现原理 | 海盗的帽子的博客</title>
+  <title>图片加载与图片加载框架 Glide | 海盗的帽子的博客</title>
   
 
 
@@ -273,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/08/28/设计模式-单例模式的实现以及实现原理/">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/09/07/图片加载与图片加载框架-Glide/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="海盗的帽子">
@@ -290,7 +292,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">设计模式----单例模式的实现以及实现原理</h1>
+          <h1 class="post-title" itemprop="name headline">图片加载与图片加载框架 Glide</h1>
         
 
         <div class="post-meta">
@@ -302,8 +304,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-28T22:48:26+08:00">
-                2018-08-28
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-07T22:46:32+08:00">
+                2018-09-07
               </time>
             
 
@@ -318,8 +320,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-08-28T22:50:47+08:00">
-                2018-08-28
+              <time title="更新于" itemprop="dateModified" datetime="2018-09-07T22:51:04+08:00">
+                2018-09-07
               </time>
             
           </span>
@@ -332,7 +334,7 @@
 
           
           
-             <span id="/2018/08/28/设计模式-单例模式的实现以及实现原理/" class="leancloud_visitors" data-flag-title="设计模式----单例模式的实现以及实现原理">
+             <span id="/2018/09/07/图片加载与图片加载框架-Glide/" class="leancloud_visitors" data-flag-title="图片加载与图片加载框架 Glide">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -363,39 +365,41 @@
       
 
       
-        <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一.简介"></a>一.简介</h2><p>单例模式是一个十分常见的设计模式，一个对象实例如果在创建的过程十分消耗资源，且整个 app 系统只需要拥有一个对象的时候，就可以使用单例模式，在单例模式下，一个类只有一个实例并且在实例化后可以向系统的各个地方提供这个实例，不再创建新的实例。</p>
-<h2 id="二-面对的问题"><a href="#二-面对的问题" class="headerlink" title="二.面对的问题"></a>二.面对的问题</h2><p>单例模式的实现关键就是确保这个类在整个系统运行过程中有且只有一个实例，因为在 Android 系统中存在者多线程，序列化等情况，在这些情况下很容易产生类多次实例化的情况，因此在实现单例模式的时候就需要特别注意这个问题。</p>
-<h5 id="实现单例模式的关键点"><a href="#实现单例模式的关键点" class="headerlink" title="实现单例模式的关键点"></a>实现单例模式的关键点</h5><ul>
-<li>构造函数不对外开放，即为 private 而不是 public</li>
-<li>通过一个静态方法或者枚举类型返回单例对象</li>
-<li>确保在多线程的环境下确保有且只有一个对象</li>
-<li>确保在反序列化的时候不会重新构建新的对象</li>
-</ul>
-<h2 id="三-实现方式"><a href="#三-实现方式" class="headerlink" title="三.实现方式"></a>三.实现方式</h2><h4 id="1-非懒加载模式-线程安全"><a href="#1-非懒加载模式-线程安全" class="headerlink" title="1.非懒加载模式 (线程安全)"></a>1.非懒加载模式 (线程安全)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 非懒加载模式</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span>  Singleton instance = <span class="keyword">new</span> Singleton();</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="function"><span class="keyword">private</span> Object <span class="title">readResolve</span><span class="params">()</span> <span class="keyword">throws</span> ObjectStreamException</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>由于 instance 在类初始化过程已经被赋值且是 final 修饰，因此就不存在线程安全的问题，但是这种情况不管这个单例有没有使用都会对 instance 进行初始化。序列化问题则通过添加 readResolve 方法解决，通过在这个返回 instance 本身就可以保证在反序列化的时候是同一个实例。</p>
-<h4 id="2-懒汉模式-（粗暴地解决线程同步问题）"><a href="#2-懒汉模式-（粗暴地解决线程同步问题）" class="headerlink" title="2.懒汉模式 （粗暴地解决线程同步问题）"></a>2.懒汉模式 （粗暴地解决线程同步问题）</h4><p>懒汉模式就是声明一个静态的变量，在获取的时候对方法进行同步，并且在第一次调用的时候进行初始化。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 懒汉模式</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span>  Singleton instance;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (instance==<span class="keyword">null</span>)&#123;</span><br><span class="line">        instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这种方式每次调用的时候都进行同步，因此在不涉及线程安全的情况时，进行同步就多余了。而对于序列化的解决和第一种方式一样。</p>
-<h4 id="3-双检测锁模式-Double-Check-Lock-，DCL-不是很优雅的优化线程同步问题"><a href="#3-双检测锁模式-Double-Check-Lock-，DCL-不是很优雅的优化线程同步问题" class="headerlink" title="3.双检测锁模式 Double Check Lock ，DCL (不是很优雅的优化线程同步问题)"></a>3.双检测锁模式 Double Check Lock ，DCL (不是很优雅的优化线程同步问题)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *  DCL 模式</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span>  Singleton instance;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">                <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>首先看到代码中通过两次检测 instance 是否为 null，第一次 来避免不必要的同步，而第二次检测时为了尽量保证线程同步，之所以说是尽量使因为这种情况还不能绝对地保证线程同步。</p>
-<p>理解上面这句话首先要明白在程序运行的时候， instance = new Singleton();这句代码会被编译器编译成多条指令，CPU 每次执行时只能执行一条指令，这些指令大致完成 3 件事;</p>
+        <h2 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h2><p>在 Android 开发中经常会遇到的一个小功能就是加载图片，然后显示在我们指定的 View 上，我们知道对于 Android 应用程序，显示图片的 View 不会太大，而图片则有不同的大小，况且应用程序的也都有一定的内存限制，如果不对图片进行一定的处理，当加载大量图片的时候很容易就 产生 OOM,因此对图片进行压缩达到需要显示的大小左右，在视觉上的差别不会太大，但是可以节约大量的内存空间。</p>
+<h2 id="二-图片加载"><a href="#二-图片加载" class="headerlink" title="二.图片加载"></a>二.图片加载</h2><h3 id="1-加载大图片"><a href="#1-加载大图片" class="headerlink" title="1.加载大图片"></a>1.加载大图片</h3><p>BitmapFactory 提供了多个对图片的解析方法解析方法，<br>这些方法会参与已经构建的 bitmap 对象分配内存，如果没有对图片进行处理，Bitmap 占用的内存就会非常大，<br>这时就容易导致 OOM。</p>
+<h5 id="压缩方法："><a href="#压缩方法：" class="headerlink" title="压缩方法："></a>压缩方法：</h5><p>通过将 BitmapFactory.Options 参数的 inJustDecodeBounds 属性设置为 true 就可以让解析方法禁止为 bitmap 分配内存，这是 bitmap 对象就为 null, 但是 Option 对象中的 Width Height ，outMineType 属性都会被赋值，这就可以在加载图片的时候就获取图片的长宽，和 MIME 类型</p>
+<p>根据显示大小和 图片大小计算 压缩比例 inSampleSIze </p>
+<p>压缩步骤：</p>
 <ul>
-<li>1.给实例分配内存</li>
-<li>2.调用构造函数，初始化成员字段</li>
-<li>3.将 1 中内存空间的地址赋值给 instance，经过 3 后 instance 才不为 null</li>
+<li>inJustDecodeBounds 属性设为 false 计算图片大小</li>
+<li>根据显示大小和 图片大小计算 压缩比例 inSampleSIze </li>
+<li>设为 true 解析图片 ，返回 Bitmap 。</li>
 </ul>
-<p>但是由于虚拟机的原因实际上上面的指令不一定是  1-&gt;2-&gt;3, 有可能是 1—&gt;3-&gt;2.因此就产生了一个问题:</p>
+<h3 id="2-图片的存储"><a href="#2-图片的存储" class="headerlink" title="2.图片的存储"></a>2.图片的存储</h3><p>在 Android 手机中图片的存储一般为有两种方式，内存和外存 （比如 SD 卡）</p>
 <ul>
-<li>首先 线程 A 获得对象锁后，执行到  instance = new Singleton(),这时如果 3 先执行，还未执行 2 的时候,即 instance 已经不为 null, 但是还未初始化。</li>
-<li>接着线程 B 进入方法，在进行第一个 null 判断（在同步代码块外面），instance 不为 null, 所有直接返回，但是实际上 instance 还未初始化，所以可能出错。</li>
+<li>内存：每个应用程序在运行的时候会申请属于自己一段内存区域，对内存区域的读写相对的比外存要快得多，应用程序在退出后就会回收内存空间，即在内存中保存 Bitmap 并不是一种持久的保存。</li>
+<li>外存：图片的外存一般是以文件的形式存在，因此读取和写入就涉及一些 IO  操作，速度没有内存块，但是是一种持久的数据保存。</li>
 </ul>
-<p>在 JDK1.5 引入了 volatile 后就可以解决这个，因为volatile 声明的变量禁止了指令的重新排序，所以就不存在上述的问题。</p>
-<p>而对于序列化的解决和第一种方式一样。</p>
-<h4 id="4-静态内部类模式-线程安全"><a href="#4-静态内部类模式-线程安全" class="headerlink" title="4.静态内部类模式(线程安全)"></a>4.静态内部类模式(线程安全)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 静态内部类模式</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> SingleHolder.instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleHolder</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span>  Singleton instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这种实现方式实际上就是对第一种方式的优化，解决了不能懒加载的问题。对于静态内部类，并不是在外部类加载的就进行初始化，而是在使用到的时候才进行类加载，因此将 instance 放在静态内部类中，只在第一次调用 getInstance 的时候才会进行初始化，解决了线程同步问题且实现了懒加载。</p>
-<p>而对于序列化的解决和第一种方式一样。</p>
-<h4 id="5-单元素枚举单例（最佳）"><a href="#5-单元素枚举单例（最佳）" class="headerlink" title="5.单元素枚举单例（最佳）"></a>5.单元素枚举单例（最佳）</h4><p>因为枚举类的实例实际上都是线程安全的，且在序列化的过程中也都是同一个对象，不用像前面一样添加方法，因此可以说枚举单例是在任何情况下都只有一个对象。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 单元素枚举模式</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span>  SingleEnum &#123;</span><br><span class="line">    INSTANCE ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * doSomething</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-图片缓存"><a href="#3-图片缓存" class="headerlink" title="3.图片缓存"></a>3.图片缓存</h3><p>为了避免重复的去从网络，文件加载图片，内存缓存可以对图片进行缓存，从内存缓存中读取图片要快得多，核心类是 LruCache ，内存缓存支持一种最少使用算法，算法原理是把最近使用的对象用强引用存储在 LinkedHashMap 中，<br>并且把最近最少使用的对象在缓存值达到预设定值之前从内存中移除。通过这样就可以提高内存缓存的效率。</p>
+<h3 id="4-基本流程"><a href="#4-基本流程" class="headerlink" title="4.基本流程"></a>4.基本流程</h3><p>实际上对于所有的图片加载的框架都有一个固定的流程，只不过在具体的模块上不同的框架有不同的处理或者优化过程而已，下面就是图片加载框架一个十分抽象的流程模型。<br><img src="/2018/09/07/图片加载与图片加载框架-Glide/图片加载流程.png" alt="image.png"></p>
+<h2 id="二-Glide"><a href="#二-Glide" class="headerlink" title="二.Glide"></a>二.Glide</h2><h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h3><p><a href="https://github.com/bumptech/glide" target="_blank" rel="noopener">Glide</a> 是  Bump Technologies 在 2013 年创建的开源项目，目前已经更新到 4.x 版本，实际上在 3.x 版本的时候就已经很成熟了，本篇基于3.x 版本的源码。Glide 是 Google 基于 Picasso 开发，优化的，因此这两个框架有很多相识的地方。因为 Glide 具有加载速度快和内存开销小等优点，更加适合移动系统， 所以这也是 Google 推荐使用的图片处理框架。</p>
+<h3 id="2-原理"><a href="#2-原理" class="headerlink" title="2.原理"></a>2.原理</h3><p>关于 Glide 的使用因其易用性，且已经有很多参考资料这里就不再赘述，下面着重于 Glide 的几个优点并结合源码进行说明。</p>
+<h4 id="1-生命周期的管理"><a href="#1-生命周期的管理" class="headerlink" title="(1)生命周期的管理"></a>(1)生命周期的管理</h4><p>Glide 和其他图片加载框架一个不同的地方就是具有对加载生命周期的管理，通常是结合 Activity 和 Fragment 的生命周期，实现加载过程跟随其生命周期的开始而开始，销毁而销毁，做到对资源的及时释放同时也降低的对内存的占用，避免和内存泄露的风险。</p>
+<p>具体从 with 方法开始：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public static RequestManager with(Context context) &#123;</span><br><span class="line">       RequestManagerRetriever retriever = RequestManagerRetriever.get();</span><br><span class="line">       return retriever.get(context);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   public static RequestManager with(Activity activity) &#123;</span><br><span class="line">       RequestManagerRetriever retriever = RequestManagerRetriever.get();</span><br><span class="line">       return retriever.get(activity);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   public static RequestManager with(FragmentActivity activity) &#123;</span><br><span class="line">       RequestManagerRetriever retriever = RequestManagerRetriever.get();</span><br><span class="line">       return retriever.get(activity);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   @TargetApi(Build.VERSION_CODES.HONEYCOMB)</span><br><span class="line">   public static RequestManager with(android.app.Fragment fragment) &#123;</span><br><span class="line">       RequestManagerRetriever retriever = RequestManagerRetriever.get();</span><br><span class="line">       return retriever.get(fragment);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   public static RequestManager with(Fragment fragment) &#123;</span><br><span class="line">       RequestManagerRetriever retriever = RequestManagerRetriever.get();</span><br><span class="line">       return retriever.get(fragment);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>这里有很多重载的方法，主要是对两类 Context 进行不同的处理</p>
+<ul>
+<li>Application Context,如果是 Application  那么 图片加载的生命周期和应用程序一样，所以不推荐直接使用 Application Context 。</li>
+<li>非 Application Context，向当前的 Activity 创建一个 隐藏的 Fragment ,绑定 图片加载的生命周期，这样和在 Activity 中 Fragments的生命周期是一样的。</li>
+</ul>
+<p>下面以 Activity 为例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public RequestManager get(Activity activity) &#123;</span><br><span class="line">        if (Util.isOnBackgroundThread() || Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.HONEYCOMB) &#123;</span><br><span class="line">            return get(activity.getApplicationContext());</span><br><span class="line">        &#125; else &#123;</span><br><span class="line"></span><br><span class="line">           //判断activity是否已经是销毁状态</span><br><span class="line">            assertNotDestroyed(activity);</span><br><span class="line">            //获取FragmentManager 对象</span><br><span class="line">            android.app.FragmentManager fm = activity.getFragmentManager();</span><br><span class="line">            //进行生命周期的绑定</span><br><span class="line">            return fragmentGet(activity, fm);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>具体接着看 fragmentGet </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@TargetApi(Build.VERSION_CODES.HONEYCOMB)</span><br><span class="line">RequestManager fragmentGet(Context context, android.app.FragmentManager fm) &#123;</span><br><span class="line">  //获取RequestManagerFragment 这就具体绑定的 Fragment </span><br><span class="line">    RequestManagerFragment current = getRequestManagerFragment(fm);</span><br><span class="line">    RequestManager requestManager = current.getRequestManager();</span><br><span class="line">    ...</span><br><span class="line">    return requestManager;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 RequestManagerFragment 的具体实现中就是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class RequestManagerFragment extends Fragment &#123;</span><br><span class="line">    private final ActivityFragmentLifecycle lifecycle; // Glide 生命周期的管理</span><br><span class="line">    //...</span><br><span class="line">    @Override</span><br><span class="line">    public void onStart() &#123;</span><br><span class="line">        super.onStart();</span><br><span class="line">        //关联 lifecycle 相应 onStart 方法</span><br><span class="line">        lifecycle.onStart();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onStop() &#123;</span><br><span class="line">        super.onStop();</span><br><span class="line">         //关联 lifecycle 相应 onStop 方法</span><br><span class="line">        lifecycle.onStop();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onDestroy() &#123;</span><br><span class="line">        super.onDestroy();</span><br><span class="line">         //关联 lifecycle 相应 onDestroy 方法</span><br><span class="line">        lifecycle.onDestroy();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>总结：可以看到对于 Glide 生命周期的管理，就是在 with 方法将 Context 类型的对象传进来的时候，根据不同的  Context 绑定其生命周期，比如 Activity 的就是在 Activity 上 创建一个隐形的 Fragment ,因为 Fragment 的生命周期是由 Activity 管理的，所以将  Glide 的回调接口与 Fragment 的进行绑定，也就间接形成了 Activity 的绑定。</p>
+<h4 id="2-高效的缓存策略"><a href="#2-高效的缓存策略" class="headerlink" title="(2)高效的缓存策略"></a>(2)高效的缓存策略</h4><p>未完待续。。。</p>
+
       
     </div>
     
@@ -412,7 +416,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+            <a href="/tags/Android-框架/" rel="tag"># Android 框架</a>
           
         </div>
       
@@ -425,8 +429,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/12/JVM-编译优化/" rel="next" title="JVM----编译优化">
-                <i class="fa fa-chevron-left"></i> JVM----编译优化
+              <a href="/2018/09/01/设计模式-观察者模式在-Android-中的影子/" rel="next" title="设计模式----观察者模式在 Android 中的影子">
+                <i class="fa fa-chevron-left"></i> 设计模式----观察者模式在 Android 中的影子
               </a>
             
           </div>
@@ -434,10 +438,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/09/01/设计模式-观察者模式在-Android-中的影子/" rel="prev" title="设计模式----观察者模式在 Android 中的影子">
-                设计模式----观察者模式在 Android 中的影子 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -582,7 +582,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-简介"><span class="nav-text">一.简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-面对的问题"><span class="nav-text">二.面对的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#实现单例模式的关键点"><span class="nav-text">实现单例模式的关键点</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-实现方式"><span class="nav-text">三.实现方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-非懒加载模式-线程安全"><span class="nav-text">1.非懒加载模式 (线程安全)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-懒汉模式-（粗暴地解决线程同步问题）"><span class="nav-text">2.懒汉模式 （粗暴地解决线程同步问题）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-双检测锁模式-Double-Check-Lock-，DCL-不是很优雅的优化线程同步问题"><span class="nav-text">3.双检测锁模式 Double Check Lock ，DCL (不是很优雅的优化线程同步问题)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-静态内部类模式-线程安全"><span class="nav-text">4.静态内部类模式(线程安全)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-单元素枚举单例（最佳）"><span class="nav-text">5.单元素枚举单例（最佳）</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-前言"><span class="nav-text">一.前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-图片加载"><span class="nav-text">二.图片加载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-加载大图片"><span class="nav-text">1.加载大图片</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#压缩方法："><span class="nav-text">压缩方法：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-图片的存储"><span class="nav-text">2.图片的存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-图片缓存"><span class="nav-text">3.图片缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-基本流程"><span class="nav-text">4.基本流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-Glide"><span class="nav-text">二.Glide</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-简介"><span class="nav-text">1.简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-原理"><span class="nav-text">2.原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-生命周期的管理"><span class="nav-text">(1)生命周期的管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-高效的缓存策略"><span class="nav-text">(2)高效的缓存策略</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
