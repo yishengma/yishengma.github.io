@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16.ico?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android 框架," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.简介ButterKnife 是  jake Wharton  的一个用于 View 注解框架，目前已经有 22000+ star , ButterKnife 的用处就是为开发者减少类似于 findViewById, setOnClickListener 等重复的代码，取代之的是通过注解对代码进行标记，让编译器自动生成需要的代码。 那么 ButterKnife 究竟怎么实现的呢？简单地说就是使用">
+<meta name="keywords" content="Android 框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="View注解框架----ButterKnife">
+<meta property="og:url" content="https://yishengma.github.io/2018/09/21/View注解框架-ButterKnife/index.html">
+<meta property="og:site_name" content="海盗的帽子的博客">
+<meta property="og:description" content="一.简介ButterKnife 是  jake Wharton  的一个用于 View 注解框架，目前已经有 22000+ star , ButterKnife 的用处就是为开发者减少类似于 findViewById, setOnClickListener 等重复的代码，取代之的是通过注解对代码进行标记，让编译器自动生成需要的代码。 那么 ButterKnife 究竟怎么实现的呢？简单地说就是使用">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://yishengma.github.io/2018/09/21/View注解框架-ButterKnife/1.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/09/21/View注解框架-ButterKnife/2.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/09/21/View注解框架-ButterKnife/3.png">
+<meta property="og:updated_time" content="2018-09-21T13:26:39.464Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="View注解框架----ButterKnife">
+<meta name="twitter:description" content="一.简介ButterKnife 是  jake Wharton  的一个用于 View 注解框架，目前已经有 22000+ star , ButterKnife 的用处就是为开发者减少类似于 findViewById, setOnClickListener 等重复的代码，取代之的是通过注解对代码进行标记，让编译器自动生成需要的代码。 那么 ButterKnife 究竟怎么实现的呢？简单地说就是使用">
+<meta name="twitter:image" content="https://yishengma.github.io/2018/09/21/View注解框架-ButterKnife/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yishengma.github.io/2018/09/21/View注解框架-ButterKnife/"/>
+
+
+
+
+
+  <title>View注解框架----ButterKnife | 海盗的帽子的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">海盗的帽子的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/09/21/View注解框架-ButterKnife/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="海盗的帽子">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/d.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="海盗的帽子的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">View注解框架----ButterKnife</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-21T21:23:02+08:00">
+                2018-09-21
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-09-21T21:26:39+08:00">
+                2018-09-21
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/09/21/View注解框架-ButterKnife/" class="leancloud_visitors" data-flag-title="View注解框架----ButterKnife">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一.简介"></a>一.简介</h2><p>ButterKnife 是  jake Wharton  的一个用于 View 注解框架，目前已经有 22000+ star , ButterKnife 的用处就是为开发者减少类似于 findViewById, setOnClickListener 等重复的代码，取代之的是通过注解对代码进行标记，让编译器自动生成需要的代码。</p>
+<p>那么 ButterKnife 究竟怎么实现的呢？简单地说就是使用了注解，通常我们对注解的处理，又两种方式，一是通过反射处理注解，一种是通过注解处理器，而 ButterKnife 就是通过注解处理器实现对注解的处理，但是在整个框架的其他地方中还是有使用到反射的。</p>
+<h2 id="二-反射"><a href="#二-反射" class="headerlink" title="二.反射"></a>二.反射</h2><h4 id="1-反射的由来"><a href="#1-反射的由来" class="headerlink" title="1.反射的由来"></a>1.反射的由来</h4><p>java 对象在运行的时候有时因为多态的原因会产生两种类型 ：</p>
+<ul>
+<li>编译时类型</li>
+<li>运行时类型</li>
+</ul>
+<p>比如对于 Person p = new Student，它的编译的时类型就是 Person，而运行时类型就是  Student。对于编译时类型在编译前就可以确定，而对于运行时类型，因为只有在运行的时候才能确定，所以有时不能直接通过对象进行访问。但是有时程序需要调用的是对象在运行时的类型方法，那有该怎么办呢？<br>解决方式有两种：</p>
+<ul>
+<li>在编译时和运行的都完全知道类型的具体信息，使用  instanceof 进行，再进行类型转换。</li>
+<li>无法知道该对象属于哪些类，程序只能依靠运行时信息确定，就必须使用反射。</li>
+</ul>
+<h4 id="2-反射的使用"><a href="#2-反射的使用" class="headerlink" title="2.反射的使用"></a>2.反射的使用</h4><p>反射就是根据一些类的信息确定一个对象属于哪个类还可以因此生成一个该类的对象。首先就是获取一个类的 Class 对象，每一个类都有一个 Class 对象，保存着这个类的信息。</p>
+<h6 id="1-获取-Class-对象"><a href="#1-获取-Class-对象" class="headerlink" title="(1)获取 Class 对象"></a>(1)获取 Class 对象</h6><ul>
+<li>Class forName（”全限定类名”）。 </li>
+<li>通过某个类的  Class 属性，获得该类对应的 Class 对象。比如 String.class</li>
+<li>调用某个对象的 getClass 方法。</li>
+<li>通过类加载器，Class.loadClass(className)</li>
+</ul>
+<h6 id="2-从Class-中获取信息"><a href="#2-从Class-中获取信息" class="headerlink" title="(2)从Class 中获取信息"></a>(2)从Class 中获取信息</h6><ul>
+<li>getConstructor 等，获取构造器</li>
+<li>getMethod 等，获取  Class 对应类的方法</li>
+<li>getField 等，获取类的成员变量</li>
+<li>getAnnotation 等，获取 class 上的 Annotation 就是注解信息。</li>
+<li>等等</li>
+</ul>
+<h6 id="3-通过反射生成并操作一个对象"><a href="#3-通过反射生成并操作一个对象" class="headerlink" title="(3)通过反射生成并操作一个对象"></a>(3)通过反射生成并操作一个对象</h6><p>1.创建一个对象</p>
+<ul>
+<li>Class newInstance，要求有对应类有默认构造器</li>
+<li>获得制定的构造器，再调用构造器的 newInstance ，这种方式可以可以选择使用指定的构造器器创建实例。</li>
+</ul>
+<p>2.调用方法</p>
+<p>每个 Method 有一个 invoke （Object ,Object…）方法，Object 是方法的主调就是方法的调用对象，Object…  是方法的参数</p>
+<p>3.访问成员变量</p>
+<p>通过 getFields/getField 可以对成员变量进行访问，set/get 方法。</p>
+<p>在访问成员变量和调用方法的时候需要对他们的访问权限做一些处理，setAccessible(boolean flag) ：</p>
+<ul>
+<li>true，指示在使用方法或者成员变量的时候取消 java  的 访问权限检查。</li>
+<li>false，指示 Method  在使用的时候 实施 java 的访问权限检查。</li>
+</ul>
+<h2 id="三-注解-Annotation"><a href="#三-注解-Annotation" class="headerlink" title="三.注解 Annotation"></a>三.注解 Annotation</h2><p>注解就是对部分代码进行标记，然后可以在编译，类加载，运行的时候被读取，并执行相应的处理， 从而对源文件补充一些信息。</p>
+<h4 id="1-基本的-Annotation"><a href="#1-基本的-Annotation" class="headerlink" title="1.基本的 Annotation"></a>1.基本的 Annotation</h4><ul>
+<li>@Override ，指定一个方法必须重写父类的方法，就是告诉编译器，检查这个方法，保证父类有一个父类重写的方法，否则编译就出错。</li>
+<li>@Deprecated，标记过时的方法等</li>
+<li>@SupperssWarnings，指示被修饰的程序元素，取消显示指定的编译器警告，要在括号内使用 name  = value ,为该 Annotation 的成员变量设置值。</li>
+<li>等等</li>
+</ul>
+<h4 id="2-自定义的-Annotation"><a href="#2-自定义的-Annotation" class="headerlink" title="2.自定义的 Annotation"></a>2.自定义的 Annotation</h4><p>定义一个 Annotation 与接口类似，不过使用的是 @interface 而不是 interface 。一个 Annotation，可以带成员变量 且以无形参的方法来声明，其方法和返回值定义了成员变量的名字和类型。也可以设置默认值 default .</p>
+<p>自定义的 Annotation 可以分为两类：</p>
+<ul>
+<li>包含成员变量，可以接受更多的元数据，也称为元数据 Annotation。</li>
+<li>没有成员包含成员变量，成为标记的 Annotation 。</li>
+</ul>
+<h4 id="2-元-Annotation"><a href="#2-元-Annotation" class="headerlink" title="2.元 Annotation"></a>2.元 Annotation</h4><p>元 Annotation 就是对注解进行注解，换句话说就是对自定义的注解补充一些信息。</p>
+<h6 id="1-Retention"><a href="#1-Retention" class="headerlink" title="1.@Retention"></a>1.@Retention</h6><p>只能用于修饰 Annotation 定义，也就是在自定义一个注解的时候修饰在 @interface 上方。Retention 指定被修饰的 Annotation 可以保留多长的时间，具体策略需要  指定 value  成员变量，有三种可选的时间长度策略。</p>
+<ul>
+<li>RetentionPolicy.Class 记录在 class 文件中，即运行时，在 JVM 不可获取 Annotation。</li>
+<li>RetentionPolicy.Runtime 可以在 运行的时候也获得，程序可以通过反射的获取该 Annotation。</li>
+<li>RetentionPolicy.SOURCE 只保留在源代码中，编译的时候就直接丢弃。</li>
+</ul>
+<h6 id="2-Target"><a href="#2-Target" class="headerlink" title="2.@Target"></a>2.@Target</h6><p>用于指定修饰的 Annotation 能用于修饰哪些程序元素，包含一个 value 变量，同样只能修饰一个 Annotation 定义。具体有以下策略</p>
+<ul>
+<li>ElementType.ANNOTATION_TYPE，指定定义的 Annotation 只能修饰 Annotation。</li>
+<li>ElementType.CONSTRUCTOR<br>指定定义的 Annotation 只能修饰构造器</li>
+<li>ElementType.FIELD<br>指定定义的 Annotation 只能修饰 成员变量</li>
+<li>ElementType.LOCAL_VARIABLE<br>指定定义的 Annotation 只能修饰 局部变量</li>
+<li>ElementType.METHOD<br>指定修饰的 Annotation 只能修饰方法定义</li>
+<li>ElementType.PACKAGE<br>指定修饰的 Annotation 只能修饰包定义</li>
+<li>ElementType.Type<br>指定修饰的 Annotation 可以修饰类接口或者枚举定义</li>
+</ul>
+<h6 id="3-Inherited"><a href="#3-Inherited" class="headerlink" title="3.@Inherited"></a>3.@Inherited</h6><p>指定修饰的 Annotation 具有继承性，则继承的类都具有默认定义的 Annotation。</p>
+<h4 id="3-提取-Annotation"><a href="#3-提取-Annotation" class="headerlink" title="3.提取 Annotation"></a>3.提取 Annotation</h4><p>只有 使用 @Retention（RetentionPolicy.RUNTIME ）修饰，JVM 才会在 装载 class 的时候提取  Annotation  ，因为注解可以修饰类，方法等，因此注解提取的信息是一个 AnnotationElement，这是所有程序元素的（class , Method , Constructor ） 的父接口。也可以通过 getAnnotation 等直接提取出 Annotation 信息。</p>
+<h4 id="4-编译时注解-Annotation"><a href="#4-编译时注解-Annotation" class="headerlink" title="4.编译时注解 Annotation"></a>4.编译时注解 Annotation</h4><p>前面说过注解信息的提取实在 JVM 装载 class 的时候提取的，因此 @Retention  的 参数就设置为 RetentionPolicy.RUNTIME ，但是这多少对 JVM  的性能有所消耗，那有什么优化的方法吗？答案就是使用 编译时处理 Annotation 技术，Annotation Processing Tool 简称 APT。 APT 的原理就是通过继承 继承 AbstractProcessor 类实现一个 APT 工具，并装在到编译类库中，编译的时候就会使用 APT 工具处理 Annotation， 可以根据源文件中的 Annotation 生成额外的源文件和其他文件，APT 还会编译生成的代码文件和原来的源文件将他们一起生成 class 文件，这些附属文件的内容也都与源代码的相关。而对注解的信息的处理通常就放在生成的文件中，在运行时就不用再提取，直接关联并执行处理即可。</p>
+<h2 id="三-ButterKnife"><a href="#三-ButterKnife" class="headerlink" title="三.ButterKnife"></a>三.ButterKnife</h2><p>下面以 findViewById 和 setOnClickListener 对应的 @BindView 和 @ OnClick 为例简单介绍 ButterKnife 宏观实现。</p>
+<h5 id="1-定义注解"><a href="#1-定义注解" class="headerlink" title="1.定义注解"></a>1.定义注解</h5><p>在 ButterKnife 源码中 butterknife-annotations 库主要用来存放自定义注解。可注解的类型如图所示：</p>
+<p><img src="/2018/09/21/View注解框架-ButterKnife/1.png" alt="image.png"></p>
+<p> @BindView 的注解：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Bind a field to the view for the specified ID. The view will automatically be cast to the field</span><br><span class="line"> * type.</span><br><span class="line"> * &lt;pre&gt;&lt;code&gt;</span><br><span class="line"> * &#123;@literal @&#125;BindView(R.id.title) TextView title;</span><br><span class="line"> * &lt;/code&gt;&lt;/pre&gt;</span><br><span class="line"> */</span><br><span class="line">@Retention(RUNTIME) @Target(FIELD)</span><br><span class="line">public @interface BindView &#123;</span><br><span class="line">  /** View ID to which the field will be bound. */</span><br><span class="line">  @IdRes int value();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>BindView 有两个注解修饰，从前面的关于注解的知识就可以知道 @Retention(RUNTIME) 表示在保留注解信息到运行的时候， @Target(FIELD) 表示这个注解只能修饰成员变量。</p>
+<p>@OnClick 的注解<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Bind a method to an &#123;@link OnClickListener OnClickListener&#125; on the view for each ID specified.</span><br><span class="line"> * &lt;pre&gt;&lt;code&gt;</span><br><span class="line"> * &#123;@literal @&#125;OnClick(R.id.example) void onClick() &#123;</span><br><span class="line"> *   Toast.makeText(this, &quot;Clicked!&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line"> * &#125;</span><br><span class="line"> * &lt;/code&gt;&lt;/pre&gt;</span><br><span class="line"> * Any number of parameters from</span><br><span class="line"> * &#123;@link OnClickListener#onClick(android.view.View) onClick&#125; may be used on the</span><br><span class="line"> * method.</span><br><span class="line"> *</span><br><span class="line"> * @see OnClickListener</span><br><span class="line"> */</span><br><span class="line">@Target(METHOD)</span><br><span class="line">@Retention(RUNTIME)</span><br><span class="line">@ListenerClass(</span><br><span class="line">    targetType = &quot;android.view.View&quot;,</span><br><span class="line">    setter = &quot;setOnClickListener&quot;,  </span><br><span class="line">    type = &quot;butterknife.internal.DebouncingOnClickListener&quot;,</span><br><span class="line">    method = @ListenerMethod(</span><br><span class="line">        name = &quot;doClick&quot;,</span><br><span class="line">        parameters = &quot;android.view.View&quot;</span><br><span class="line">    )</span><br><span class="line">)</span><br><span class="line">public @interface OnClick &#123;</span><br><span class="line">  /** View IDs to which the method will be bound. */</span><br><span class="line">  @IdRes int[] value() default &#123; View.NO_ID &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>BindView 有三个注解修饰， @Retention(RUNTIME) 表示在保留注解信息到运行的时候， @Target(METHOD)  表示这个注解只能方法，@ListenerClass 就是对方法进一步描述，比如调用者类型 targetType，调用方法 setter，方法监听 type，最后执行的方法和方法参数 name ，parameters。</p>
+<h5 id="2-注解处理器"><a href="#2-注解处理器" class="headerlink" title="2.注解处理器"></a>2.注解处理器</h5><p>ButterKnifeProcessor  注解处理器是 APT 中对注解处理的关键类，在 ButterKnife 中注解处理器位于 butterknife - compiler 包中。</p>
+<p><img src="/2018/09/21/View注解框架-ButterKnife/2.png" alt="image.png"></p>
+<p>ButterKnifeProcessor 继承自 AbstractProcessor ，而 AbstractProcessor 实现了 Processor 接口，这个接口主要有两个重要的方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public interface Processor &#123;</span><br><span class="line">   </span><br><span class="line">    ...</span><br><span class="line">    void init(ProcessingEnvironment processingEnv);</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">    </span><br><span class="line">    boolean process(Set&lt;? extends TypeElement&gt; annotations,</span><br><span class="line">                    RoundEnvironment roundEnv);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>init 方法 ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@Override public synchronized void init(ProcessingEnvironment env) &#123;</span><br><span class="line">    super.init(env);</span><br><span class="line"></span><br><span class="line">    String sdk = env.getOptions().get(OPTION_SDK_INT);</span><br><span class="line">    if (sdk != null) &#123;</span><br><span class="line">      try &#123;</span><br><span class="line">        this.sdk = Integer.parseInt(sdk);</span><br><span class="line">      &#125; catch (NumberFormatException e) &#123;</span><br><span class="line">        env.getMessager()</span><br><span class="line">            .printMessage(Kind.WARNING, &quot;Unable to parse supplied minSdk option &apos;&quot;</span><br><span class="line">                + sdk</span><br><span class="line">                + &quot;&apos;. Falling back to API 1 support.&quot;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    debuggable = !&quot;false&quot;.equals(env.getOptions().get(OPTION_DEBUGGABLE));</span><br><span class="line">    useAndroidX = hasAndroidX(env.getElementUtils());</span><br><span class="line"></span><br><span class="line">    typeUtils = env.getTypeUtils();</span><br><span class="line">    filer = env.getFiler();</span><br><span class="line">    try &#123;</span><br><span class="line">      trees = Trees.instance(processingEnv);</span><br><span class="line">    &#125; catch (IllegalArgumentException ignored) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法主要的作用是：</p>
+<ul>
+<li>获取java SDK 的版本</li>
+<li>获取 ElementUtils，用于处理 Element ，Element 就是 Java 中的包，类等元素。</li>
+<li>获取 TypeUtils，用于处理 javaType,Type 就是 java 的类型元素，比如有原始类型（普通的类型），参数化类型（比如List<string>），数组类型，原生类型（int ,long） 等。</string></li>
+<li>获取 Filer ，用于最后生成相关的文件。</li>
+</ul>
+<p>process 方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@Override public boolean process(Set&lt;? extends TypeElement&gt; elements, RoundEnvironment env) &#123;</span><br><span class="line">    Map&lt;TypeElement, BindingSet&gt; bindingMap = findAndParseTargets(env);</span><br><span class="line"></span><br><span class="line">    for (Map.Entry&lt;TypeElement, BindingSet&gt; entry : bindingMap.entrySet()) &#123;</span><br><span class="line">      TypeElement typeElement = entry.getKey();</span><br><span class="line">      BindingSet binding = entry.getValue();</span><br><span class="line"></span><br><span class="line">      JavaFile javaFile = binding.brewJava(sdk, debuggable, useAndroidX);</span><br><span class="line">      try &#123;</span><br><span class="line">        javaFile.writeTo(filer);</span><br><span class="line">      &#125; catch (IOException e) &#123;</span><br><span class="line">        error(typeElement, &quot;Unable to write binding for type %s: %s&quot;, typeElement, e.getMessage());</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return false;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>在 brewJava 方法中 有如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">static Builder newBuilder(TypeElement enclosingElement) &#123;</span><br><span class="line">   TypeMirror typeMirror = enclosingElement.asType();</span><br><span class="line"></span><br><span class="line">   boolean isView = isSubtypeOfType(typeMirror, VIEW_TYPE);</span><br><span class="line">   boolean isActivity = isSubtypeOfType(typeMirror, ACTIVITY_TYPE);</span><br><span class="line">   boolean isDialog = isSubtypeOfType(typeMirror, DIALOG_TYPE);</span><br><span class="line"></span><br><span class="line">   TypeName targetType = TypeName.get(typeMirror);</span><br><span class="line">   if (targetType instanceof ParameterizedTypeName) &#123;</span><br><span class="line">     targetType = ((ParameterizedTypeName) targetType).rawType;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   String packageName = getPackage(enclosingElement).getQualifiedName().toString();</span><br><span class="line">   String className = enclosingElement.getQualifiedName().toString().substring(</span><br><span class="line">       packageName.length() + 1).replace(&apos;.&apos;, &apos;$&apos;);</span><br><span class="line">   ClassName bindingClassName = ClassName.get(packageName, className + &quot;_ViewBinding&quot;);   //注意这段命名</span><br><span class="line"></span><br><span class="line">   boolean isFinal = enclosingElement.getModifiers().contains(Modifier.FINAL);</span><br><span class="line">   return new Builder(targetType, bindingClassName, isFinal, isView, isActivity, isDialog);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>对于 process 方法，主要做了如下几件事：</p>
+<ul>
+<li>调用 findAndParseTargets ，扫描所有的 ButterKnife 注解。</li>
+<li>调用 brewJava 生成 JavaFile。</li>
+<li>最后生成一个 对应的 class 文件。这个class 文件名可以在 brewJava 的方法中可以看到，对应着 bindingClassName ，所以最后生成的 class  名字就为 xxxx_ViewBinding.</li>
+</ul>
+<p>为了验证，在 MainActicity 中使用 ButterKnife 注解，然后运行一下，最后可以在 build-intermediates-classes 下找到对应的 MainActivity_ViewBinding。</p>
+<p><img src="/2018/09/21/View注解框架-ButterKnife/3.png" alt="image.png"></p>
+<h5 id="2-绑定-bind-方法"><a href="#2-绑定-bind-方法" class="headerlink" title="2.绑定 bind 方法"></a>2.绑定 bind 方法</h5><p>在经过前面两个步骤后，对于 ButterKnife 的使用也就是一句 bind 方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">   protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">       super.onCreate(savedInstanceState);</span><br><span class="line">       setContentView(R.layout.activity_main);</span><br><span class="line">       ButterKnife.bind(this);</span><br><span class="line"></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>直接看 bing 方法的具体实现 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@NonNull @UiThread</span><br><span class="line"> public static Unbinder bind(@NonNull Activity target) &#123;</span><br><span class="line">   View sourceView = target.getWindow().getDecorView();</span><br><span class="line">   return createBinding(target, sourceView);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>对于 bind 方法，首先就是获取 目前 Window 的一个 根视图 DecorView ，这里可以比较一下 findViewById 的实现中有这么一段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static AppCompatDelegate create(Activity activity, AppCompatCallback callback) &#123;</span><br><span class="line">        return create(activity, activity.getWindow(), callback);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>通过比较就可以看出，对于注解来说最后的实现还是一样的。下面接着看 createBinding </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private static Unbinder createBinding(@NonNull Object target, @NonNull View source) &#123;</span><br><span class="line">    Class&lt;?&gt; targetClass = target.getClass();</span><br><span class="line">    </span><br><span class="line">    Constructor&lt;? extends Unbinder&gt; constructor = findBindingConstructorForClass(targetClass);</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    try &#123;</span><br><span class="line">      return constructor.newInstance(target, source);</span><br><span class="line">    &#125; catch </span><br><span class="line">      ...</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>在这里 会先去获取一个对象的构造器 ，然后调用这个构造器去实例化一个对象 。获取构造器的方法对应着 findBindingConstructorForClass<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">private static Constructor&lt;? extends Unbinder&gt; findBindingConstructorForClass(Class&lt;?&gt; cls) &#123;</span><br><span class="line"></span><br><span class="line">  Constructor&lt;? extends Unbinder&gt; bindingCtor = BINDINGS.get(cls);</span><br><span class="line"> </span><br><span class="line">  String clsName = cls.getName();</span><br><span class="line">  try &#123;</span><br><span class="line">    Class&lt;?&gt; bindingClass = Class.forName(clsName + &quot;_ViewBinding&quot;);</span><br><span class="line">    </span><br><span class="line">    bindingCtor = (Constructor&lt;? extends Unbinder&gt;) bindingClass.getConstructor(cls, View.class);</span><br><span class="line">   ...</span><br><span class="line">  BINDINGS.put(cls, bindingCtor);</span><br><span class="line">  return bindingCtor;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在这个方法中，可以看到这个构造器的类就是以 ++clsName + “_ViewBinding”++，为名字的，以 MainActivity 为例就是对应着前面的 MainActivity_ViewBinding 。</p>
+<p>最后是通过构造器的 newInstance(target, source) 方法创建了一个对象，并将 Context 对象（target） 和 DecorView (source) 传过去。</p>
+<p>以 @BindView 和 @OnClick 为例，最后看生成的 MainActivity_ViewBinding 类。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity_ViewBinding&lt;T extends MainActivity&gt; implements Unbinder &#123;</span><br><span class="line">    protected T target;</span><br><span class="line">    private View view2131165218;</span><br><span class="line"></span><br><span class="line">    @UiThread</span><br><span class="line">    public MainActivity_ViewBinding(final T target, View source) &#123;</span><br><span class="line">        this.target = target;</span><br><span class="line">        View view = Utils.findRequiredView(source, 2131165218, &quot;field &apos;mButtonOne&apos; and method &apos;click&apos;&quot;);</span><br><span class="line">        target.mButtonOne = (Button)Utils.castView(view, 2131165218, &quot;field &apos;mButtonOne&apos;&quot;, Button.class);</span><br><span class="line">        this.view2131165218 = view;</span><br><span class="line">        view.setOnClickListener(new DebouncingOnClickListener() &#123;</span><br><span class="line">            public void doClick(View p0) &#123;</span><br><span class="line">                target.click();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        target.mButtonTwo = (Button)Utils.findRequiredViewAsType(source, 2131165219, &quot;field &apos;mButtonTwo&apos;&quot;, Button.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @CallSuper</span><br><span class="line">    public void unbind() &#123;</span><br><span class="line">        T target = this.target;</span><br><span class="line">        if(target == null) &#123;</span><br><span class="line">            throw new IllegalStateException(&quot;Bindings already cleared.&quot;);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            target.mButtonOne = null;</span><br><span class="line">            target.mButtonTwo = null;</span><br><span class="line">            this.view2131165218.setOnClickListener((OnClickListener)null);</span><br><span class="line">            this.view2131165218 = null;</span><br><span class="line">            this.target = null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p> 到这里就很清楚了，所有的 findViewById 和 setOnClickListener 等操作最后都是在这里实现了。 所有的参数都是从构造器里传进来的，进行绑定。</p>
+<p> ButterKnife 实现的大致流程：</p>
+<ul>
+<li>自定义注解</li>
+<li>实现注解处理器</li>
+<li>使用注解进行标记，在编译的时候通过注解处理器生成对应的 xx_ViewBinding  类</li>
+<li>运行的时候，调用 bind 进行绑定，通过反射获取 对应的 xx_ViewBind 类的构造器，将 Context 对象和 DecorView  传递。</li>
+<li>在 xx_ViewBinding  实现类似于 findViewId 或者 setOnClickListener 等方法。</li>
+</ul>
+<p>总的来说，ButterKnife 在注解的处理上使用的是 注解处理器，在编译的时候将注解处理好，从而减少运行的时候对虚拟机性能的消耗。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android-框架/" rel="tag"># Android 框架</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/07/图片加载与图片加载框架-Glide/" rel="next" title="图片加载与图片加载框架 Glide">
+                <i class="fa fa-chevron-left"></i> 图片加载与图片加载框架 Glide
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+ <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/d.jpg"
+                alt="海盗的帽子" />
+            
+              <p class="site-author-name" itemprop="name">海盗的帽子</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yishengma" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/m0_38089373" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-copyright"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-简介"><span class="nav-text">一.简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-反射"><span class="nav-text">二.反射</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-反射的由来"><span class="nav-text">1.反射的由来</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-反射的使用"><span class="nav-text">2.反射的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-获取-Class-对象"><span class="nav-text">(1)获取 Class 对象</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-从Class-中获取信息"><span class="nav-text">(2)从Class 中获取信息</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-通过反射生成并操作一个对象"><span class="nav-text">(3)通过反射生成并操作一个对象</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-注解-Annotation"><span class="nav-text">三.注解 Annotation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-基本的-Annotation"><span class="nav-text">1.基本的 Annotation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-自定义的-Annotation"><span class="nav-text">2.自定义的 Annotation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-元-Annotation"><span class="nav-text">2.元 Annotation</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-Retention"><span class="nav-text">1.@Retention</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-Target"><span class="nav-text">2.@Target</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-Inherited"><span class="nav-text">3.@Inherited</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-提取-Annotation"><span class="nav-text">3.提取 Annotation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-编译时注解-Annotation"><span class="nav-text">4.编译时注解 Annotation</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-ButterKnife"><span class="nav-text">三.ButterKnife</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-定义注解"><span class="nav-text">1.定义注解</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-注解处理器"><span class="nav-text">2.注解处理器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-绑定-bind-方法"><span class="nav-text">2.绑定 bind 方法</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-[object Object]"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">海盗的帽子</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://rawgit.com/yishengma/147d4f60feb7cdc79c355ad2da83d513/raw/d624cffa8a67b4da07048d59ba0031e2860b1b2b/md5.min.js"></script>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '15e7b5ecca662534768c',
+          clientSecret: '26dc23d2d7a013bbcce94772f42f2e434247c6ba',
+          repo: 'yishengma.github.io',
+          owner: 'yishengma',
+          admin: ['yishengma'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2LveBulvcfzvQ6MBGz9b3URY-gzGzoHsz", "7mcKtxSVSDUSpSxFfdxBmyaP");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
