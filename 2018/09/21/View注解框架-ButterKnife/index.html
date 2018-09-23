@@ -86,7 +86,7 @@
 <meta property="og:image" content="https://yishengma.github.io/2018/09/21/View注解框架-ButterKnife/1.png">
 <meta property="og:image" content="https://yishengma.github.io/2018/09/21/View注解框架-ButterKnife/2.png">
 <meta property="og:image" content="https://yishengma.github.io/2018/09/21/View注解框架-ButterKnife/3.png">
-<meta property="og:updated_time" content="2018-09-21T13:26:39.464Z">
+<meta property="og:updated_time" content="2018-09-23T07:03:56.119Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="View注解框架----ButterKnife">
 <meta name="twitter:description" content="一.简介ButterKnife 是  jake Wharton  的一个用于 View 注解框架，目前已经有 22000+ star , ButterKnife 的用处就是为开发者减少类似于 findViewById, setOnClickListener 等重复的代码，取代之的是通过注解对代码进行标记，让编译器自动生成需要的代码。 那么 ButterKnife 究竟怎么实现的呢？简单地说就是使用">
@@ -322,8 +322,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-09-21T21:26:39+08:00">
-                2018-09-21
+              <time title="更新于" itemprop="dateModified" datetime="2018-09-23T15:03:56+08:00">
+                2018-09-23
               </time>
             
           </span>
@@ -494,6 +494,12 @@
 <li>在 xx_ViewBinding  实现类似于 findViewId 或者 setOnClickListener 等方法。</li>
 </ul>
 <p>总的来说，ButterKnife 在注解的处理上使用的是 注解处理器，在编译的时候将注解处理好，从而减少运行的时候对虚拟机性能的消耗。</p>
+<h6 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h6><p>为了更好地理解整个过程，通过学习</p>
+<p><a href="https://blog.csdn.net/u011240877/article/details/74490201#apt" target="_blank" rel="noopener">使用编译时注解简单实现类似 ButterKnife 的效果</a></p>
+<p><a href="https://blog.csdn.net/lmj623565791/article/details/39275847" target="_blank" rel="noopener">Android 进阶 教你打造 Android 中的 IOC 框架</a></p>
+<p><a href="https://blog.csdn.net/lmj623565791/article/details/43452969" target="_blank" rel="noopener">Android 打造编译时注解解析框架</a></p>
+<p>用反射和编译时注解连两种不同的方式简单的实现了相同的效果。</p>
+<p><a href="https://github.com/yishengma/ViewInject" target="_blank" rel="noopener">github 地址</a></p>
 
       
     </div>
@@ -677,7 +683,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-简介"><span class="nav-text">一.简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-反射"><span class="nav-text">二.反射</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-反射的由来"><span class="nav-text">1.反射的由来</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-反射的使用"><span class="nav-text">2.反射的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-获取-Class-对象"><span class="nav-text">(1)获取 Class 对象</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-从Class-中获取信息"><span class="nav-text">(2)从Class 中获取信息</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-通过反射生成并操作一个对象"><span class="nav-text">(3)通过反射生成并操作一个对象</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-注解-Annotation"><span class="nav-text">三.注解 Annotation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-基本的-Annotation"><span class="nav-text">1.基本的 Annotation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-自定义的-Annotation"><span class="nav-text">2.自定义的 Annotation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-元-Annotation"><span class="nav-text">2.元 Annotation</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-Retention"><span class="nav-text">1.@Retention</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-Target"><span class="nav-text">2.@Target</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-Inherited"><span class="nav-text">3.@Inherited</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-提取-Annotation"><span class="nav-text">3.提取 Annotation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-编译时注解-Annotation"><span class="nav-text">4.编译时注解 Annotation</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-ButterKnife"><span class="nav-text">三.ButterKnife</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-定义注解"><span class="nav-text">1.定义注解</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-注解处理器"><span class="nav-text">2.注解处理器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-绑定-bind-方法"><span class="nav-text">2.绑定 bind 方法</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-简介"><span class="nav-text">一.简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-反射"><span class="nav-text">二.反射</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-反射的由来"><span class="nav-text">1.反射的由来</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-反射的使用"><span class="nav-text">2.反射的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-获取-Class-对象"><span class="nav-text">(1)获取 Class 对象</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-从Class-中获取信息"><span class="nav-text">(2)从Class 中获取信息</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-通过反射生成并操作一个对象"><span class="nav-text">(3)通过反射生成并操作一个对象</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-注解-Annotation"><span class="nav-text">三.注解 Annotation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-基本的-Annotation"><span class="nav-text">1.基本的 Annotation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-自定义的-Annotation"><span class="nav-text">2.自定义的 Annotation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-元-Annotation"><span class="nav-text">2.元 Annotation</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-Retention"><span class="nav-text">1.@Retention</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-Target"><span class="nav-text">2.@Target</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-Inherited"><span class="nav-text">3.@Inherited</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-提取-Annotation"><span class="nav-text">3.提取 Annotation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-编译时注解-Annotation"><span class="nav-text">4.编译时注解 Annotation</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-ButterKnife"><span class="nav-text">三.ButterKnife</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-定义注解"><span class="nav-text">1.定义注解</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-注解处理器"><span class="nav-text">2.注解处理器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-绑定-bind-方法"><span class="nav-text">2.绑定 bind 方法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#最后"><span class="nav-text">最后</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>
