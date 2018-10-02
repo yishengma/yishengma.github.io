@@ -64,7 +64,6 @@
 
 
 
-  <meta name="keywords" content="Java 虚拟机," />
 
 
 
@@ -74,21 +73,13 @@
 
 
 
-
-<meta name="description" content="一.简介Java 语言的编译期大致可以分为三种：  前端编译器，把.java 文件编译成class 文件 后端运行期编译器 JIT 编译器，把字节码转变为机器码的过程 静态提前编译器 AOT ，直接把 .java 文件编译成 机器码  不同的编译时期，为了提高代码的运行效率，JVM 会进行一定的编译优化。 二.早期优化早期编译主要是第一种编译，即把 .java 文件编译成 class 文件，这个过">
-<meta name="keywords" content="Java 虚拟机">
-<meta property="og:type" content="article">
-<meta property="og:title" content="JVM----编译优化">
-<meta property="og:url" content="https://yishengma.github.io/2018/08/12/JVM-编译优化/index.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="海盗的帽子的博客">
+<meta property="og:url" content="https://yishengma.github.io/archives/2018/10/index.html">
 <meta property="og:site_name" content="海盗的帽子的博客">
-<meta property="og:description" content="一.简介Java 语言的编译期大致可以分为三种：  前端编译器，把.java 文件编译成class 文件 后端运行期编译器 JIT 编译器，把字节码转变为机器码的过程 静态提前编译器 AOT ，直接把 .java 文件编译成 机器码  不同的编译时期，为了提高代码的运行效率，JVM 会进行一定的编译优化。 二.早期优化早期编译主要是第一种编译，即把 .java 文件编译成 class 文件，这个过">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://yishengma.github.io/2018/08/12/JVM-编译优化/image1.png">
-<meta property="og:updated_time" content="2018-08-12T12:24:12.361Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JVM----编译优化">
-<meta name="twitter:description" content="一.简介Java 语言的编译期大致可以分为三种：  前端编译器，把.java 文件编译成class 文件 后端运行期编译器 JIT 编译器，把字节码转变为机器码的过程 静态提前编译器 AOT ，直接把 .java 文件编译成 机器码  不同的编译时期，为了提高代码的运行效率，JVM 会进行一定的编译优化。 二.早期优化早期编译主要是第一种编译，即把 .java 文件编译成 class 文件，这个过">
-<meta name="twitter:image" content="https://yishengma.github.io/2018/08/12/JVM-编译优化/image1.png">
+<meta name="twitter:title" content="海盗的帽子的博客">
 
 
 
@@ -118,13 +109,13 @@
 
 
 
-  <link rel="canonical" href="https://yishengma.github.io/2018/08/12/JVM-编译优化/"/>
+  <link rel="canonical" href="https://yishengma.github.io/archives/2018/10/"/>
 
 
 
 
 
-  <title>JVM----编译优化 | 海盗的帽子的博客</title>
+  <title>归档 | 海盗的帽子的博客</title>
   
 
 
@@ -143,7 +134,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left page-archive">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -261,262 +252,74 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
+  
+  
+  
+  <div class="post-block archive">
+    <div id="posts" class="posts-collapse">
+      <span class="archive-move-on"></span>
 
-  
+      <span class="archive-page-counter">
+        
+        
+        
+          
+        
+        嗯..! 目前共计 15 篇日志。 继续努力。
+      </span>
 
-  
-  
-  
+      
+
+        
+        
+        
+
+        
+          
+          <div class="collection-title">
+            <h1 class="archive-year" id="archive-year-2018">2018</h1>
+          </div>
+        
+        
+
+        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/08/12/JVM-编译优化/">
+    <header class="post-header">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="海盗的帽子">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/d.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="海盗的帽子的博客">
-    </span>
-
-    
-      <header class="post-header">
-
+      <h2 class="post-title">
         
+            <a class="post-title-link" href="/2018/10/02/网络请求框架-OkHttp原理/" itemprop="url">
+              
+                <span itemprop="name">网络请求框架----OkHttp原理</span>
+              
+            </a>
         
-          <h1 class="post-title" itemprop="name headline">JVM----编译优化</h1>
-        
+      </h2>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-12T20:22:31+08:00">
-                2018-08-12
-              </time>
-            
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2018-10-02T17:23:19+08:00"
+              content="2018-10-02" >
+          10-02
+        </time>
+      </div>
 
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2018-08-12T20:24:12+08:00">
-                2018-08-12
-              </time>
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2018/08/12/JVM-编译优化/" class="leancloud_visitors" data-flag-title="JVM----编译优化">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一.简介"></a>一.简介</h2><p>Java 语言的编译期大致可以分为三种：</p>
-<ul>
-<li>前端编译器，把.java 文件编译成class 文件</li>
-<li>后端运行期编译器 JIT 编译器，把字节码转变为机器码的过程</li>
-<li>静态提前编译器 AOT ，直接把 .java 文件编译成 机器码</li>
-</ul>
-<p>不同的编译时期，为了提高代码的运行效率，JVM 会进行一定的编译优化。</p>
-<h2 id="二-早期优化"><a href="#二-早期优化" class="headerlink" title="二.早期优化"></a>二.早期优化</h2><p>早期编译主要是第一种编译，即把 .java 文件编译成 class 文件，这个过程的编译可以分为三个部分;</p>
-<ul>
-<li>解析与填充符号表.</li>
-<li>插入式注解处理器的注解处理过程.</li>
-<li>分析与字节码生成过程</li>
-</ul>
-<h3 id="1-解析与填充符号表"><a href="#1-解析与填充符号表" class="headerlink" title="1.解析与填充符号表"></a>1.解析与填充符号表</h3><p>解析分为词法解析，和语法解析</p>
-<h4 id="1-词法解析"><a href="#1-词法解析" class="headerlink" title="(1).词法解析"></a>(1).词法解析</h4><p>将源代码中的字符流转变为标记<token>集合，一个标记就是一个关键字，变量名，字面量，或者运算符. 比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int a = 1 + b;</span><br></pre></td></tr></table></figure></token></p>
-<p>这部分的标记集合的元素就是：int , a , = ,1 , + ,b</p>
-<h4 id="2-语法分析"><a href="#2-语法分析" class="headerlink" title="(2).语法分析"></a>(2).语法分析</h4><p>将标记集合构造成抽象语法树的过程，抽象语法树就是程序代码语法结构的树形表示，每个节点都是一种语法的结构。</p>
-<h4 id="3-填充符号表"><a href="#3-填充符号表" class="headerlink" title="(3)填充符号表"></a>(3)填充符号表</h4><p>符号表，是一组符号地址和符号信息构成的表格.</p>
-<h3 id="2-插入式注解处理器的注解处理过程"><a href="#2-插入式注解处理器的注解处理过程" class="headerlink" title="2.插入式注解处理器的注解处理过程"></a>2.插入式注解处理器的注解处理过程</h3><p>注解处理器可以读取，修改，添加抽象语法树种的任何元素，如果修改了编译器就回到解析过程重新开始处理直到没有注解处理器对语法树进行修改，每次循环称为一个 Round,通过注解处理器就可以干涉编译器的行为.</p>
-<h3 id="3-分析与字节码生成过程"><a href="#3-分析与字节码生成过程" class="headerlink" title="3.分析与字节码生成过程"></a>3.分析与字节码生成过程</h3><p>分析主要是程序的语义分析，对抽象语法树中进行上下文性质的审查，如类型审查等。包括下面三种;</p>
-<ul>
-<li>标注检查</li>
-<li>数据及控制流分析</li>
-<li>解语法糖</li>
-</ul>
-<h4 id="1-标注检查"><a href="#1-标注检查" class="headerlink" title="(1)标注检查"></a>(1)标注检查</h4><p>检查变量是否被声明，赋值之间的数据类型等，还有变量折叠 比如 int a = 1 + 2 ; 就会折叠成 int a = 3;</p>
-<h4 id="2-数据及控制流分析"><a href="#2-数据及控制流分析" class="headerlink" title="(2)数据及控制流分析"></a>(2)数据及控制流分析</h4><p>对程序上下文逻辑进行更进一步的验证，使用前是否赋值，方法是否有返回值等.</p>
-<h4 id="3-解语法糖"><a href="#3-解语法糖" class="headerlink" title="(3)解语法糖"></a>(3)解语法糖</h4><p>语法糖，也称糖衣语法.语法糖虽然不会提供实际性的功能改进，但是可以提高效率，提升语法的严谨性，减少编码出错的机会.虚拟机运行时不支持这些语法在编译阶段会还原简单的基础语法结构，并在相应的地方插入强制类型转换.Java 中的语法糖常见的有泛型，集合的遍历，变长参数，自动装箱和拆箱，条件编译等。</p>
-<ul>
-<li>泛型，java 语言中泛型实现方法称为类型擦除，这种泛型称为伪泛型，因此对于 List<string> 和 List<integer> 是同一个类。</integer></string></li>
-<li>自动装箱拆箱，转换为对应的包装方法和还原方法。</li>
-<li>遍历循环，则把代码还原成了迭代器的实现。</li>
-<li>条件编译，对于 if while 等条件分支中不成立的代码块消除掉。</li>
-</ul>
-<h4 id="4-字节码生成"><a href="#4-字节码生成" class="headerlink" title="(4)字节码生成"></a>(4)字节码生成</h4><p>这一步就是把前面的步骤生成的信息转化为字节码写到磁盘中并进行少量的代码添加和转换工作，比如实力构造器 <init> 和类构造器 <clinit> </clinit></init></p>
-<h2 id="三-晚期优化"><a href="#三-晚期优化" class="headerlink" title="三.晚期优化"></a>三.晚期优化</h2><p>晚期优化主要是对一些热点代码进行优化。当虚拟机发现某个方法或代码块运行特别频繁时就会把这些代码认定为热点代码。在运行时候虚拟机会将这些代码编译成与本地平台相关的机器码，这个编译器叫即时编译器。而对于之前的一般的编译是通过解释器进行解释执行。两个各有区别，但也会相互配合工作。</p>
-<h3 id="1-解释器和即时编译器"><a href="#1-解释器和即时编译器" class="headerlink" title="1.解释器和即时编译器"></a>1.解释器和即时编译器</h3><p>当程序需要迅速启动和执行的时候，解释器可以省去编译时间，立即执行，解释执行可以节约内存。<br>在程序运行的时候，编译器可以把越来越多的代码编译成本地代码，提高执行效率。</p>
-<p>解释器和编译器可以配合工作，可以从解释器转到即时编译器，<br>也可以从编译器逆优化到解释器。程序的执行一般先是解释器执行编译，在某些情况下解释器可启动即时编译器来进行一些优化编译，通常会为即时编译设置一个“逃生门”，这个逃生门的作用就是一旦一些优化不可执行编译的时候，即时编可以退回到解释器编译器，也叫逆优化。</p>
-<h4 id="1-即时编译器"><a href="#1-即时编译器" class="headerlink" title="1.即时编译器"></a>1.即时编译器</h4><p>即时编译器 （JIT 编译器），可以分为 Client 编译器和 Server 编译器，简称 C1 编译器和 C2 编译器。JVM 会根据不同的平台选取不同的编译器，以实现效率的提高。</p>
-<h4 id="2-分层编译"><a href="#2-分层编译" class="headerlink" title="2.分层编译"></a>2.分层编译</h4><p>为了让解释器和即时编译器能够实现效率最大化，一般将代码分为几个层次进行编译。</p>
-<ul>
-<li>第 0 层，程序解释执行。</li>
-<li>第 1 层 C1 编译将字节码编译为本地代码，进行简单的优化。</li>
-<li>第 2 层或以上 称 C2 编译，将字节码编译为 本地代码，会启用一些编译时较长的优化。</li>
-</ul>
-<h4 id="3-热点代码"><a href="#3-热点代码" class="headerlink" title="3.热点代码"></a>3.热点代码</h4><p>热点代码通常由两种;</p>
-<ul>
-<li>被多次调用的方法,编译时以整个方法做为编译对象，属于 JIT 编译方式。</li>
-<li>被多次执行的循环体，以循环体所在方法为对象，因为发生在方法中，所以称为栈上替换编译，OSP 编译。</li>
-</ul>
-<p>判断是否为热点代码也有两种方式：</p>
-<ul>
-<li>基于采样的热点探测，周期性检查各个线程的栈顶</li>
-<li>基于计数器热点探测，使用方法调用计数器和回边计数器，当超过一定值时就出发 JIT 编译。</li>
-</ul>
-<p>方法调用计数器，计数不是方法调用的绝对值，而是一段时间中的次数，<br>且这个次数没有超过阈值的时候会衰减。</p>
-<p>回边计数器（循环体执行次数），计数的是执行的绝对次数。</p>
-<p>这个是否进行热点代码优化判断过程如图：<br><img src="/2018/08/12/JVM-编译优化/image1.png" alt="image.png"></p>
-<p>提交编译请求后，解释方式会继续执行，而编译器的执行会在一个子线程中进行。</p>
-<p>对于 C1，编译的过程可分为三个阶段：</p>
-<ul>
-<li>第一阶段，将字节码狗造成高级中间代码 HIR,以静态分配的形式存在<br> SSA,进行一个方法内联，常量传播优化。</li>
-<li>第二阶段，从 HIR 产生低级中间代码 LIR。</li>
-<li>最后使用线性算法在 LIR 上分配寄存器，并在 LIR 上做窥孔优化，后产生机器代码。</li>
-</ul>
-<h3 id="2-编译优化"><a href="#2-编译优化" class="headerlink" title="2.编译优化"></a>2.编译优化</h3><p>对于这部分的优化实际上有很多方式，经典的有有如下几种：</p>
-<h4 id="1-公共子表达式消除"><a href="#1-公共子表达式消除" class="headerlink" title="(1).公共子表达式消除"></a>(1).公共子表达式消除</h4><p>如果一个表达式 A 已经计算过了，并且从先前的计算到现在的 A 中所有的变量的值都没有变化，那么这个 A 就可以成为子表达式。比如;</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int a = b * c + (3 + b * c );</span><br><span class="line">//优化</span><br><span class="line">int a = A + (3 + A);</span><br><span class="line">//优化</span><br><span class="line">int a = 2 * A + 3;</span><br></pre></td></tr></table></figure>
-<h4 id="2-数组边界检查消除"><a href="#2-数组边界检查消除" class="headerlink" title="(2)数组边界检查消除"></a>(2)数组边界检查消除</h4><p>当访问一个数组的时候，经常会对数组的边界进行检查。而可以采取的优化就是在数据流分析时确定对数组的访问不会超过 数组范围就不再每次进行数组越界检查。</p>
-<h4 id="3-方法内联"><a href="#3-方法内联" class="headerlink" title="(3)方法内联"></a>(3)方法内联</h4><p>就是将一些没用的代码剔除，或者对于没有必要的方法跳转，将目标方法中的代码 “复制”到发起调用的方法之中，避免真实的方法调用。因为 Java 中的多态性的存在因此，内联有时不能确定目标方法，对应的情况如下：</p>
-<ul>
-<li>如果是非虚方法，直接进行内联。</li>
-<li>如果是虚方法</li>
-<li><ul>
-<li>只有一个版本，进行守护内联属于激进优化，要设置”逃生门“，没有变化时继续内联，若是加载了一个有变化的新类就直接抛弃退回解释执行。</li>
-</ul>
-</li>
-<li><ul>
-<li>如果有多个版本，就做内联缓存，在未发生内联的时候，缓存为空，第一次调用方法时，记录方法的调用者，后面每次调用就进行判断，一致就继续进行，不一致就取消内联。</li>
-</ul>
-</li>
-</ul>
-<h4 id="3-逃逸分析"><a href="#3-逃逸分析" class="headerlink" title="(3).逃逸分析"></a>(3).逃逸分析</h4><p>分析对象的动态作用域，当一个对象在方法中被定义后可能被外部方法所引用，例如传参，这称为方法逃逸，还有被其他线程访问的线程逃逸。</p>
-<p>如果一个对象不会逃逸那么可以进行如下优化;</p>
-<ul>
-<li>栈上分配,在栈上分配内存.</li>
-<li>同步消除,消除没有必要的线程同步。</li>
-<li>标量替换，标量是指一个数据不能再分解，比如数据类型，而聚合量就是由多个标量组成的，如果一个对象可以被分解，且不会逃逸，就直接使用标量代替对对象的成员变量，而不直接创建这个对象。</li>
-</ul>
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Java-虚拟机/" rel="tag"># Java 虚拟机</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2018/08/10/JVM-执行子系统/" rel="next" title="JVM----执行子系统">
-                <i class="fa fa-chevron-left"></i> JVM----执行子系统
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/28/设计模式-单例模式的实现以及实现原理/" rel="prev" title="设计模式----单例模式的实现以及实现原理">
-                设计模式----单例模式的实现以及实现原理 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
+    </header>
   </article>
 
 
 
-    <div class="post-spread">
       
+
     </div>
   </div>
+  
+  
+  
+
+  
+
 
 
           </div>
@@ -524,12 +327,6 @@
 
 
           
-
-  
- <div id="gitalk-container"></div>
-  
-
-
 
         </div>
         
@@ -550,17 +347,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -631,22 +419,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-简介"><span class="nav-text">一.简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-早期优化"><span class="nav-text">二.早期优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-解析与填充符号表"><span class="nav-text">1.解析与填充符号表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-词法解析"><span class="nav-text">(1).词法解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-语法分析"><span class="nav-text">(2).语法分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-填充符号表"><span class="nav-text">(3)填充符号表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-插入式注解处理器的注解处理过程"><span class="nav-text">2.插入式注解处理器的注解处理过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-分析与字节码生成过程"><span class="nav-text">3.分析与字节码生成过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-标注检查"><span class="nav-text">(1)标注检查</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-数据及控制流分析"><span class="nav-text">(2)数据及控制流分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-解语法糖"><span class="nav-text">(3)解语法糖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-字节码生成"><span class="nav-text">(4)字节码生成</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-晚期优化"><span class="nav-text">三.晚期优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-解释器和即时编译器"><span class="nav-text">1.解释器和即时编译器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-即时编译器"><span class="nav-text">1.即时编译器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-分层编译"><span class="nav-text">2.分层编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-热点代码"><span class="nav-text">3.热点代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-编译优化"><span class="nav-text">2.编译优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-公共子表达式消除"><span class="nav-text">(1).公共子表达式消除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-数组边界检查消除"><span class="nav-text">(2)数组边界检查消除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-方法内联"><span class="nav-text">(3)方法内联</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-逃逸分析"><span class="nav-text">(3).逃逸分析</span></a></li></ol></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -797,10 +569,6 @@
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
-<script type="text/javascript" src="/js/src/post-details.js?v="></script>
-
-
 
   
 
@@ -841,22 +609,6 @@
 
 
 
-
-  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-  <script src="https://rawgit.com/yishengma/147d4f60feb7cdc79c355ad2da83d513/raw/d624cffa8a67b4da07048d59ba0031e2860b1b2b/md5.min.js"></script>
-    <script type="text/javascript">
-        var gitalk = new Gitalk({
-          clientID: '15e7b5ecca662534768c',
-          clientSecret: '26dc23d2d7a013bbcce94772f42f2e434247c6ba',
-          repo: 'yishengma.github.io',
-          owner: 'yishengma',
-          admin: ['yishengma'],
-          id: md5(location.pathname),
-          distractionFreeMode: 'true'
-        })
-        gitalk.render('gitalk-container')
-    </script>
 
   
 
