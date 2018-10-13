@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16.ico?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java 基础," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.Mapjava 中的 Map 是一种以键值对存储数据的数据结构，可用于快速查找。 Map 通常 是不保证有序性的（除了 TreeMap ），且一个 Map 内部 一般要包括三个集合视图，key 的集合，value 的集合 ，以及键值对的 Entry 集合，对这三个集合的修改都会直接影响 Map 集合。123456789101112//key 的集合，需要保持互异性 使用 Set Set&amp;lt;">
+<meta name="keywords" content="Java 基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java集合----Map">
+<meta property="og:url" content="https://yishengma.github.io/2018/10/13/java集合-Map/index.html">
+<meta property="og:site_name" content="海盗的帽子的博客">
+<meta property="og:description" content="一.Mapjava 中的 Map 是一种以键值对存储数据的数据结构，可用于快速查找。 Map 通常 是不保证有序性的（除了 TreeMap ），且一个 Map 内部 一般要包括三个集合视图，key 的集合，value 的集合 ，以及键值对的 Entry 集合，对这三个集合的修改都会直接影响 Map 集合。123456789101112//key 的集合，需要保持互异性 使用 Set Set&amp;lt;">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://yishengma.github.io/2018/10/13/java集合-Map/1.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/10/13/java集合-Map/2.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/10/13/java集合-Map/3.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/10/13/java集合-Map/4.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/10/13/java集合-Map/5.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/10/13/java集合-Map/6.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/10/13/java集合-Map/7.png">
+<meta property="og:updated_time" content="2018-10-13T14:21:01.957Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java集合----Map">
+<meta name="twitter:description" content="一.Mapjava 中的 Map 是一种以键值对存储数据的数据结构，可用于快速查找。 Map 通常 是不保证有序性的（除了 TreeMap ），且一个 Map 内部 一般要包括三个集合视图，key 的集合，value 的集合 ，以及键值对的 Entry 集合，对这三个集合的修改都会直接影响 Map 集合。123456789101112//key 的集合，需要保持互异性 使用 Set Set&amp;lt;">
+<meta name="twitter:image" content="https://yishengma.github.io/2018/10/13/java集合-Map/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yishengma.github.io/2018/10/13/java集合-Map/"/>
+
+
+
+
+
+  <title>java集合----Map | 海盗的帽子的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">海盗的帽子的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/10/13/java集合-Map/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="海盗的帽子">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/d.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="海盗的帽子的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java集合----Map</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-13T22:14:13+08:00">
+                2018-10-13
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-13T22:21:01+08:00">
+                2018-10-13
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/10/13/java集合-Map/" class="leancloud_visitors" data-flag-title="java集合----Map">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-Map"><a href="#一-Map" class="headerlink" title="一.Map"></a>一.Map</h2><p>java 中的 Map 是一种以键值对存储数据的数据结构，可用于快速查找。 Map 通常 是不保证有序性的（除了 TreeMap ），且一个 Map 内部 一般要包括三个集合视图，key 的集合，value 的集合 ，以及键值对的 Entry 集合，对这三个集合的修改都会直接影响 Map 集合。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//key 的集合，需要保持互异性 使用 Set</span><br><span class="line"> Set&lt;K&gt; keySet();</span><br><span class="line">// value 的集合，不需要保持互异性 </span><br><span class="line">Collection&lt;V&gt; values();</span><br><span class="line"></span><br><span class="line">// 键值对的 Entry 的集合</span><br><span class="line">Set&lt;Map.Entry&lt;K, V&gt;&gt; entrySet();</span><br><span class="line"></span><br><span class="line">//键值对的接口</span><br><span class="line">interface Entry&lt;K, V&gt; &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到对于 key 和 Entry 都是用 Set 集合，Set 集合一般有如下特点：</p>
+<ul>
+<li>无序性：一个集合中，每个元素的地位都是相同的，元素之间也都是无序的（也有有序的 Set）。</li>
+<li>互异性：一个集合中，任何两个元素都是不相同的。</li>
+<li>确定性：给定一个集合以及其任一元素，该元素属于或者不属于该集合是必须可以确定的。</li>
+</ul>
+<p><img src="/2018/10/13/java集合-Map/1.png" alt="image.png"></p>
+<h2 id="二-AbstractMap"><a href="#二-AbstractMap" class="headerlink" title="二.AbstractMap"></a>二.AbstractMap</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public abstract class AbstractMap&lt;K,V&gt; implements Map&lt;K,V&gt; &#123;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>AbstractMap 是一个抽象类，在具体的 Map 的实现类和接口之间定义的一层抽象，为了就是服用一些用的函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br></pre></td><td class="code"><pre><span class="line">// 键值对集合 EntrySet 是一个抽象的函数，交由实现类去实现</span><br><span class="line">public abstract Set&lt;Entry&lt;K,V&gt;&gt; entrySet();</span><br><span class="line"></span><br><span class="line">//下面的几个函数都是基于 EntrySet 可以复用的函数</span><br><span class="line">public int size() &#123;</span><br><span class="line">    return entrySet().size();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public boolean isEmpty() &#123;</span><br><span class="line">    return size() == 0;</span><br><span class="line">&#125;</span><br><span class="line">public boolean containsValue(Object value) &#123;</span><br><span class="line">    Iterator&lt;Entry&lt;K,V&gt;&gt; i = entrySet().iterator();</span><br><span class="line">    if (value==null) &#123;</span><br><span class="line">        while (i.hasNext()) &#123;</span><br><span class="line">            Entry&lt;K,V&gt; e = i.next();</span><br><span class="line">            if (e.getValue()==null)</span><br><span class="line">                return true;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        while (i.hasNext()) &#123;</span><br><span class="line">            Entry&lt;K,V&gt; e = i.next();</span><br><span class="line">            if (value.equals(e.getValue()))</span><br><span class="line">                return true;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public boolean containsKey(Object key) &#123;</span><br><span class="line">    Iterator&lt;Map.Entry&lt;K,V&gt;&gt; i = entrySet().iterator();</span><br><span class="line">    if (key==null) &#123;</span><br><span class="line">        while (i.hasNext()) &#123;</span><br><span class="line">            Entry&lt;K,V&gt; e = i.next();</span><br><span class="line">            if (e.getKey()==null)</span><br><span class="line">                return true;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        while (i.hasNext()) &#123;</span><br><span class="line">            Entry&lt;K,V&gt; e = i.next();</span><br><span class="line">            if (key.equals(e.getKey()))</span><br><span class="line">                return true;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public V get(Object key) &#123;</span><br><span class="line">    Iterator&lt;Entry&lt;K,V&gt;&gt; i = entrySet().iterator();</span><br><span class="line">    if (key==null) &#123;</span><br><span class="line">        while (i.hasNext()) &#123;</span><br><span class="line">            Entry&lt;K,V&gt; e = i.next();</span><br><span class="line">            if (e.getKey()==null)</span><br><span class="line">                return e.getValue();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        while (i.hasNext()) &#123;</span><br><span class="line">            Entry&lt;K,V&gt; e = i.next();</span><br><span class="line">            if (key.equals(e.getKey()))</span><br><span class="line">                return e.getValue();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public V remove(Object key) &#123;</span><br><span class="line">    Iterator&lt;Entry&lt;K,V&gt;&gt; i = entrySet().iterator();</span><br><span class="line">    Entry&lt;K,V&gt; correctEntry = null;</span><br><span class="line">    if (key==null) &#123;</span><br><span class="line">        while (correctEntry==null &amp;&amp; i.hasNext()) &#123;</span><br><span class="line">            Entry&lt;K,V&gt; e = i.next();</span><br><span class="line">            if (e.getKey()==null)</span><br><span class="line">                correctEntry = e;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        while (correctEntry==null &amp;&amp; i.hasNext()) &#123;</span><br><span class="line">            Entry&lt;K,V&gt; e = i.next();</span><br><span class="line">            if (key.equals(e.getKey()))</span><br><span class="line">                correctEntry = e;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    V oldValue = null;</span><br><span class="line">    if (correctEntry !=null) &#123;</span><br><span class="line">        oldValue = correctEntry.getValue();</span><br><span class="line">        i.remove();</span><br><span class="line">    &#125;</span><br><span class="line">    return oldValue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public void putAll(Map&lt;? extends K, ? extends V&gt; m) &#123;</span><br><span class="line">    for (Map.Entry&lt;? extends K, ? extends V&gt; e : m.entrySet())</span><br><span class="line">        put(e.getKey(), e.getValue());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">public void clear() &#123;</span><br><span class="line">    entrySet().clear();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// AbstractMap并没有实现put()函数。</span><br><span class="line">//对于不可修改的 Map 实现子类直接继承就行了，</span><br><span class="line">//但是而对于一个可修改的Map实现子类则必须重写 put() 函数</span><br><span class="line"></span><br><span class="line">public V put(K key, V value) &#123;</span><br><span class="line">    throw new UnsupportedOperationException();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// Views</span><br><span class="line">// ketSet 视图集合</span><br><span class="line">//values 视图集合</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">transient Set&lt;K&gt;        keySet;</span><br><span class="line">transient Collection&lt;V&gt; values;</span><br><span class="line"></span><br><span class="line">public Set&lt;K&gt; keySet() &#123;</span><br><span class="line">    Set&lt;K&gt; ks = keySet;</span><br><span class="line">    if (ks == null) &#123;</span><br><span class="line">        ks = new AbstractSet&lt;K&gt;() &#123;</span><br><span class="line">            public Iterator&lt;K&gt; iterator() &#123;</span><br><span class="line">                return new Iterator&lt;K&gt;() &#123;</span><br><span class="line">                    private Iterator&lt;Entry&lt;K,V&gt;&gt; i = entrySet().iterator();</span><br><span class="line"></span><br><span class="line">                    public boolean hasNext() &#123;</span><br><span class="line">                        return i.hasNext();</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    public K next() &#123;</span><br><span class="line">                        return i.next().getKey();</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    public void remove() &#123;</span><br><span class="line">                        i.remove();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            public int size() &#123;</span><br><span class="line">                return AbstractMap.this.size();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            public boolean isEmpty() &#123;</span><br><span class="line">                return AbstractMap.this.isEmpty();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            public void clear() &#123;</span><br><span class="line">                AbstractMap.this.clear();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            public boolean contains(Object k) &#123;</span><br><span class="line">                return AbstractMap.this.containsKey(k);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        keySet = ks;</span><br><span class="line">    &#125;</span><br><span class="line">    return ks;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public Collection&lt;V&gt; values() &#123;</span><br><span class="line">    Collection&lt;V&gt; vals = values;</span><br><span class="line">    if (vals == null) &#123;</span><br><span class="line">        vals = new AbstractCollection&lt;V&gt;() &#123;</span><br><span class="line">            public Iterator&lt;V&gt; iterator() &#123;</span><br><span class="line">                return new Iterator&lt;V&gt;() &#123;</span><br><span class="line">                    private Iterator&lt;Entry&lt;K,V&gt;&gt; i = entrySet().iterator();</span><br><span class="line"></span><br><span class="line">                    public boolean hasNext() &#123;</span><br><span class="line">                        return i.hasNext();</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    public V next() &#123;</span><br><span class="line">                        return i.next().getValue();</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    public void remove() &#123;</span><br><span class="line">                        i.remove();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            public int size() &#123;</span><br><span class="line">                return AbstractMap.this.size();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            public boolean isEmpty() &#123;</span><br><span class="line">                return AbstractMap.this.isEmpty();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            public void clear() &#123;</span><br><span class="line">                AbstractMap.this.clear();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            public boolean contains(Object v) &#123;</span><br><span class="line">                return AbstractMap.this.containsValue(v);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        values = vals;</span><br><span class="line">    &#125;</span><br><span class="line">    return vals;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 AbstractMap 还有两个 Entry 的实现类。</p>
+<ul>
+<li>SimpleEntry 简单的 Entry ，对一个 key 和 value 的封装。</li>
+<li>SimpleImmutableEntry，简单不可变的 Entry， 这个键值对 的 值是不能改变的。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public static class SimpleEntry&lt;K,V&gt;</span><br><span class="line">      implements Entry&lt;K,V&gt;, java.io.Serializable</span><br><span class="line">  &#123;</span><br><span class="line">      private static final long serialVersionUID = -8499721149061103585L;</span><br><span class="line"></span><br><span class="line">      private final K key;   //key是final 的 </span><br><span class="line">      private V value;      // value 不是 final  的</span><br><span class="line">      </span><br><span class="line">      ...</span><br><span class="line">  // 可以进行 setValue 操作</span><br><span class="line">       public V setValue(V value) &#123;</span><br><span class="line">          V oldValue = this.value;</span><br><span class="line">          this.value = value;</span><br><span class="line">          return oldValue;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public static class SimpleImmutableEntry&lt;K,V&gt;</span><br><span class="line">      implements Entry&lt;K,V&gt;, java.io.Serializable</span><br><span class="line">  &#123;</span><br><span class="line">      private final K key;</span><br><span class="line">      private final V value;  value 是final 的</span><br><span class="line">      </span><br><span class="line">      </span><br><span class="line">      //进行set操作会抛出异常</span><br><span class="line">       public V setValue(V value) &#123;</span><br><span class="line">          throw new UnsupportedOperationException();</span><br><span class="line">      &#125;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="三-HashMap"><a href="#三-HashMap" class="headerlink" title="三.HashMap"></a>三.HashMap</h2><h3 id="1-Hash-算法"><a href="#1-Hash-算法" class="headerlink" title="1.Hash 算法"></a>1.Hash 算法</h3><h5 id="1-简介"><a href="#1-简介" class="headerlink" title="(1)简介"></a>(1)简介</h5><p>hash 算法是一种可以从一个任何长度的数据中提取出一个固定长度的算法，这个固定的长度就叫做 hashCode ，hash 算法具有如下两种特性：</p>
+<ul>
+<li>唯一性：同样的输入经过 hash 算法得出的结果都是一样的。</li>
+<li>不可逆性，不能从 hashCode 得出原本的数据。</li>
+<li>重复性：对于不同的输入，可能得出同样的输出。<br><img src="/2018/10/13/java集合-Map/2.png" alt="image.png"></li>
+</ul>
+<h5 id="2-hash-Code"><a href="#2-hash-Code" class="headerlink" title="(2)hash Code"></a>(2)hash Code</h5><p>在数据查找过程中，最理想的情况是可以不进行记录的比较，就直接得到待查记录。若记录的关键字与存储位置存在某种一一映射关系，那么就可以通过待查记录的关键字，计算其存储位置，直接找到该记录。实现这种对应关系的函数就散列函数，散列函数中就运用到了 hash 算法产生的 hash Code .</p>
+<h5 id="3-hash-表"><a href="#3-hash-表" class="headerlink" title="(3)hash 表"></a>(3)hash 表</h5><p>hash 查找通常需要维护一个数组，这个数组就叫做 hash table (hash 表 或 散列表)<br>这个数组元素被称为桶（ bin ）,当传入一个 关键字 key 的时候，就可以通过散列 函数直接将 key 转为数组的下标。通过下标就可以直接得到对应的数据。</p>
+<p><img src="/2018/10/13/java集合-Map/3.png" alt="image.png"></p>
+<h5 id="4-冲突"><a href="#4-冲突" class="headerlink" title="(4)冲突"></a>(4)冲突</h5><p>前面说过 hash 算法具有重复性，因此在 hash Code 上建立的 散列函数也就存在着重复，不是一一对应的关系，出现两个不同的数据拥有在 hash 表中同一下标的情况就叫做冲突。</p>
+<p>处理冲突的方式有两种方式：</p>
+<ul>
+<li>开放地址法： 开放地址又分为线性探测和二次探测。</li>
+<li>链地址法。</li>
+</ul>
+<h6 id="线性探测"><a href="#线性探测" class="headerlink" title="线性探测"></a>线性探测</h6><p>思想是：若哈希表的地址区间长度为m，将哈希表看成是一个循环空间，如若冲突就放在数组后一个位置，如果下一个位置已有数据就再往后放。</p>
+<p>这种想法的缺点很明显：如果连续序列越长，则当新的元素加入该表时，与这个序列发生冲突的可能性越大。</p>
+<h6 id="二次探测"><a href="#二次探测" class="headerlink" title="二次探测"></a>二次探测</h6><p>思想是：探测的序列不是连续的，而是跳跃式的，为后续待插入的记录留下空间从而减少堆聚。如若冲突就根据一些跳跃的函数进行跳跃式的探测，如若有数据就再进行探测。</p>
+<h6 id="链地址法"><a href="#链地址法" class="headerlink" title="链地址法"></a>链地址法</h6><p>链地址法将关键字为同义词的记录链接在同一个单链表中，即数组元素是一个个节点，如若冲突就在这个节点上生成一个链表。</p>
+<p><img src="/2018/10/13/java集合-Map/4.png" alt="image.png"></p>
+<h3 id="2-HashMap"><a href="#2-HashMap" class="headerlink" title="2.HashMap"></a>2.HashMap</h3><p>HashMap 实际上就是基于 hash 表的一个查找集合。</p>
+<h5 id="HashMap-的散列函数"><a href="#HashMap-的散列函数" class="headerlink" title="HashMap 的散列函数"></a>HashMap 的散列函数</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// HashMap 维护的 哈希表 </span><br><span class="line"> transient Node&lt;K,V&gt;[] table;  </span><br><span class="line"> //对 key 进行处理</span><br><span class="line">static final int hash(Object key) &#123;</span><br><span class="line">     int h;</span><br><span class="line">     return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> //要想看 HashMap 的散列函数就必须找到 put 方法</span><br><span class="line">  public V put(K key, V value) &#123;</span><br><span class="line">     return putVal(hash(key), key, value, false, true);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"> final V putVal(int hash, K key, V value, boolean onlyIfAbsent,</span><br><span class="line">                boolean evict) &#123;</span><br><span class="line">     Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;</span><br><span class="line">     if ((tab = table) == null || (n = tab.length) == 0)</span><br><span class="line">         n = (tab = resize()).length;</span><br><span class="line">     if ((p = tab[i = (n - 1) &amp; hash]) == null)&#123;   //注意这一句的(n-1)&amp;hash 就是数组的小标</span><br><span class="line">         ...</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+<p>HashMap 的散列函数没有一个固定的实现，但是基本的思想都在上面的代码中。</p>
+<ul>
+<li>内部实现了一个hash()函数，首先要对key 的 hashCode() 进行处理</li>
+<li>该函数将 key.hashCode() 的低 16 位和高 16 位做了个异或运算，其目的是为了扰乱低位的信息以实现减少碰撞冲突。</li>
+<li>把处理的返回值与 table.length - 1 做与运算（table 为 哈希表），得到的结果即是数组的下标。</li>
+</ul>
+<p>(n-1) 就是数组的最后一位的而下标，就像是一个低位掩码，它和 hash() 做与操作时会将高位屏蔽只保留低位，它会导致总是只有最低的几位是有效的，因为就算你的 hashCode() 实现得再好也难以避免发生碰撞，所以 hash () 对 hash code 的低位添加了随机性并且混合了高位的部分特征，显著减少了碰撞冲突的发生。<br><img src="/2018/10/13/java集合-Map/5.png" alt="image.png"></p>
+<h5 id="处理冲突"><a href="#处理冲突" class="headerlink" title="处理冲突"></a>处理冲突</h5><p>HashMap 处理冲突的方式使用的是链地址法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">  //哈希数组</span><br><span class="line">  transient Node&lt;K,V&gt;[] table;  </span><br><span class="line">  //节点</span><br><span class="line"> static class Node&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; &#123;</span><br><span class="line">        final int hash;</span><br><span class="line">        final K key;</span><br><span class="line">        V value;</span><br><span class="line">        Node&lt;K,V&gt; next;  //可构成链表</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>每个节点都包含下一个节点的引用。链表虽然实现简单，但是在查找的效率上只有 O(n)，而 HashMap 大部分的操作都是在进行查找，如果链表变得越来越长，这个查找的效率就非常差。Java 8 对其实现了优化，链表的节点数量在到达阈值时会转化为红黑树，这样查找所需的时间就只有O(log n)。</p>
+<blockquote>
+<p>红黑树 就是平衡二叉查找树</p>
+</blockquote>
+<p>这就是对阈值的介绍，当链表的长度大于阈值就会转为红黑树，如果小于阈值就转为链表。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//链表的节点大于这个值就进行树化</span><br><span class="line">static final int TREEIFY_THRESHOLD = 8;</span><br><span class="line"></span><br><span class="line">//树的节点太少就转为链表</span><br><span class="line">static final int UNTREEIFY_THRESHOLD = 6;</span><br><span class="line"></span><br><span class="line">//数组长度大于这个值才进行树化</span><br><span class="line">static final int MIN_TREEIFY_CAPACITY = 64;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Replaces all linked nodes in bin at index for given hash unless</span><br><span class="line"> * table is too small, in which case resizes instead.</span><br><span class="line"> */</span><br><span class="line">final void treeifyBin(Node&lt;K,V&gt;[] tab, int hash) &#123;&#125;</span><br><span class="line"></span><br><span class="line">final void treeify(Node&lt;K,V&gt;[] tab) &#123;&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="数组扩容"><a href="#数组扩容" class="headerlink" title="数组扩容"></a>数组扩容</h5><p>HashMap 避免冲突的另一种方式就是对散列表进行动态扩容。<br>所谓扩容，其实就是用一个容量更大（在原容量上乘以二）的数组来替换掉当前的数组，这个过程需要把旧数组中的数据重新hash到新数组，所以扩容也能在一定程度上减缓碰撞。</p>
+<p> table 数组的大小约束对于整个 HashMap 都至关重要，为了防止传入一个不是2次幂的整数，必须要有所防范。tableSizeFor()函数会尝试修正一个整数，并转换为离该整数最近的2次幂.<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">static final int tableSizeFor(int cap) &#123;</span><br><span class="line">       int n = cap - 1;</span><br><span class="line">       n |= n &gt;&gt;&gt; 1;</span><br><span class="line">       n |= n &gt;&gt;&gt; 2;</span><br><span class="line">       n |= n &gt;&gt;&gt; 4;</span><br><span class="line">       n |= n &gt;&gt;&gt; 8;</span><br><span class="line">       n |= n &gt;&gt;&gt; 16;</span><br><span class="line">       return (n &lt; 0) ? 1 : (n &gt;= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p> HashMap通过负载因子（Load Factor）乘以 table 数组的长度来计算出临界值，算法：threshold = load_factor <em>  capacity。比如，HashMap 的默认初始容量为 16（capacity = 16），默认负载因子为 0.75（ load_factor = 0.75），那么临界值就为threshold = 0.75 </em> 16 = 12，只要 Entry 的数量大于12，就会触发扩容操作。<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">final Node&lt;K,V&gt;[] resize() &#123;</span><br><span class="line">      Node&lt;K,V&gt;[] oldTab = table;</span><br><span class="line">      int oldCap = (oldTab == null) ? 0 : oldTab.length;</span><br><span class="line">      int oldThr = threshold;</span><br><span class="line">      int newCap, newThr = 0;</span><br><span class="line">      .... </span><br><span class="line">      // 默认的阈值</span><br><span class="line">      newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);</span><br><span class="line">      ...</span><br><span class="line">      threshold = newThr;</span><br><span class="line">      ...</span><br><span class="line">      &#125;</span><br><span class="line">      return newTab;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p> 从上面解释可以看出，负载因子越小，数组就越小，查找的性能就会越高，但同时额外占用的内存就会越多，因为需要经常扩容。</p>
+<h5 id="扩容后的下标"><a href="#扩容后的下标" class="headerlink" title="扩容后的下标"></a>扩容后的下标</h5><p>扩容后的下标需要依靠两个前提条件：</p>
+<ul>
+<li>数组是永远长度是 2 次幂的.</li>
+<li>扩容前的下标是 （n-1）&amp; hash .</li>
+</ul>
+<p>前面说过 n-1 就像一个掩码，现在数组增加一倍，在进行 &amp; 操作的时候 n-1 就增加了一位，因此只要判断 hash 和新增加的有效位是 0 还是 1 就可以确定新的位置，如果是 0 就不变，如果是 1 ,索引就是原索引加上扩容前的容量。通过这种方式就可以将本来在 扩容前冲突的两个节点拆分到新的数组，在扩容的时候均匀地散开。</p>
+<p><img src="/2018/10/13/java集合-Map/6.png" alt="image.png"></p>
+<h2 id="四-TreeMap"><a href="#四-TreeMap" class="headerlink" title="四.TreeMap"></a>四.TreeMap</h2><p>TreeMap 是一个基于红黑树的有序的 Map ，继承自 AbstractMap 抽象类，实现了 NavigableMap 接口，这个接口又继承了 SortedMap 。</p>
+<h4 id="SortedMap"><a href="#SortedMap" class="headerlink" title="SortedMap"></a>SortedMap</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">public interface SortedMap&lt;K,V&gt; extends Map&lt;K,V&gt; &#123;</span><br><span class="line">    </span><br><span class="line">    //定义排序的原则，对 key 进行排序</span><br><span class="line">    Comparator&lt;? super K&gt; comparator();</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    SortedMap&lt;K,V&gt; subMap(K fromKey, K toKey);</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    SortedMap&lt;K,V&gt; headMap(K toKey);</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    SortedMap&lt;K,V&gt; tailMap(K fromKey);</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    K firstKey();</span><br><span class="line"></span><br><span class="line">    K lastKey();</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    Set&lt;K&gt; keySet();</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    Collection&lt;V&gt; values();</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    Set&lt;Map.Entry&lt;K, V&gt;&gt; entrySet();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个接口定义就是对 Map 的元素的排序，以及几个子视图，比如 从 from 到 to 的视图或者从 from 到结束或者从开始到 to 的视图。</p>
+<h4 id="NavigableMap"><a href="#NavigableMap" class="headerlink" title="NavigableMap"></a>NavigableMap</h4><p>NavigableMap 对 SortMap 进行了扩展，增加了对键值对的导航方法，和一些以逆序升序排序的集合视图。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">public interface NavigableMap&lt;K,V&gt; extends SortedMap&lt;K,V&gt; &#123;</span><br><span class="line">    //返回比 key 小的键值对</span><br><span class="line">    Map.Entry&lt;K,V&gt; lowerEntry(K key);</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    K lowerKey(K key);</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line">    Map.Entry&lt;K,V&gt; floorEntry(K key);</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">    K floorKey(K key);</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    Map.Entry&lt;K,V&gt; ceilingEntry(K key);</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">    K ceilingKey(K key);</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    Map.Entry&lt;K,V&gt; higherEntry(K key);</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    K higherKey(K key);</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    Map.Entry&lt;K,V&gt; firstEntry();</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">    Map.Entry&lt;K,V&gt; lastEntry();</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    Map.Entry&lt;K,V&gt; pollFirstEntry();</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    Map.Entry&lt;K,V&gt; pollLastEntry();</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">    NavigableMap&lt;K,V&gt; descendingMap();</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">    NavigableSet&lt;K&gt; navigableKeySet();</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">    NavigableSet&lt;K&gt; descendingKeySet();</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    NavigableMap&lt;K,V&gt; subMap(K fromKey, boolean fromInclusive,</span><br><span class="line">                             K toKey,   boolean toInclusive);</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    NavigableMap&lt;K,V&gt; headMap(K toKey, boolean inclusive);</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    NavigableMap&lt;K,V&gt; tailMap(K fromKey, boolean inclusive);</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    SortedMap&lt;K,V&gt; subMap(K fromKey, K toKey);</span><br><span class="line"></span><br><span class="line">    SortedMap&lt;K,V&gt; headMap(K toKey);</span><br><span class="line"></span><br><span class="line">    SortedMap&lt;K,V&gt; tailMap(K fromKey);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h4><p>对于 TreeMap 返回的子视图，都是由两个内部类提供，对这些集合视图的修改同样会影响 TreeMap。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 升序</span><br><span class="line"> */</span><br><span class="line">static final class AscendingSubMap&lt;K,V&gt; extends NavigableSubMap&lt;K,V&gt; &#123;&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 降序</span><br><span class="line"> */</span><br><span class="line">static final class DescendingSubMap&lt;K,V&gt;  extends NavigableSubMap&lt;K,V&gt; &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>TreeMap 之所以能够排序是因为内部使用的是红黑树的数据结构，红黑树就是一种平衡二叉查找树，节点使用一个 boolean 型表示。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">    private transient Entry&lt;K,V&gt; root; // 根节点</span><br><span class="line">    </span><br><span class="line">      // Red-black mechanics</span><br><span class="line"></span><br><span class="line">    private static final boolean RED   = false;</span><br><span class="line">    private static final boolean BLACK = true;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    static final class Entry&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; &#123;</span><br><span class="line">        K key;</span><br><span class="line">        V value;</span><br><span class="line">        Entry&lt;K,V&gt; left;</span><br><span class="line">        Entry&lt;K,V&gt; right;</span><br><span class="line">        Entry&lt;K,V&gt; parent;</span><br><span class="line">        boolean color = BLACK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="五-LinkHashMap"><a href="#五-LinkHashMap" class="headerlink" title="五.LinkHashMap"></a>五.LinkHashMap</h2><p>LinkHashMap 是一个用链表维护 Map 元素添加顺序的 Map .<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class LinkedHashMap&lt;K,V&gt;</span><br><span class="line">    extends HashMap&lt;K,V&gt;</span><br><span class="line">    implements Map&lt;K,V&gt;</span><br><span class="line">&#123;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">static class Entry&lt;K,V&gt; extends HashMap.Node&lt;K,V&gt; &#123;</span><br><span class="line">        Entry&lt;K,V&gt; before, after;</span><br><span class="line">        Entry(int hash, K key, V value, Node&lt;K,V&gt; next) &#123;</span><br><span class="line">            super(hash, key, value, next);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>LinkedHashMap 继承 HashMap 并实现了 Map 接口，Entry 也继承了 HashMap.Node  ,不过增加了 两个节点，before, after 用于将键值对构建成一条双向的链表。</p>
+<p>LinkHashMap 同时增加了一个对顺序的标记位。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 这个标记位表示的是遍历元素的模式</span><br><span class="line">// true 表示按最近最多访问的顺序</span><br><span class="line">// false 表示按插入的顺序</span><br><span class="line">// 默认是 false </span><br><span class="line">final boolean accessOrder;</span><br></pre></td></tr></table></figure></p>
+<p>LishHashMap 可以说是结合了 HashMap 查找元素的优点和链表遍历元素的快捷优点，牺牲了获取元素和删除元素维护链表性能。</p>
+<p>LishHashMap 并没有重写 put 方法，说明对 put 方式，两者的方式基本是一样，不过是构造节点 newNode 的时候进行前后节点的关联。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">private void linkNodeLast(LinkedHashMap.Entry&lt;K,V&gt; p) &#123;</span><br><span class="line">       LinkedHashMap.Entry&lt;K,V&gt; last = tail;</span><br><span class="line">       tail = p;</span><br><span class="line">       if (last == null)</span><br><span class="line">           head = p;</span><br><span class="line">       else &#123;</span><br><span class="line">           p.before = last;</span><br><span class="line">           last.after = p;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>而对于 get 方法，如果 accessOrder 标记位指定的是访问模式，还需要将最近访问的节点调整到链表的最后。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public V get(Object key) &#123;</span><br><span class="line">       Node&lt;K,V&gt; e;</span><br><span class="line">       if ((e = getNode(hash(key), key)) == null)</span><br><span class="line">           return null;</span><br><span class="line">       if (accessOrder)</span><br><span class="line">           afterNodeAccess(e); //调整这个节点的位置</span><br><span class="line">       return e.value;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   //将这个节点调整到链表的最后。</span><br><span class="line">void afterNodeAccess(Node&lt;K,V&gt; e) &#123; // move node to last</span><br><span class="line">       LinkedHashMap.Entry&lt;K,V&gt; last;</span><br><span class="line">       if (accessOrder &amp;&amp; (last = tail) != e) &#123;</span><br><span class="line">           LinkedHashMap.Entry&lt;K,V&gt; p =</span><br><span class="line">               (LinkedHashMap.Entry&lt;K,V&gt;)e, b = p.before, a = p.after;</span><br><span class="line">           p.after = null;</span><br><span class="line">           if (b == null)</span><br><span class="line">               head = a;</span><br><span class="line">           else</span><br><span class="line">               b.after = a;</span><br><span class="line">           if (a != null)</span><br><span class="line">               a.before = b;</span><br><span class="line">           else</span><br><span class="line">               last = b;</span><br><span class="line">           if (last == null)</span><br><span class="line">               head = p;</span><br><span class="line">           else &#123;</span><br><span class="line">               p.before = last;</span><br><span class="line">               last.after = p;</span><br><span class="line">           &#125;</span><br><span class="line">           tail = p;</span><br><span class="line">           ++modCount;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>遍历的时候就直接使用链表的形式进行遍历<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public void forEach(BiConsumer&lt;? super K, ? super V&gt; action) &#123;</span><br><span class="line">        if (action == null)</span><br><span class="line">            throw new NullPointerException();</span><br><span class="line">        int mc = modCount;</span><br><span class="line">        for (LinkedHashMap.Entry&lt;K,V&gt; e = head; e != null; e = e.after)</span><br><span class="line">            action.accept(e.key, e.value);</span><br><span class="line">        if (modCount != mc)</span><br><span class="line">            throw new ConcurrentModificationException();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>因此对于 LinkHashMap 的遍历，时间与元素的数量成正比，而 HashMap 则是与 table 数组成正比。且  LinkHashMap 还支持按访问顺序排序，因此可以简单地运用成最近使用的缓存策略。</p>
+<h2 id="六-ConcurrentHashMap"><a href="#六-ConcurrentHashMap" class="headerlink" title="六.ConcurrentHashMap"></a>六.ConcurrentHashMap</h2><p>前面的 Map 都是属于非线程安全的 Map ，可以通过 Collections.synchronizedMap(Map&lt;K,V&gt; m) 转换成一个线程安全的 Map<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">private static class SynchronizedMap&lt;K,V&gt;</span><br><span class="line">        implements Map&lt;K,V&gt;, Serializable &#123;</span><br><span class="line">        private static final long serialVersionUID = 1978198479659022715L;</span><br><span class="line"></span><br><span class="line">        private final Map&lt;K,V&gt; m;     // Backing Map</span><br><span class="line">        final Object      mutex;        // Object on which to synchronize</span><br><span class="line"></span><br><span class="line">        SynchronizedMap(Map&lt;K,V&gt; m) &#123;</span><br><span class="line">            this.m = Objects.requireNonNull(m);</span><br><span class="line">            mutex = this;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        SynchronizedMap(Map&lt;K,V&gt; m, Object mutex) &#123;</span><br><span class="line">            this.m = m;</span><br><span class="line">            this.mutex = mutex;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public int size() &#123;</span><br><span class="line">            synchronized (mutex) &#123;return m.size();&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        public boolean isEmpty() &#123;</span><br><span class="line">            synchronized (mutex) &#123;return m.isEmpty();&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        public boolean containsKey(Object key) &#123;</span><br><span class="line">            synchronized (mutex) &#123;return m.containsKey(key);&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        public boolean containsValue(Object value) &#123;</span><br><span class="line">            synchronized (mutex) &#123;return m.containsValue(value);&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        public V get(Object key) &#123;</span><br><span class="line">            synchronized (mutex) &#123;return m.get(key);&#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public V put(K key, V value) &#123;</span><br><span class="line">            synchronized (mutex) &#123;return m.put(key, value);&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        public V remove(Object key) &#123;</span><br><span class="line">            synchronized (mutex) &#123;return m.remove(key);&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        public void putAll(Map&lt;? extends K, ? extends V&gt; map) &#123;</span><br><span class="line">            synchronized (mutex) &#123;m.putAll(map);&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        public void clear() &#123;</span><br><span class="line">            synchronized (mutex) &#123;m.clear();&#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这种方式就是通过 synchronized 将原本的 Map 进行包装而已，锁住的一整个 Map ,同一时间只能只有一个线程访问，性能极差。</p>
+<p>java 8 的 ConcurrentHashMap 则是作为线程安全的最优实现。因为目的是在多线程的环境下使用，因此各个方面就需要考虑多线程的问题。</p>
+<h4 id="1-初始化"><a href="#1-初始化" class="headerlink" title="1.初始化"></a>1.初始化</h4><p>ConcurrentHashMap 的初始化时 懒加载的，只有在 put 操作的时候才进行初始化。<br>为了避免多次初始化，使用了变量 sizeCtl 用于控制 table 数组的初始化和扩容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private transient volatile int sizeCtl;</span><br></pre></td></tr></table></figure>
+<p>它的值代表如下集中情况：</p>
+<ul>
+<li>-1 ，表示 table 正在初始化或者扩容</li>
+<li>-(1+n) ，表示有 n 个线程在进行扩容</li>
+<li>大于 0:</li>
+<li><ul>
+<li>table 还未初始化，就表示初始化的数组大小</li>
+</ul>
+</li>
+<li><ul>
+<li>table 初始化了就表示，触发扩容的阈值。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">private final Node&lt;K,V&gt;[] initTable() &#123;</span><br><span class="line">       Node&lt;K,V&gt;[] tab; int sc;</span><br><span class="line">       while ((tab = table) == null || tab.length == 0) &#123;</span><br><span class="line">           if ((sc = sizeCtl) &lt; 0)</span><br><span class="line">               Thread.yield(); // lost initialization race; just spin</span><br><span class="line">           else if (U.compareAndSetInt(this, SIZECTL, sc, -1)) &#123;  // CAS 尝试</span><br><span class="line">               try &#123;</span><br><span class="line">                   if ((tab = table) == null || tab.length == 0) &#123;</span><br><span class="line">                       int n = (sc &gt; 0) ? sc : DEFAULT_CAPACITY;</span><br><span class="line">                       @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">                       Node&lt;K,V&gt;[] nt = (Node&lt;K,V&gt;[])new Node&lt;?,?&gt;[n];</span><br><span class="line">                       table = tab = nt;</span><br><span class="line">                       sc = n - (n &gt;&gt;&gt; 2);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125; finally &#123;</span><br><span class="line">                   sizeCtl = sc;</span><br><span class="line">               &#125;</span><br><span class="line">               break;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       return tab;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>sizeCtl 是一个 volatile 变量，只要有一个线程 CAS 操作成功，sizeCtl 就会被暂时地修改为-1，这样其他线程就能够根据 sizeCtl 得知 table 是否已经处于初始化状态中，最后 sizeCtl 会被设置成阈值，用于触发扩容操作。</p>
+<h4 id="2-扩容"><a href="#2-扩容" class="headerlink" title="2.扩容"></a>2.扩容</h4><p>对 talbe 的扩容并没有选择直接加锁，而是选择了基于 CAS 的并发同步策略，将table 作为一个多线程共享的任务队列，让多个线程同时协助扩容。这个时候只需要在原来的 table 数组上维护一个指针表示数组下标，当一个线程进行数据迁移的时候，就先移动指针。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">   * The next table index (plus one) to split while resizing.</span><br><span class="line">   */</span><br><span class="line">  private transient volatile int transferIndex;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/2018/10/13/java集合-Map/7.png" alt="image.png"></p>
+<h4 id="3-get"><a href="#3-get" class="headerlink" title="3.get"></a>3.get</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * The array of bins. Lazily initialized upon first insertion.</span><br><span class="line"> * Size is always a power of two. Accessed directly by iterators.</span><br><span class="line"> */</span><br><span class="line">transient volatile Node&lt;K,V&gt;[] table;</span><br></pre></td></tr></table></figure>
+<p>因为 get 只要保证访问 table 与节点的操作总是能够返回最新的数据就可以了。ConcurrentHashMap 并没有采用锁的方式，而是通过 volatile 关键字来保证它们的可见性。虽然 volatile 不保证原子性，但是 ConcurrentHashMap 只是用来确保访问到的变量是最新的，所以也不会发生什么问题。</p>
+<h4 id="4-put-和-remove"><a href="#4-put-和-remove" class="headerlink" title="4.put 和 remove"></a>4.put 和 remove</h4><p>ConcurrentHashMap 对锁的粒度只是针对每个 table 元素，对节点进行操作的时候需要通过互斥锁保证线程安全，只对需要操作的这个 table 元素加锁。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/** Implementation for put and putIfAbsent */</span><br><span class="line">    final V putVal(K key, V value, boolean onlyIfAbsent) &#123;</span><br><span class="line">        </span><br><span class="line">        for (Node&lt;K,V&gt;[] tab = table;;) &#123;</span><br><span class="line">                Node&lt;K,V&gt; f; int n, i, fh;</span><br><span class="line">           ...</span><br><span class="line">                synchronized (f) &#123;&#125;</span><br><span class="line">                </span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public V remove(Object key) &#123;</span><br><span class="line">    return replaceNode(key, null, null);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">final V replaceNode(Object key, V value, Object cv) &#123;</span><br><span class="line">    int hash = spread(key.hashCode());</span><br><span class="line">    for (Node&lt;K,V&gt;[] tab = table;;) &#123;</span><br><span class="line">        Node&lt;K,V&gt; f; int n, i, fh;</span><br><span class="line">        ...</span><br><span class="line">            synchronized (f) &#123;&#125;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>对于 put 和 removbe 的操作都是相似的，获取 table 元素的锁再进行操作。</p>
+<h4 id="5-计数"><a href="#5-计数" class="headerlink" title="5.计数"></a>5.计数</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">    private transient volatile long baseCount;</span><br><span class="line">     </span><br><span class="line">     private transient volatile CounterCell[] counterCells;</span><br><span class="line">     </span><br><span class="line">final long sumCount() &#123;</span><br><span class="line">        CounterCell[] as = counterCells; CounterCell a;</span><br><span class="line">        long sum = baseCount;</span><br><span class="line">        if (as != null) &#123;</span><br><span class="line">            for (int i = 0; i &lt; as.length; ++i) &#123;</span><br><span class="line">                if ((a = as[i]) != null)</span><br><span class="line">                    sum += a.value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return sum;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * A padded cell for distributing counts.  Adapted from LongAdder</span><br><span class="line">     * and Striped64.  See their internal docs for explanation.</span><br><span class="line">     */</span><br><span class="line">    @jdk.internal.vm.annotation.Contended static final class CounterCell &#123;</span><br><span class="line">        volatile long value;</span><br><span class="line">        CounterCell(long x) &#123; value = x; &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>ConcurrentHashMap 的计数方式使用两个变量进行协助。<br>在一个低并发的情况下，就只是简单地使用 CAS 操作来对 baseCount 进行更新，但只要这个 CAS 操作失败一次，就代表有多个线程正在竞争，那么就转而使用 CounterCell 数组进行计数，数组内的每个 ConuterCell 都是一个独立的计数单元</p>
+<p>每个线程找到自己对应的位置方式类似于 Hash 散列算法，但是这也代表着还是会产生竞争，因此还使用了自旋锁的方式，无限循环加上CAS 来模拟出一个自旋锁来保证线程安全，自旋锁的实现基于一个被 volatile 修饰的整数变量，该变量只会有两种状态：0 和 1，当它被设置为 0 时表示没有加锁，当它被设置为 1 时表示已被其他线程加锁。这个自旋锁用于保护初始化 CounterCell、初始化 CounterCell 数组以及对 CounterCell 数组进行扩容时的安全。</p>
+<p>最后的统计就只需要 将每个 CounterCell 和 baseCount 进行相加就行了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java-基础/" rel="tag"># Java 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/02/网络请求框架-OkHttp原理/" rel="next" title="网络请求框架----OkHttp原理">
+                <i class="fa fa-chevron-left"></i> 网络请求框架----OkHttp原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+ <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/d.jpg"
+                alt="海盗的帽子" />
+            
+              <p class="site-author-name" itemprop="name">海盗的帽子</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yishengma" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/m0_38089373" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-copyright"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-Map"><span class="nav-text">一.Map</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-AbstractMap"><span class="nav-text">二.AbstractMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-HashMap"><span class="nav-text">三.HashMap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Hash-算法"><span class="nav-text">1.Hash 算法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-简介"><span class="nav-text">(1)简介</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-hash-Code"><span class="nav-text">(2)hash Code</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-hash-表"><span class="nav-text">(3)hash 表</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-冲突"><span class="nav-text">(4)冲突</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#线性探测"><span class="nav-text">线性探测</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#二次探测"><span class="nav-text">二次探测</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#链地址法"><span class="nav-text">链地址法</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-HashMap"><span class="nav-text">2.HashMap</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#HashMap-的散列函数"><span class="nav-text">HashMap 的散列函数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#处理冲突"><span class="nav-text">处理冲突</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#数组扩容"><span class="nav-text">数组扩容</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#扩容后的下标"><span class="nav-text">扩容后的下标</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-TreeMap"><span class="nav-text">四.TreeMap</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SortedMap"><span class="nav-text">SortedMap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NavigableMap"><span class="nav-text">NavigableMap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TreeMap"><span class="nav-text">TreeMap</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五-LinkHashMap"><span class="nav-text">五.LinkHashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六-ConcurrentHashMap"><span class="nav-text">六.ConcurrentHashMap</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-初始化"><span class="nav-text">1.初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-扩容"><span class="nav-text">2.扩容</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-get"><span class="nav-text">3.get</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-put-和-remove"><span class="nav-text">4.put 和 remove</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-计数"><span class="nav-text">5.计数</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-[object Object]"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">海盗的帽子</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://rawgit.com/yishengma/147d4f60feb7cdc79c355ad2da83d513/raw/d624cffa8a67b4da07048d59ba0031e2860b1b2b/md5.min.js"></script>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '15e7b5ecca662534768c',
+          clientSecret: '26dc23d2d7a013bbcce94772f42f2e434247c6ba',
+          repo: 'yishengma.github.io',
+          owner: 'yishengma',
+          admin: ['yishengma'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2LveBulvcfzvQ6MBGz9b3URY-gzGzoHsz", "7mcKtxSVSDUSpSxFfdxBmyaP");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
