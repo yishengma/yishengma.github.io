@@ -64,7 +64,7 @@
 
 
 
-  <meta name="keywords" content="设计模式," />
+  <meta name="keywords" content="Java 基础," />
 
 
 
@@ -75,20 +75,21 @@
 
 
 
-<meta name="description" content="一.简介观察者模式的实现就是有两个角色，一个是观察者( 比如有观察者 a, b , c )，一个是被观察者(比如有被观察者 d ),他们之间存在这样的一种关系，被观察者一旦某些状态改变，就会通知观察者甚至引起被观察者的一些行为的产生。比如 前面说的 a , b , c 他们观察这 d 的 大小写变化，一旦 d 变成了 D  ,就会通知 被观察者 a, b, c , 而被观察者就可以因此得知 d 的">
-<meta name="keywords" content="设计模式">
+<meta name="description" content="一.简介String 是 Java 中使用得最频繁的一个类了，不管是作为开发者的业务使用，还是一些系统级别的字符使用， String 都发挥着重要的作用。又因 String 是不可变的、final的 且 Java 在运行时也保存了一个字符串池(String pool) ，就使得 String 变得很特殊。 二.==/equalsString 对象的创建有两种方式：12String strCompl">
+<meta name="keywords" content="Java 基础">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式----观察者模式在 Android 中的影子">
-<meta property="og:url" content="https://yishengma.github.io/2018/09/01/设计模式-观察者模式在-Android-中的影子/index.html">
+<meta property="og:title" content="Java----谈谈String">
+<meta property="og:url" content="https://yishengma.github.io/2018/10/14/Java-谈谈String/index.html">
 <meta property="og:site_name" content="海盗的帽子的博客">
-<meta property="og:description" content="一.简介观察者模式的实现就是有两个角色，一个是观察者( 比如有观察者 a, b , c )，一个是被观察者(比如有被观察者 d ),他们之间存在这样的一种关系，被观察者一旦某些状态改变，就会通知观察者甚至引起被观察者的一些行为的产生。比如 前面说的 a , b , c 他们观察这 d 的 大小写变化，一旦 d 变成了 D  ,就会通知 被观察者 a, b, c , 而被观察者就可以因此得知 d 的">
+<meta property="og:description" content="一.简介String 是 Java 中使用得最频繁的一个类了，不管是作为开发者的业务使用，还是一些系统级别的字符使用， String 都发挥着重要的作用。又因 String 是不可变的、final的 且 Java 在运行时也保存了一个字符串池(String pool) ，就使得 String 变得很特殊。 二.==/equalsString 对象的创建有两种方式：12String strCompl">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://yishengma.github.io/2018/09/01/设计模式-观察者模式在-Android-中的影子/1240">
-<meta property="og:updated_time" content="2018-09-01T15:05:05.891Z">
+<meta property="og:image" content="https://yishengma.github.io/2018/10/14/Java-谈谈String/1.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/10/14/Java-谈谈String/2.png">
+<meta property="og:updated_time" content="2018-10-14T07:34:08.957Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="设计模式----观察者模式在 Android 中的影子">
-<meta name="twitter:description" content="一.简介观察者模式的实现就是有两个角色，一个是观察者( 比如有观察者 a, b , c )，一个是被观察者(比如有被观察者 d ),他们之间存在这样的一种关系，被观察者一旦某些状态改变，就会通知观察者甚至引起被观察者的一些行为的产生。比如 前面说的 a , b , c 他们观察这 d 的 大小写变化，一旦 d 变成了 D  ,就会通知 被观察者 a, b, c , 而被观察者就可以因此得知 d 的">
-<meta name="twitter:image" content="https://yishengma.github.io/2018/09/01/设计模式-观察者模式在-Android-中的影子/1240">
+<meta name="twitter:title" content="Java----谈谈String">
+<meta name="twitter:description" content="一.简介String 是 Java 中使用得最频繁的一个类了，不管是作为开发者的业务使用，还是一些系统级别的字符使用， String 都发挥着重要的作用。又因 String 是不可变的、final的 且 Java 在运行时也保存了一个字符串池(String pool) ，就使得 String 变得很特殊。 二.==/equalsString 对象的创建有两种方式：12String strCompl">
+<meta name="twitter:image" content="https://yishengma.github.io/2018/10/14/Java-谈谈String/1.png">
 
 
 
@@ -118,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="https://yishengma.github.io/2018/09/01/设计模式-观察者模式在-Android-中的影子/"/>
+  <link rel="canonical" href="https://yishengma.github.io/2018/10/14/Java-谈谈String/"/>
 
 
 
 
 
-  <title>设计模式----观察者模式在 Android 中的影子 | 海盗的帽子的博客</title>
+  <title>Java----谈谈String | 海盗的帽子的博客</title>
   
 
 
@@ -275,7 +276,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/09/01/设计模式-观察者模式在-Android-中的影子/">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/10/14/Java-谈谈String/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="海盗的帽子">
@@ -292,7 +293,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">设计模式----观察者模式在 Android 中的影子</h1>
+          <h1 class="post-title" itemprop="name headline">Java----谈谈String</h1>
         
 
         <div class="post-meta">
@@ -304,8 +305,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-01T23:01:41+08:00">
-                2018-09-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-14T15:32:19+08:00">
+                2018-10-14
               </time>
             
 
@@ -320,8 +321,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-09-01T23:05:05+08:00">
-                2018-09-01
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-14T15:34:08+08:00">
+                2018-10-14
               </time>
             
           </span>
@@ -334,7 +335,7 @@
 
           
           
-             <span id="/2018/09/01/设计模式-观察者模式在-Android-中的影子/" class="leancloud_visitors" data-flag-title="设计模式----观察者模式在 Android 中的影子">
+             <span id="/2018/10/14/Java-谈谈String/" class="leancloud_visitors" data-flag-title="Java----谈谈String">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -365,28 +366,61 @@
       
 
       
-        <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一.简介"></a>一.简介</h2><p>观察者模式的实现就是有两个角色，一个是观察者( 比如有观察者 a, b , c )，一个是被观察者(比如有被观察者 d ),他们之间存在这样的一种关系，被观察者一旦某些状态改变，就会通知观察者甚至引起被观察者的一些行为的产生。比如 前面说的 a , b , c 他们观察这 d 的 大小写变化，一旦 d 变成了 D  ,就会通知 被观察者 a, b, c , 而被观察者就可以因此得知 d 的改变，也可以因此产生一些行为比如 自己也变大写。</p>
-<p><img src="/2018/09/01/设计模式-观察者模式在-Android-中的影子/1240" alt="image.png"></p>
-<p>《Android 源码设计模式》中的定义是：定义对象一种一对多的依赖关系，使得每当一个对象改变状态，则所有的依赖于它的对象会得到通知并自动更新,通常为一种发布 –订阅的系统。</p>
-<h4 id="二-使用场景"><a href="#二-使用场景" class="headerlink" title="二.使用场景"></a>二.使用场景</h4><ul>
-<li>1.关联行为场景，这种行为是可以拆分的，比如上文的大小写的行为。</li>
-<li>2.事件多级触发，比如 a ,b , c, 按顺序触发变成大写的操作。</li>
-<li>3.跨系统的消息交换场景，消息队列，事件总线 EventBus  等，比如 Android  中的广播机制。</li>
-</ul>
-<h4 id="三-在-Java-中的实现例子"><a href="#三-在-Java-中的实现例子" class="headerlink" title="三.在 Java 中的实现例子"></a>三.在 Java 中的实现例子</h4><ul>
-<li>Observer ，观察者，在 Java 9 后废弃</li>
-<li>Observable ，被观察者 ，在Java 9 后废弃</li>
-</ul>
-<p>虽然上面两个 接口已经废弃但是这并不影响体会 观察者模式的应用，因为这并不是观察者模式的一种唯一写法。实际上，作为一种设计模式，精华的其设计思想而不是实现细节。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">//码农是观察者，观察一些 IT 信息</span><br><span class="line">public class CoderObserver implements Observer &#123;</span><br><span class="line">    public  String name;</span><br><span class="line"></span><br><span class="line">    public CoderObserver(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void update(Observable o, Object arg) &#123;</span><br><span class="line">            System.out.println(name+&quot;更新&quot;+arg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;码农&quot;+name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//IT 信息是被观察者，一旦有信息就会通知观察者</span><br><span class="line">public class MessageObservable extends Observable &#123;</span><br><span class="line">    public void postMessage(String content) &#123;</span><br><span class="line">        setChanged();</span><br><span class="line">        notifyObservers(content);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        MessageObservable messageObservable = new MessageObservable();</span><br><span class="line">        CoderObserver coderObserver = new CoderObserver(&quot;No0&quot;);</span><br><span class="line">        CoderObserver coderObserver1 = new CoderObserver(&quot;No1&quot;);</span><br><span class="line">        CoderObserver coderObserver2 = new CoderObserver(&quot;No2&quot;);</span><br><span class="line"></span><br><span class="line">        messageObservable.addObserver(coderObserver);</span><br><span class="line">        messageObservable.addObserver(coderObserver1);</span><br><span class="line">        messageObservable.addObserver(coderObserver2);</span><br><span class="line"></span><br><span class="line">        messageObservable.postMessage(&quot;新的消息发布&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>执行结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">No2更新新的消息发布</span><br><span class="line">No1更新新的消息发布</span><br><span class="line">No0更新新的消息发布</span><br></pre></td></tr></table></figure>
-<h4 id="四-Android-中的体现"><a href="#四-Android-中的体现" class="headerlink" title="四.Android 中的体现"></a>四.Android 中的体现</h4><p>观察模式在 Android 中是一种常见的设计模式。</p>
+        <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一.简介"></a>一.简介</h2><p>String 是 Java 中使用得最频繁的一个类了，不管是作为开发者的业务使用，还是一些系统级别的字符使用， String 都发挥着重要的作用。又因 String 是不可变的、final的 且 Java 在运行时也保存了一个字符串池(String pool) ，就使得 String 变得很特殊。</p>
+<h2 id="二-equals"><a href="#二-equals" class="headerlink" title="二.==/equals"></a>二.==/equals</h2><p>String 对象的创建有两种方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String strComplier = &quot;A&quot;;</span><br><span class="line">String strNew = new String(&quot;A&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>虽然同样是创建字符串 “A” ,但是这两种方式在内存分配上是由区别的。</p>
+<h4 id="1-String-strComplier-“A”"><a href="#1-String-strComplier-“A”" class="headerlink" title="1.String strComplier = “A”;"></a>1.String strComplier = “A”;</h4><p>Java 程序在运行的时候会维护者一个常量池，编译期生成的各种字面量和符号引用会在类加载后进入方法区的运行时常量池。对于 上述这种实现字符串的方式就可以在编译的时候确定字符串的内容，因此这一行生成的内存结构就如下图。<br><img src="/2018/10/14/Java-谈谈String/1.png" alt="image.png"></p>
+<p>不严谨的讲：虚拟机栈中的 strComplier 存储的就是 A 在常量池中的地址。</p>
+<h4 id="2-String-strNew-new-String-“A”"><a href="#2-String-strNew-new-String-“A”" class="headerlink" title="2. String strNew = new String(“A”);"></a>2. String strNew = new String(“A”);</h4><p>因为使用的 new 的方式，所以这句代码只有的运行的时候才能确定字符串的内容。而对于 new 关键字，java 是将对象的实例数据存放堆上的，但是又因 String 常量池的存在，因此实际上在堆上的 String 对象的数据又指向了字符串常量池。</p>
+<p><img src="/2018/10/14/Java-谈谈String/2.png" alt="image.png"></p>
+<p>不严谨的讲:虚拟机栈中的 strNew 存储的就是 strNew 这个对象在堆内存的地址，而 strNew 中的字符串数据又指向了常量池中的 A .</p>
+<h4 id="3-equals"><a href="#3-equals" class="headerlink" title="3.==/equals"></a>3.==/equals</h4><p>有了前面的知识基础之后，对于字符串这两个比较操作就十分简单了。</p>
+<h5 id="1"><a href="#1" class="headerlink" title="(1).=="></a>(1).==</h5><p>== 比较的两个对象的引用是否相等，也就是说比较两个地址是否相等，显然对于下面的比较。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String a = &quot;A&quot;;</span><br><span class="line">String a1 = &quot;A&quot;;</span><br><span class="line">System.out.println(a1 == a); //指向的都是 A 的地址，地址相同，返回的是 true</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String a = new String(&quot;A&quot;);</span><br><span class="line">String a1 = new String(&quot;A&quot;);</span><br><span class="line">System.out.println(a==a1);//分别指向的是在堆内存上的对象的地址，地址不同，返回的是 false</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String a = &quot;A&quot;;</span><br><span class="line">String a1 = new String(&quot;A&quot;);</span><br><span class="line">System.out.println(a == a1);//一个指向常量池，一个指向堆，返回 false</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String a = &quot;A&quot;;</span><br><span class="line">String a1 = a; //编译的时候不能确定</span><br><span class="line">System.out.println(a == a1);//一个指向常量池，一个指向堆，返回 false</span><br></pre></td></tr></table></figure>
+<p>通过这个例子可以看出实际上对于 == 的比较，只要在编译的时候能够确定的，都是相同 的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">String a = &quot;A1&quot;;</span><br><span class="line">String a1 = &quot;A&quot; +1;</span><br><span class="line">System.out.println(a == a1);//true</span><br><span class="line"></span><br><span class="line">String a = &quot;A1&quot;;</span><br><span class="line">String a1 = a +1;</span><br><span class="line">System.out.println(a == a1);//false</span><br><span class="line"></span><br><span class="line">String a = &quot;A1&quot;;</span><br><span class="line">final String a1 = a + 1;</span><br><span class="line">System.out.println(a == a1);// final 修饰的在 a1 在编译的时候就能确定下来</span><br><span class="line"></span><br><span class="line">private static String get1() &#123;</span><br><span class="line">    return &quot;1&quot;;</span><br><span class="line">&#125;</span><br><span class="line">String a = &quot;A&quot;;</span><br><span class="line">final String a1 = get1();</span><br><span class="line">String a2 = &quot;a&quot; + a1;</span><br><span class="line">System.out.println(a == a2); //使用了 方法，只能在运行的时候确定，所以返回false</span><br></pre></td></tr></table></figure></p>
+<h5 id="2-equals"><a href="#2-equals" class="headerlink" title="(2)equals"></a>(2)equals</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public boolean equals(Object anObject) &#123;</span><br><span class="line">        if (this == anObject) &#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        if (anObject instanceof String) &#123;</span><br><span class="line">            String aString = (String)anObject;</span><br><span class="line">            if (coder() == aString.coder()) &#123;</span><br><span class="line">                return isLatin1() ? StringLatin1.equals(value, aString.value)</span><br><span class="line">                                  : StringUTF16.equals(value, aString.value);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>对于 equals 的比较：</p>
 <ul>
-<li>ListView/RecycklerView 中 的 Adapter， 对于 notifyDataSetChanged 这个方法每次调用都会通知各个item 刷新数据。就是一个观察者模式，其中数据是一个被观察者，每个 item 就是一个观察者。</li>
-<li>广播的发布和广播接收者的接收 也是一个观察者模式的体现，或者说成一种订阅-发布更加合适，每一个订阅者订阅自己想要的广播，每一个广播都是一个发布者，且通过系统进行中转/转发，从而实现了观察者这种模式，因为这种信息的传递时跨进程的，因此称这种方式为<br>跨系统的消息交换场景。详见<a href="https://blog.csdn.net/m0_38089373/article/details/81031652" target="_blank" rel="noopener">Android 广播的流程</a></li>
-<li>观察者一些重要的实践在于一些开源的框架，EventBus ，Otto 等，简化了组件之间的交互，从而降低了耦合。</li>
+<li>首先如果是两个对象相同的对象就直接返回 true .</li>
+<li>接着先判断时候属于 String 类的对象，不是就直接返回 false ,这就说明 对于 StringBuilder(“A”) 和 String(“A”) 显然 equals 返回的是 false ，但是对于前面说过的两种方式，实际上都是 String 对象。</li>
+<li>然后，就要判断编码的方式如果编码的方式不同就直接返回 false ，如果编码方式相同就比较两个字符串是否完全相等。</li>
+<li>如果两个字符串是完全的一样， 就是 true .</li>
 </ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String stringCompiler = &quot;A&quot;;</span><br><span class="line">String stringNew = new String(&quot;A&quot;);</span><br><span class="line">StringBuilder stringBuilder = new StringBuilder(&quot;A&quot;);</span><br><span class="line">StringBuffer stringBuffer = new StringBuffer(&quot;A&quot;)</span><br><span class="line">System.out.println(stringCompiler.equals(stringNew));  // true</span><br><span class="line">System.out.println(stringCompiler.equals(stringBuilder));  // false</span><br><span class="line">System.out.println(stringNew.equals(stringBuffer));   // false</span><br></pre></td></tr></table></figure>
+<h5 id="3-引申"><a href="#3-引申" class="headerlink" title="(3)引申"></a>(3)引申</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String strNew = new String(&quot;A&quot;);</span><br></pre></td></tr></table></figure>
+<p>对于这行代码，前面说过会在堆保存对象的实例数据，然后在常量池保存了 “A” 这个常量。所以这一句实际涉及了两个 String 对象。</p>
+<h2 id="三-final"><a href="#三-final" class="headerlink" title="三.final"></a>三.final</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public final class String</span><br><span class="line">    implements java.io.Serializable, Comparable&lt;String&gt;, CharSequence &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>总所周知，String 是 final ，也就是String 是不可变的。即一个 String 对象创建之后所有对它修改后的字符串都是新生成的 String  对象。</p>
+<p>String 设计成 final 主要有下的原因：</p>
+<ul>
+<li>实现字符串常量池，只有当字符串是不可变时字符串池才有可能实现，字符串池的实现可以在运行时节约很多 heap 空间，因为不同的字符串变量都指向池中的同一个字符串，即可以实现多个变量引用 JVM 内存中的同一个字符串实例，如果字符串不是不变的，String interning 将不能实现(String interning 是指对不同的字符串仅仅只保存一个，即不会保存多个相同的字符串)，因为这样的话，如果变量改变了它的值，那么其它指向这个值的变量的值也会一起改变。</li>
+<li>安全问题，在系统中有很多地方都是以字符串的形式存在的，比如数据库的用户名，Socket 的主机和端口，当你在调用其他方法，比如调用一些系统级操作之前，可能会有一系列校验，如果是可变类的话，可能在你校验过后，其内部的值被改变了，可能引起严重的系统崩溃问题。</li>
+<li>缓存提升性能，String 大量运用在哈希的处理中，由于 String 的不可变性，可以只计算一次哈希值，然后缓存在内部，后续直接取就好了，字符串的处理速度要快过其它的键对象，这就是 HashMap 中的键往往都使用字符串的原因。</li>
+<li>线程安全，因为字符串是不可变的，所以是多线程安全的，同一个字符串实例可以被多个线程共享。这样便不用因为线程安全问题而使用同步。</li>
+</ul>
+<h4 id="使用-StringBuilder-和-StringBuffer-拼接字符串"><a href="#使用-StringBuilder-和-StringBuffer-拼接字符串" class="headerlink" title="使用 StringBuilder 和 StringBuffer 拼接字符串"></a>使用 StringBuilder 和 StringBuffer 拼接字符串</h4><p>前面说过 String 是final 类的，因此对于字符串的拼接实际上就是创建了新的对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String str = &quot;111&quot;;</span><br><span class="line">str += &quot;222&quot;;</span><br><span class="line">str += &quot;333&quot;;</span><br><span class="line">System.out.println(str);</span><br></pre></td></tr></table></figure></p>
+<p>编译器每次碰到 ”+=” 的时候，会 new 一个 StringBuilder 出来，接着调用 append 方法，在调用 toString 方法，生成新字符串。因此对于字符串的拼接，应该直接使用  StringBuilder 或者 StringBuffer。虽然 这两类也是 final 但是他们在内部 维护了父类一个可变的 byte 数组，每次 append 的时候就往 byte 数组里面放字符.</p>
+<p>StringBuffer 和 StringBuilder用法一模一样，唯一的区别只是 StringBuffer 是线程安全的，它对所有方法都做了同步，StringBuilder 是线程非安全的，所以在不涉及线程安全的场景，比如方法内部，尽量使用 StringBuilder，避免同步带来的消耗.</p>
+<ul>
+<li><p>StringBuffer</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">   public synchronized StringBuffer append(Object obj) &#123;</span><br><span class="line">       toStringCache = null;</span><br><span class="line">       super.append(String.valueOf(obj));</span><br><span class="line">       return this;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>StringBuilder</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">   public StringBuilder append(Object obj) &#123;</span><br><span class="line">       return append(String.valueOf(obj));</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   @Override</span><br><span class="line">   @HotSpotIntrinsicCandidate</span><br><span class="line">   public StringBuilder append(String str) &#123;</span><br><span class="line">       super.append(str);</span><br><span class="line">       return this;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="四-null"><a href="#四-null" class="headerlink" title="四.null"></a>四.null</h2><p>String 是一个 引用型对象，因此也就存在着 null 值，又因 String 是一个经常使用的对象，如果为 null 的话很可能导致整个系统崩溃，因此 String 对 null  值有很高的容错率<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static String valueOf(Object obj) &#123;</span><br><span class="line">        return (obj == null) ? &quot;null&quot; : obj.toString();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>String 对象：直接判断是否为 null，如果为 null 给 null 对象赋值为”null”。</li>
+<li>非 String 对象：通过调用 String.valueOf 方法，如果是 null 对象，就返回 “null” ，否则调用对象的 toString 方法</li>
+</ul>
+<p>对于字符串的拼接也是如此<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String s = null;</span><br><span class="line">s = s + &quot;!&quot;;</span><br><span class="line">System.out.print(s);// 输出 null!</span><br></pre></td></tr></table></figure></p>
+<p>前面说过对于 “+=” 都是转为 StringBuffer 的 append ,下面就看 AbstractStringBuilder 是如何处理 null 的 （AbstractStringBuilder 是 StringBuffer 和 StringBuilder 的父类 ）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">private AbstractStringBuilder appendNull() &#123;</span><br><span class="line">       ensureCapacityInternal(count + 4);</span><br><span class="line">       int count = this.count;</span><br><span class="line">       byte[] val = this.value;</span><br><span class="line">       if (isLatin1()) &#123;</span><br><span class="line">           val[count++] = &apos;n&apos;;</span><br><span class="line">           val[count++] = &apos;u&apos;;</span><br><span class="line">           val[count++] = &apos;l&apos;;</span><br><span class="line">           val[count++] = &apos;l&apos;;</span><br><span class="line">       &#125; else &#123;</span><br><span class="line">           count = StringUTF16.putCharsAt(val, count, &apos;n&apos;, &apos;u&apos;, &apos;l&apos;, &apos;l&apos;);</span><br><span class="line">       &#125;</span><br><span class="line">       this.count = count;</span><br><span class="line">       return this;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到也是直接添加 “null” 字符串。</p>
+<h2 id="五-保密性"><a href="#五-保密性" class="headerlink" title="五.保密性"></a>五.保密性</h2><p>为什么针对安全保密高的信息，char[]比String更好?</p>
+<p>因为 String 是不可变的，就是说它一旦创建，就不能更改了，直到垃圾收集器将它回收走。而字符数组中的元素是可以更改的（这就意味着可以在使用完之后将其更改，而不会保留原始的数据）。所以使用字符数组的话，安全保密性高的信息(如密码之类的)将不会存在于系统中被他人看到。</p>
 
       
     </div>
@@ -404,7 +438,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+            <a href="/tags/Java-基础/" rel="tag"># Java 基础</a>
           
         </div>
       
@@ -417,8 +451,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/28/设计模式-单例模式的实现以及实现原理/" rel="next" title="设计模式----单例模式的实现以及实现原理">
-                <i class="fa fa-chevron-left"></i> 设计模式----单例模式的实现以及实现原理
+              <a href="/2018/10/13/java集合-Map/" rel="next" title="java集合----Map">
+                <i class="fa fa-chevron-left"></i> java集合----Map
               </a>
             
           </div>
@@ -426,10 +460,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/09/07/图片加载与图片加载框架-Glide/" rel="prev" title="图片加载与图片加载框架 Glide">
-                图片加载与图片加载框架 Glide <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -574,7 +604,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-简介"><span class="nav-text">一.简介</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#二-使用场景"><span class="nav-text">二.使用场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三-在-Java-中的实现例子"><span class="nav-text">三.在 Java 中的实现例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四-Android-中的体现"><span class="nav-text">四.Android 中的体现</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-简介"><span class="nav-text">一.简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-equals"><span class="nav-text">二.==/equals</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-String-strComplier-“A”"><span class="nav-text">1.String strComplier = “A”;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-String-strNew-new-String-“A”"><span class="nav-text">2. String strNew = new String(“A”);</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-equals"><span class="nav-text">3.==/equals</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1"><span class="nav-text">(1).==</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-equals"><span class="nav-text">(2)equals</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-引申"><span class="nav-text">(3)引申</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-final"><span class="nav-text">三.final</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用-StringBuilder-和-StringBuffer-拼接字符串"><span class="nav-text">使用 StringBuilder 和 StringBuffer 拼接字符串</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-null"><span class="nav-text">四.null</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五-保密性"><span class="nav-text">五.保密性</span></a></li></ol></div>
             
 
           </div>
