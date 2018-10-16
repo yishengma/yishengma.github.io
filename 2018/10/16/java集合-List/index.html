@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16.ico?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java 基础," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.Listjava 中的 List 是一种类似于列表的集合，以前的一篇文章List说过 Map 接口的实现类是不保证添加顺序的(LinkedHashMap 除外) ,但是对于 List 的接口实现类，基本上都是保证了添加的顺序。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464">
+<meta name="keywords" content="Java 基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java集合----List">
+<meta property="og:url" content="https://yishengma.github.io/2018/10/16/java集合-List/index.html">
+<meta property="og:site_name" content="海盗的帽子的博客">
+<meta property="og:description" content="一.Listjava 中的 List 是一种类似于列表的集合，以前的一篇文章List说过 Map 接口的实现类是不保证添加顺序的(LinkedHashMap 除外) ,但是对于 List 的接口实现类，基本上都是保证了添加的顺序。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-10-16T14:52:47.744Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java集合----List">
+<meta name="twitter:description" content="一.Listjava 中的 List 是一种类似于列表的集合，以前的一篇文章List说过 Map 接口的实现类是不保证添加顺序的(LinkedHashMap 除外) ,但是对于 List 的接口实现类，基本上都是保证了添加的顺序。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yishengma.github.io/2018/10/16/java集合-List/"/>
+
+
+
+
+
+  <title>java集合----List | 海盗的帽子的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">海盗的帽子的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/10/16/java集合-List/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="海盗的帽子">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/d.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="海盗的帽子的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java集合----List</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T22:52:01+08:00">
+                2018-10-16
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-16T22:52:47+08:00">
+                2018-10-16
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/10/16/java集合-List/" class="leancloud_visitors" data-flag-title="java集合----List">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-List"><a href="#一-List" class="headerlink" title="一.List"></a>一.List</h2><p>java 中的 List 是一种类似于列表的集合，<a href="https://note.youdao.com/" target="_blank" rel="noopener">以前的一篇文章List</a>说过 Map 接口的实现类是不保证添加顺序的(LinkedHashMap 除外) ,但是对于 List 的接口实现类，基本上都是保证了添加的顺序。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br></pre></td><td class="code"><pre><span class="line">public interface List&lt;E&gt; extends Collection&lt;E&gt; &#123;</span><br><span class="line">    // Query Operations</span><br><span class="line">    //询问操作</span><br><span class="line">    int size();</span><br><span class="line">    boolean isEmpty();</span><br><span class="line">    boolean contains(Object o);</span><br><span class="line">    Iterator&lt;E&gt; iterator();</span><br><span class="line">    Object[] toArray();</span><br><span class="line">    &lt;T&gt; T[] toArray(T[] a);</span><br><span class="line">    </span><br><span class="line">    // Modification Operations</span><br><span class="line">    //修改操作</span><br><span class="line">    boolean add(E e);</span><br><span class="line">    boolean remove(Object o);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    // Bulk Modification Operations</span><br><span class="line">    //大量修改的操作</span><br><span class="line">    boolean containsAll(Collection&lt;?&gt; c);</span><br><span class="line">    boolean addAll(Collection&lt;? extends E&gt; c);</span><br><span class="line">    boolean addAll(int index, Collection&lt;? extends E&gt; c);</span><br><span class="line">    boolean removeAll(Collection&lt;?&gt; c);</span><br><span class="line">    boolean retainAll(Collection&lt;?&gt; c);</span><br><span class="line">    default void replaceAll(UnaryOperator&lt;E&gt; operator) &#123;</span><br><span class="line">        Objects.requireNonNull(operator);</span><br><span class="line">        final ListIterator&lt;E&gt; li = this.listIterator();</span><br><span class="line">        while (li.hasNext()) &#123;</span><br><span class="line">            li.set(operator.apply(li.next()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     *Java 8 开始支持排序操作</span><br><span class="line">     * @since 1.8</span><br><span class="line">     */</span><br><span class="line">    @SuppressWarnings(&#123;&quot;unchecked&quot;, &quot;rawtypes&quot;&#125;)</span><br><span class="line">    default void sort(Comparator&lt;? super E&gt; c) &#123;</span><br><span class="line">        Object[] a = this.toArray();</span><br><span class="line">        Arrays.sort(a, (Comparator) c);</span><br><span class="line">        ListIterator&lt;E&gt; i = this.listIterator();</span><br><span class="line">        for (Object e : a) &#123;</span><br><span class="line">            i.next();</span><br><span class="line">            i.set((E) e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    void clear();</span><br><span class="line">    </span><br><span class="line">    // Comparison and hashing</span><br><span class="line">    //比较和 hash 操作</span><br><span class="line">    boolean equals(Object o);</span><br><span class="line">    int hashCode();</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    // Positional Access Operations</span><br><span class="line">    //基于位置的访问</span><br><span class="line">    E get(int index);</span><br><span class="line">    E set(int index, E element);</span><br><span class="line">    void add(int index, E element);</span><br><span class="line">    E remove(int index);</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    // Search Operations</span><br><span class="line">    //返回位置的操作</span><br><span class="line">    int indexOf(Object o);</span><br><span class="line">    int lastIndexOf(Object o);</span><br><span class="line"></span><br><span class="line">    // List Iterators</span><br><span class="line">    //迭代器，用于遍历列表</span><br><span class="line">    ListIterator&lt;E&gt; listIterator();</span><br><span class="line">    ListIterator&lt;E&gt; listIterator(int index);</span><br><span class="line"></span><br><span class="line">    // View</span><br><span class="line">    //list 的子视图，也就是子列表</span><br><span class="line">    List&lt;E&gt; subList(int fromIndex, int toIndex);</span><br><span class="line">     /*</span><br><span class="line">     * @return a &#123;@code Spliterator&#125; over the elements in this list</span><br><span class="line">     * @since 1.8</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    default Spliterator&lt;E&gt; spliterator() &#123;</span><br><span class="line">        if (this instanceof RandomAccess) &#123;</span><br><span class="line">            return new AbstractList.RandomAccessSpliterator&lt;&gt;(this);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return Spliterators.spliterator(this, Spliterator.ORDERED);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * Java 9 扩展的返回不可变的list 列表</span><br><span class="line">     * @since 9</span><br><span class="line">     */</span><br><span class="line">    static &lt;E&gt; List&lt;E&gt; of() &#123;</span><br><span class="line">        return ImmutableCollections.List0.instance();</span><br><span class="line">    &#125;</span><br><span class="line">    static &lt;E&gt; List&lt;E&gt; of(E e1) &#123;</span><br><span class="line">        return new ImmutableCollections.List1&lt;&gt;(e1);</span><br><span class="line">    &#125;</span><br><span class="line">    static &lt;E&gt; List&lt;E&gt; of(E e1, E e2) &#123;</span><br><span class="line">        return new ImmutableCollections.List2&lt;&gt;(e1, e2);</span><br><span class="line">    &#125;</span><br><span class="line">    static &lt;E&gt; List&lt;E&gt; of(E e1, E e2, E e3) &#123;</span><br><span class="line">        return new ImmutableCollections.ListN&lt;&gt;(e1, e2, e3);</span><br><span class="line">    &#125;</span><br><span class="line">    static &lt;E&gt; List&lt;E&gt; of(E e1, E e2, E e3, E e4) &#123;</span><br><span class="line">        return new ImmutableCollections.ListN&lt;&gt;(e1, e2, e3, e4);</span><br><span class="line">    &#125;</span><br><span class="line">    static &lt;E&gt; List&lt;E&gt; of(E e1, E e2, E e3, E e4, E e5) &#123;</span><br><span class="line">        return new ImmutableCollections.ListN&lt;&gt;(e1, e2, e3, e4, e5);</span><br><span class="line">    &#125;</span><br><span class="line">    static &lt;E&gt; List&lt;E&gt; of(E e1, E e2, E e3, E e4, E e5, E e6) &#123;</span><br><span class="line">        return new ImmutableCollections.ListN&lt;&gt;(e1, e2, e3, e4, e5,</span><br><span class="line">                                                e6);</span><br><span class="line">    &#125;</span><br><span class="line">    static &lt;E&gt; List&lt;E&gt; of(E e1, E e2, E e3, E e4, E e5, E e6, E e7) &#123;</span><br><span class="line">        return new ImmutableCollections.ListN&lt;&gt;(e1, e2, e3, e4, e5,</span><br><span class="line">                                                e6, e7);</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    static &lt;E&gt; List&lt;E&gt; of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) &#123;</span><br><span class="line">        return new ImmutableCollections.ListN&lt;&gt;(e1, e2, e3, e4, e5,</span><br><span class="line">                                                e6, e7, e8);</span><br><span class="line">    &#125;</span><br><span class="line">    static &lt;E&gt; List&lt;E&gt; of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) &#123;</span><br><span class="line">        return new ImmutableCollections.ListN&lt;&gt;(e1, e2, e3, e4, e5,</span><br><span class="line">                                                e6, e7, e8, e9);</span><br><span class="line">    &#125;</span><br><span class="line">    static &lt;E&gt; List&lt;E&gt; of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) &#123;</span><br><span class="line">        return new ImmutableCollections.ListN&lt;&gt;(e1, e2, e3, e4, e5,</span><br><span class="line">                                                e6, e7, e8, e9, e10);</span><br><span class="line">    &#125;</span><br><span class="line">    @SafeVarargs</span><br><span class="line">    @SuppressWarnings(&quot;varargs&quot;)</span><br><span class="line">    static &lt;E&gt; List&lt;E&gt; of(E... elements) &#123;</span><br><span class="line">        switch (elements.length) &#123; // implicit null check of elements</span><br><span class="line">            case 0:</span><br><span class="line">                return ImmutableCollections.List0.instance();</span><br><span class="line">            case 1:</span><br><span class="line">                return new ImmutableCollections.List1&lt;&gt;(elements[0]);</span><br><span class="line">            case 2:</span><br><span class="line">                return new ImmutableCollections.List2&lt;&gt;(elements[0], elements[1]);</span><br><span class="line">            default:</span><br><span class="line">                return new ImmutableCollections.ListN&lt;&gt;(elements);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">      *Java 新增的复制集合方法，如果是不可变的集合，就直接返回，如果是可变的集*合就复制并返回一个不可变得集合。</span><br><span class="line">     * @since 10</span><br><span class="line">     */</span><br><span class="line">    @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">    static &lt;E&gt; List&lt;E&gt; copyOf(Collection&lt;? extends E&gt; coll) &#123;</span><br><span class="line">        if (coll instanceof ImmutableCollections.AbstractImmutableList) &#123;</span><br><span class="line">            return (List&lt;E&gt;)coll;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return (List&lt;E&gt;)List.of(coll.toArray());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="二-ArrayList"><a href="#二-ArrayList" class="headerlink" title="二.ArrayList"></a>二.ArrayList</h2><h4 id="1-继承关系"><a href="#1-继承关系" class="headerlink" title="1.继承关系"></a>1.继承关系</h4><p>首先看一下  ArrayList 的继承关系<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class ArrayList&lt;E&gt; extends AbstractList&lt;E&gt;</span><br><span class="line">        implements List&lt;E&gt;, RandomAccess, Cloneable, java.io.Serializable</span><br><span class="line">&#123;&#125;</span><br><span class="line">public abstract class AbstractList&lt;E&gt; extends AbstractCollection&lt;E&gt; implements List&lt;E&gt; &#123;&#125;</span><br><span class="line"></span><br><span class="line">public abstract class AbstractCollection&lt;E&gt; implements Collection&lt;E&gt; &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>与 Map 相似，ArrayList 也会继承一个抽象类 AbstractList 而这个抽象类有继承自  AbstractCollection ，这两个抽象类的主要作用就是将一些通用的方法进行复用，对于具体的实现可能就会进行重写从而实现自己的特性。</p>
+<p>除此之外，还看到 RandomAccess 这个接口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> * for typical instances of the class, this loop:</span><br><span class="line"> * &lt;pre&gt;</span><br><span class="line"> *     for (int i=0, n=list.size(); i &amp;lt; n; i++)</span><br><span class="line"> *         list.get(i);</span><br><span class="line"> * &lt;/pre&gt;</span><br><span class="line"> * runs faster than this loop:</span><br><span class="line"> * &lt;pre&gt;</span><br><span class="line"> *     for (Iterator i=list.iterator(); i.hasNext(); )</span><br><span class="line"> *         i.next();</span><br><span class="line"> * &lt;/pre&gt;</span><br><span class="line">public interface RandomAccess &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这是一个 标记接口，在这个接口中的说明中有一段话  <em>this loop: …  runs faster than this loop:</em> (如上)，这段话的意思就是说对于 实现这个接口的类来说，使用 for 循环进行遍历要比使用迭代器快得多，比如在 Collections 的查巡操作中会根据书数组还是迭代器进行选择<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">  public static &lt;T&gt; int binarySearch(List&lt;? extends T&gt; list, T key, Comparator&lt;? super T&gt; c) &#123;</span><br><span class="line">      if (c==null)</span><br><span class="line">          return binarySearch((List&lt;? extends Comparable&lt;? super T&gt;&gt;) list, key);</span><br><span class="line"></span><br><span class="line">      if (list instanceof RandomAccess || list.size()&lt;BINARYSEARCH_THRESHOLD)</span><br><span class="line">          return Collections.indexedBinarySearch(list, key, c);</span><br><span class="line">      else</span><br><span class="line">          return Collections.iteratorBinarySearch(list, key, c);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>至于 ArrayList 为什么要实现这个接口？ 实际上就是因为 ArrayList 的内部实现是通过数组实现的。</p>
+<blockquote>
+<p>标记接口就是标记实现这个接口的类具有某种特性。</p>
+</blockquote>
+<h4 id="2-数组"><a href="#2-数组" class="headerlink" title="2.数组"></a>2.数组</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transient Object[] elementData; // non-private to simplify nested class access</span><br></pre></td></tr></table></figure>
+<p>ArrayList 从名字就可以猜出这是一个基于数组的集合，内部有一个用于存储元素的集合 elementData，这里使用 transient 进行修饰，就说明这个数组不进行序列化，但是 ArrayList 又支持序列化，这似乎有点矛盾，我们接着看。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * The size of the ArrayList (the number of elements it contains).</span><br><span class="line">    *</span><br><span class="line">    * @serial</span><br><span class="line">    */</span><br><span class="line">   private int size; //说明这是数组元素的个数，不是数组的长度</span><br><span class="line">   </span><br><span class="line">   //重写 writeObject </span><br><span class="line">private void writeObject(java.io.ObjectOutputStream s)</span><br><span class="line">       throws java.io.IOException &#123;</span><br><span class="line">       // Write out element count, and any hidden stuff</span><br><span class="line">       int expectedModCount = modCount;</span><br><span class="line">       s.defaultWriteObject();</span><br><span class="line"></span><br><span class="line">       // Write out size as capacity for behavioral compatibility with clone()</span><br><span class="line">       s.writeInt(size); </span><br><span class="line"></span><br><span class="line">       // Write out all elements in the proper order.</span><br><span class="line">       for (int i=0; i&lt;size; i++) &#123; // 这是根据集合的元素个数，而不是数组的长度</span><br><span class="line">           s.writeObject(elementData[i]);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       if (modCount != expectedModCount) &#123;</span><br><span class="line">           throw new ConcurrentModificationException();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>ArrayList 并没有去序列化整个数组，而是对数组中的元素逐个进行序列化，这样做就减少空元素的序列化，加快序列化的速度。</p>
+<h4 id="3-add"><a href="#3-add" class="headerlink" title="3.add"></a>3.add</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> public boolean add(E e) &#123;</span><br><span class="line">        modCount++;</span><br><span class="line">        add(e, elementData, size);</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">private void add(E e, Object[] elementData, int s) &#123;</span><br><span class="line">        if (s == elementData.length) //判断是否达到数组的长度</span><br><span class="line">            elementData = grow(); // 如果是就进行扩容</span><br><span class="line">        elementData[s] = e; //如果还没有就直接对数组进行赋值</span><br><span class="line">        size = s + 1;  // 将集合元素加一</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>对于 ArrayList 的添加元素操作，首先会判断是否达到数组的长度，如果是就进行扩容，如果还没有就直接对数组进行赋值，最后将将集合元素加一。</p>
+<p>这里的关键就是数组的动态扩容。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">   /**</span><br><span class="line">     * Default initial capacity.</span><br><span class="line">     * 数组默认初始化个数 为 10 个</span><br><span class="line">     */</span><br><span class="line">    private static final int DEFAULT_CAPACITY = 10;</span><br><span class="line">    </span><br><span class="line">    //数组的极限值，-8 是因为一些 虚拟机会在在数组添加一些 头信息</span><br><span class="line">    //-8 进行容错，但是最后还是最大还是创建 Integer.MAX_VALUE  。</span><br><span class="line">    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;</span><br><span class="line">    </span><br><span class="line">private Object[] grow() &#123;</span><br><span class="line">        return grow(size + 1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> private Object[] grow(int minCapacity) &#123;</span><br><span class="line">        System.out.println(newCapacity(minCapacity));</span><br><span class="line">        return elementData = Arrays.copyOf(elementData,</span><br><span class="line">                newCapacity(minCapacity));</span><br><span class="line">    &#125;</span><br><span class="line">// 扩容的具体操作</span><br><span class="line">private int newCapacity(int minCapacity) &#123;</span><br><span class="line">        // overflow-conscious code</span><br><span class="line">        //原来的容量</span><br><span class="line">        int oldCapacity = elementData.length;</span><br><span class="line">        //计算新的容量</span><br><span class="line">        //新的容量 = 原来的容量 + （原来的容量的一半）</span><br><span class="line">        int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1);</span><br><span class="line">        </span><br><span class="line">        //如果计算的新的容量比指定的扩容容量小，那么就使用指定的容量</span><br><span class="line">        //通常比指定的小是因为 使用 addAll 添加元素</span><br><span class="line">        if (newCapacity - minCapacity &lt;= 0) &#123;</span><br><span class="line">            if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA)</span><br><span class="line">                return Math.max(DEFAULT_CAPACITY, minCapacity);</span><br><span class="line">            if (minCapacity &lt; 0) // overflow</span><br><span class="line">                throw new OutOfMemoryError();</span><br><span class="line">            return minCapacity;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        //如果新的容量大于MAX_ARRAY_SIZE(Integer.MAX_VALUE - 8)</span><br><span class="line">        //那么就使用 hugeCapacity 进行容量分配</span><br><span class="line">        //否则就是用计算出来的新容量</span><br><span class="line">        return (newCapacity - MAX_ARRAY_SIZE &lt;= 0)</span><br><span class="line">                ? newCapacity</span><br><span class="line">                : hugeCapacity(minCapacity);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">private static int hugeCapacity(int minCapacity) &#123;</span><br><span class="line">        if (minCapacity &lt; 0) // overflow</span><br><span class="line">            throw new OutOfMemoryError();</span><br><span class="line">        return (minCapacity &gt; MAX_ARRAY_SIZE)</span><br><span class="line">                ? Integer.MAX_VALUE</span><br><span class="line">                : MAX_ARRAY_SIZE;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后的扩容就是调用 Arrays.copyOf  进行数组的复制。</p>
+<h4 id="3-remove"><a href="#3-remove" class="headerlink" title="3.remove"></a>3.remove</h4><p>对于 ArrayList 的各种移除操作，最后都会调用下面两种方法之一。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">private void fastRemove(Object[] es, int i) &#123;</span><br><span class="line">        modCount++;</span><br><span class="line">        final int newSize;</span><br><span class="line">        if ((newSize = size - 1) &gt; i)</span><br><span class="line">            System.arraycopy(es, i + 1, es, i, newSize - i);</span><br><span class="line">        es[size = newSize] = null;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">     private void shiftTailOverGap(Object[] es, int lo, int hi) &#123;</span><br><span class="line">        System.arraycopy(es, hi, es, lo, size - hi);</span><br><span class="line">        for (int to = size, i = (size -= hi - lo); i &lt; to; i++)</span><br><span class="line">            es[i] = null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>简单地说还是对数组进行复制，然后再将空出的位置置为 null ，等待 GC 回收。</p>
+<h4 id="4-subList"><a href="#4-subList" class="headerlink" title="4.subList"></a>4.subList</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public List&lt;E&gt; subList(int fromIndex, int toIndex) &#123;</span><br><span class="line">       subListRangeCheck(fromIndex, toIndex, size);</span><br><span class="line">       return new SubList&lt;&gt;(this, fromIndex, toIndex);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>subList 返回的是 ArrayList 的一个子视图，也就是子集合，实际的是 ArrayList 的一个内部类 SubList，虽然 SubList 也实现了 AbstractList 接口但是 SubList 并不是  ArrayList 的子类，== 和 instanceOf 会返回 false  。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">private static class SubList&lt;E&gt; extends AbstractList&lt;E&gt; implements RandomAccess &#123;</span><br><span class="line">       private final ArrayList&lt;E&gt; root;</span><br><span class="line">       private final SubList&lt;E&gt; parent;</span><br><span class="line">       private final int offset;</span><br><span class="line">       private int size;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">/**</span><br><span class="line">        * Constructs a sublist of an arbitrary ArrayList.</span><br><span class="line">        */</span><br><span class="line">       public SubList(ArrayList&lt;E&gt; root, int fromIndex, int toIndex) &#123;</span><br><span class="line">           this.root = root;</span><br><span class="line">           this.parent = null;</span><br><span class="line">           this.offset = fromIndex;</span><br><span class="line">           this.size = toIndex - fromIndex;</span><br><span class="line">           this.modCount = root.modCount;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       /**</span><br><span class="line">        * Constructs a sublist of another SubList.</span><br><span class="line">        */</span><br><span class="line">       private SubList(SubList&lt;E&gt; parent, int fromIndex, int toIndex) &#123;</span><br><span class="line">           this.root = parent.root;</span><br><span class="line">           this.parent = parent;</span><br><span class="line">           this.offset = parent.offset + fromIndex;</span><br><span class="line">           this.size = toIndex - fromIndex;</span><br><span class="line">           this.modCount = root.modCount;</span><br><span class="line">       &#125;</span><br><span class="line"> public E set(int index, E element) &#123;</span><br><span class="line">           Objects.checkIndex(index, size);</span><br><span class="line">           checkForComodification(); </span><br><span class="line">           E oldValue = root.elementData(offset + index);</span><br><span class="line">           root.elementData[offset + index] = element;</span><br><span class="line">           return oldValue;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       public E get(int index) &#123;</span><br><span class="line">           Objects.checkIndex(index, size);</span><br><span class="line">           checkForComodification();</span><br><span class="line">           return root.elementData(offset + index);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       public int size() &#123;</span><br><span class="line">           checkForComodification();</span><br><span class="line">           return size;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       public void add(int index, E element) &#123;</span><br><span class="line">           rangeCheckForAdd(index);</span><br><span class="line">           checkForComodification();</span><br><span class="line">           root.add(offset + index, element);</span><br><span class="line">           updateSizeAndModCount(1);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       public E remove(int index) &#123;</span><br><span class="line">           Objects.checkIndex(index, size);</span><br><span class="line">           checkForComodification();</span><br><span class="line">           E result = root.remove(offset + index);</span><br><span class="line">           updateSizeAndModCount(-1);</span><br><span class="line">           return result;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       protected void removeRange(int fromIndex, int toIndex) &#123;</span><br><span class="line">           checkForComodification();</span><br><span class="line">           root.removeRange(offset + fromIndex, offset + toIndex);</span><br><span class="line">           updateSizeAndModCount(fromIndex - toIndex);</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure></p>
+<p>SubList 里并没有数组变量但是有一个root b变量  root 变量就是原本的集合，而且从两个构造器可以看出 SubList 也可以产生它 的 SubList 。而且 对于 SubList 的各种修改操作也都是调用 root 却修改原生的 集合，换句话说也就是对 SubList 的修改也会影响到原声的 ArrayList .</p>
+<blockquote>
+<p>删除指定范围的元素就可以使用 list.subList(from,to).clear();</p>
+</blockquote>
+<p>特别注意的是这进行这些方法的时候都回调用这个 <em>checkForComodification</em>  方法进行检查 .<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">private void checkForComodification() &#123;</span><br><span class="line">          if (root.modCount != modCount)</span><br><span class="line">              throw new ConcurrentModificationException();</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个方法表示的是 如果 ArrayList 的 modCount 和 SubList 的 modCount 不一样的时候就会抛出异常，也就是说，在生成了 SubList 后，如果再对 ArrayList 进行修改则其 modCount 就会发生变化，这个时候如果又对 SubList 进行操作就会异常。</p>
+<p>简单地说就是再生成 SubList 后，如果对 ArrayList 操作了，则不能对已生成的 SubList进行操作。</p>
+<h6 id="Array-asList"><a href="#Array-asList" class="headerlink" title="Array.asList"></a>Array.asList</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">public static &lt;T&gt; List&lt;T&gt; asList(T... a) &#123;</span><br><span class="line">       return new ArrayList&lt;&gt;(a);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * @serial include</span><br><span class="line">    */</span><br><span class="line">   private static class ArrayList&lt;E&gt; extends AbstractList&lt;E&gt;</span><br><span class="line">       implements RandomAccess, java.io.Serializable</span><br><span class="line">   &#123;</span><br><span class="line">       private static final long serialVersionUID = -2764017481108945198L;</span><br><span class="line">       private final E[] a;</span><br><span class="line"></span><br><span class="line">       ArrayList(E[] array) &#123;</span><br><span class="line">         </span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       @Override</span><br><span class="line">       public int size() &#123;</span><br><span class="line">     </span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       @Override</span><br><span class="line">       public Object[] toArray() &#123;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       @Override</span><br><span class="line">       @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">       public &lt;T&gt; T[] toArray(T[] a) &#123;</span><br><span class="line">        </span><br><span class="line">       &#125;</span><br><span class="line">       @Override</span><br><span class="line">       public E get(int index) &#123;</span><br><span class="line">      </span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       @Override</span><br><span class="line">       public E set(int index, E element) &#123;</span><br><span class="line">        </span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       @Override</span><br><span class="line">       public int indexOf(Object o) &#123;</span><br><span class="line">          </span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       @Override</span><br><span class="line">       public boolean contains(Object o) &#123;</span><br><span class="line">          </span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       @Override</span><br><span class="line">       public Spliterator&lt;E&gt; spliterator() &#123;</span><br><span class="line">          </span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       @Override</span><br><span class="line">       public void forEach(Consumer&lt;? super E&gt; action) &#123;</span><br><span class="line">          </span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       @Override</span><br><span class="line">       public void replaceAll(UnaryOperator&lt;E&gt; operator) &#123;</span><br><span class="line">          </span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       @Override</span><br><span class="line">       public void sort(Comparator&lt;? super E&gt; c) &#123;</span><br><span class="line">         </span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       @Override</span><br><span class="line">       public Iterator&lt;E&gt; iterator() &#123;</span><br><span class="line">           return new ArrayItr&lt;&gt;(a);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>Arrays 有一个 asList 的返回一个 ArrayList ,从上面的源码可以看出，这个实际上也是 Arrays 的一个内部类，而且这个不是现在通常说的 ArrayList ,因此两个类也没 有继承关系，但是这个内部类可以转为 ArrayList  因为 ArrayList  的 构造器参数是 <em>Collection&lt;? extends E&gt; c</em> 而且这个内部类并没有包含 ArrayList 的所有方法，比如就没有 add 方法，不具备扩展和缩小。</p>
+<p>对于数组 Array和 ArrayList  的区别 可以包含基本类型和对象类型，ArrayList 只能包含对象类型；Array 的大小是固定的，ArrayList 的大小是动态变化的；ArrayList 提供了更多的方法和特性， addAll()、removeAll()、iterator() 等。</p>
+<h4 id="5-equals"><a href="#5-equals" class="headerlink" title="5.equals"></a>5.equals</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public boolean equals(Object o) &#123;</span><br><span class="line">        if (o == this)</span><br><span class="line">            return true;</span><br><span class="line">        if (!(o instanceof List))</span><br><span class="line">            return false;</span><br><span class="line"></span><br><span class="line">        ListIterator&lt;E&gt; e1 = listIterator();</span><br><span class="line">        ListIterator&lt;?&gt; e2 = ((List&lt;?&gt;) o).listIterator();</span><br><span class="line">        while (e1.hasNext() &amp;&amp; e2.hasNext()) &#123;</span><br><span class="line">            E o1 = e1.next();</span><br><span class="line">            Object o2 = e2.next();</span><br><span class="line">            if (!(o1==null ? o2==null : o1.equals(o2)))</span><br><span class="line">                return false;</span><br><span class="line">        &#125;</span><br><span class="line">        return !(e1.hasNext() || e2.hasNext());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>对于 ArrayList 的equals 比较，最后还是比较其中的元素数量和每个元素对应时候符合 equals 。显然对于 ArrayList 和 SubList (这里取全部元素)，就符合 equals 返回 true 。</p>
+<h4 id="6-线程安全"><a href="#6-线程安全" class="headerlink" title="6.线程安全"></a>6.线程安全</h4><p>ArrayList 是不是线程安全的，一个方法是用 Collections.synchronizedList 方法把 ArrayList 变成一个线程安全的，另一个方法就是 Vector，它是ArrayList的线程安全版本，区别在于：Vector 可以指定增长因子，如果该增长因子指定了，那么扩容的时候会每次新的数组大小会在原数组的大小基础上加上增长因子；如果不指定增长因子，那么就给原数组大小*2。</p>
+<p>ArrayList适用于查找但是不适用于增加和删除，因为内部的操作都是调用 System.arrayCopy 这种效率很低的方法进行处理，所以如果遇到了数据量略大且需要频繁插入或删除的操作效率就比较低了。</p>
+<h2 id="三-LinkedList"><a href="#三-LinkedList" class="headerlink" title="三.LinkedList"></a>三.LinkedList</h2><p>LinkedList 是以双向链表实现，链表无容量限制。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public class LinkedList&lt;E&gt;</span><br><span class="line">    extends AbstractSequentialList&lt;E&gt;</span><br><span class="line">    implements List&lt;E&gt;, Deque&lt;E&gt;, Cloneable, java.io.Serializable</span><br><span class="line">&#123;</span><br><span class="line">    transient int size = 0;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Pointer to first node.</span><br><span class="line">     */</span><br><span class="line">    transient Node&lt;E&gt; first;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Pointer to last node.</span><br><span class="line">     */</span><br><span class="line">    transient Node&lt;E&gt; last;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"> // 内部的节点类</span><br><span class="line">    private static class Node&lt;E&gt; &#123;</span><br><span class="line">        E item;</span><br><span class="line">        Node&lt;E&gt; next;</span><br><span class="line">        Node&lt;E&gt; prev;</span><br><span class="line"></span><br><span class="line">        Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;</span><br><span class="line">            this.item = element;</span><br><span class="line">            this.next = next;</span><br><span class="line">            this.prev = prev;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>LinkedList 的继承关系也很简单 AbstractSequentialList 用于保持有序性，除此之外还实现了  Deque ，表明这个一个 双向的链表，支持 Deque 的一些操作。对于每一个 Node 节点，包含了对上一个节点和下一个节点的引用。对于整个 LinkedList 持有头节点和尾节点的引用 。</p>
+<h4 id="1-基本操作"><a href="#1-基本操作" class="headerlink" title="1.基本操作"></a>1.基本操作</h4><p>由于 LinkedList 是以链表形式存在，因此内部定义了许多对节点的基本操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * Links e as first element.</span><br><span class="line">     * 添加一个元素作为头节点 </span><br><span class="line">    */</span><br><span class="line">   private void linkFirst(E e) &#123;</span><br><span class="line">       final Node&lt;E&gt; f = first;</span><br><span class="line">       final Node&lt;E&gt; newNode = new Node&lt;&gt;(null, e, f);</span><br><span class="line">       first = newNode;</span><br><span class="line">       if (f == null)</span><br><span class="line">           last = newNode;</span><br><span class="line">       else</span><br><span class="line">           f.prev = newNode;</span><br><span class="line">       size++;</span><br><span class="line">       modCount++;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * Links e as last element.</span><br><span class="line">    * 添加一个元素作为尾节点</span><br><span class="line">    */</span><br><span class="line">   void linkLast(E e) &#123;</span><br><span class="line">       final Node&lt;E&gt; l = last;</span><br><span class="line">       final Node&lt;E&gt; newNode = new Node&lt;&gt;(l, e, null);</span><br><span class="line">       last = newNode;</span><br><span class="line">       if (l == null)</span><br><span class="line">           first = newNode;</span><br><span class="line">       else</span><br><span class="line">           l.next = newNode;</span><br><span class="line">       size++;</span><br><span class="line">       modCount++;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * Inserts element e before non-null Node succ.</span><br><span class="line">    * 在一个节点之前插入一个节点</span><br><span class="line">    */</span><br><span class="line">   void linkBefore(E e, Node&lt;E&gt; succ) &#123;</span><br><span class="line">       // assert succ != null;</span><br><span class="line">       final Node&lt;E&gt; pred = succ.prev;</span><br><span class="line">       final Node&lt;E&gt; newNode = new Node&lt;&gt;(pred, e, succ);</span><br><span class="line">       succ.prev = newNode;</span><br><span class="line">       if (pred == null)</span><br><span class="line">           first = newNode;</span><br><span class="line">       else</span><br><span class="line">           pred.next = newNode;</span><br><span class="line">       size++;</span><br><span class="line">       modCount++;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * Unlinks non-null first node f.</span><br><span class="line">    * 删除头节点</span><br><span class="line">    */</span><br><span class="line">   private E unlinkFirst(Node&lt;E&gt; f) &#123;</span><br><span class="line">       // assert f == first &amp;&amp; f != null;</span><br><span class="line">       final E element = f.item;</span><br><span class="line">       final Node&lt;E&gt; next = f.next;</span><br><span class="line">       f.item = null;</span><br><span class="line">       f.next = null; // help GC</span><br><span class="line">       first = next;</span><br><span class="line">       if (next == null)</span><br><span class="line">           last = null;</span><br><span class="line">       else</span><br><span class="line">           next.prev = null;</span><br><span class="line">       size--;</span><br><span class="line">       modCount++;</span><br><span class="line">       return element;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * Unlinks non-null last node l.</span><br><span class="line">    * 删除尾节点</span><br><span class="line">    */</span><br><span class="line">   private E unlinkLast(Node&lt;E&gt; l) &#123;</span><br><span class="line">       // assert l == last &amp;&amp; l != null;</span><br><span class="line">       final E element = l.item;</span><br><span class="line">       final Node&lt;E&gt; prev = l.prev;</span><br><span class="line">       l.item = null;</span><br><span class="line">       l.prev = null; // help GC</span><br><span class="line">       last = prev;</span><br><span class="line">       if (prev == null)</span><br><span class="line">           first = null;</span><br><span class="line">       else</span><br><span class="line">           prev.next = null;</span><br><span class="line">       size--;</span><br><span class="line">       modCount++;</span><br><span class="line">       return element;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * Unlinks non-null node x.</span><br><span class="line">    * 删除某个节点</span><br><span class="line">    */</span><br><span class="line">   E unlink(Node&lt;E&gt; x) &#123;</span><br><span class="line">       // assert x != null;</span><br><span class="line">       final E element = x.item;</span><br><span class="line">       final Node&lt;E&gt; next = x.next;</span><br><span class="line">       final Node&lt;E&gt; prev = x.prev;</span><br><span class="line"></span><br><span class="line">       if (prev == null) &#123;</span><br><span class="line">           first = next;</span><br><span class="line">       &#125; else &#123;</span><br><span class="line">           prev.next = next;</span><br><span class="line">           x.prev = null;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       if (next == null) &#123;</span><br><span class="line">           last = prev;</span><br><span class="line">       &#125; else &#123;</span><br><span class="line">           next.prev = prev;</span><br><span class="line">           x.next = null;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       x.item = null;</span><br><span class="line">       size--;</span><br><span class="line">       modCount++;</span><br><span class="line">       return element;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * Returns the first element in this list.</span><br><span class="line">    *</span><br><span class="line">    * @return the first element in this list</span><br><span class="line">    * @throws NoSuchElementException if this list is empty</span><br><span class="line">    * 返回第一个头节点</span><br><span class="line">    */</span><br><span class="line">   public E getFirst() &#123;</span><br><span class="line">       final Node&lt;E&gt; f = first;</span><br><span class="line">       if (f == null)</span><br><span class="line">           throw new NoSuchElementException();</span><br><span class="line">       return f.item;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * Returns the last element in this list.</span><br><span class="line">    *</span><br><span class="line">    * @return the last element in this list</span><br><span class="line">    * @throws NoSuchElementException if this list is empty</span><br><span class="line">    * 返回尾节点</span><br><span class="line">    */</span><br><span class="line">   public E getLast() &#123;</span><br><span class="line">       final Node&lt;E&gt; l = last;</span><br><span class="line">       if (l == null)</span><br><span class="line">           throw new NoSuchElementException();</span><br><span class="line">       return l.item;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>基本上所有的增加删除都是基于上面这几个操作完成。</p>
+<h4 id="2-查询"><a href="#2-查询" class="headerlink" title="2.查询"></a>2.查询</h4><p>LinkedList  不是以数组的为基础的，因此不能直接定位到指定的元素，需要进行遍历<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public E get(int index) &#123;</span><br><span class="line">       checkElementIndex(index);</span><br><span class="line">       return node(index).item;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * Returns the (non-null) Node at the specified element index.</span><br><span class="line">    */</span><br><span class="line">   Node&lt;E&gt; node(int index) &#123;</span><br><span class="line">       // assert isElementIndex(index);</span><br><span class="line"></span><br><span class="line">       if (index &lt; (size &gt;&gt; 1)) &#123;</span><br><span class="line">           Node&lt;E&gt; x = first;</span><br><span class="line">           for (int i = 0; i &lt; index; i++)</span><br><span class="line">               x = x.next;</span><br><span class="line">           return x;</span><br><span class="line">       &#125; else &#123;</span><br><span class="line">           Node&lt;E&gt; x = last;</span><br><span class="line">           for (int i = size - 1; i &gt; index; i--)</span><br><span class="line">               x = x.prev;</span><br><span class="line">           return x;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>对于 LinkedList 的查巡遍历并不是从前往后进行的，而是进行判断，如果下标小于长度的一半就从头节点开始，否则就从尾节点开始。<br>访问的复杂度为 O(N/2)）只有在链表两头的操作（比如 add()、addFirst()、removeLast() 或用在 iterator() 上的 remove() 操作）才不需要进行遍历寻找定位。</p>
+<h2 id="四-对比"><a href="#四-对比" class="headerlink" title="四.对比"></a>四.对比</h2><ul>
+<li>当插入的元素比较靠后的时候，ArrayList 效率低，因为 ArrayList 将批量 copy 大量的元素。</li>
+<li>ArrayList 使用最普通的 for 循环遍历，数组元素之间没有关联，而迭代器强制将 RandomAccess 的 ArrayList 建立了前后遍历关系，且在每次遍历过程中进行了一堆判断，所以比较慢。 LinkedList 使用 foreach 循环比较快，前后元素是通过链表索引建立关联的，无法直接取到对应的下标，因此在使用普通的 index 索引下标遍历时就需要计算对应的元素在哪，二分法决定头部还是尾部遍历，然后一步步的遍历找到元素，所以在遍历中每次都要从头查找元素位置，十分低效率。而迭代器的实现就是指向下一个元素，迭代器直接通过 LinkedList 的指针进行遍历，一次遍历就能找到每个合适的元素。</li>
+<li>ArrayList 是动态数组顺序表，顺序表的存储地址是连续的，所以查找比较快，但是插入和删除时由于需要把其它的元素顺序移动，所以比较耗时。LinkedList 是双向链表的数据结构，同时实现了双端队列 Deque 接口，链表节点的存储地址是不连续的，每个存储地址通过指针关联，在查找时需要进行指针遍历节点，所以查找比较慢，而在插入和删除时比较快。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java-基础/" rel="tag"># Java 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/14/Java-谈谈String/" rel="next" title="Java----谈谈String">
+                <i class="fa fa-chevron-left"></i> Java----谈谈String
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+ <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/d.jpg"
+                alt="海盗的帽子" />
+            
+              <p class="site-author-name" itemprop="name">海盗的帽子</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yishengma" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/m0_38089373" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-copyright"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-List"><span class="nav-text">一.List</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-ArrayList"><span class="nav-text">二.ArrayList</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-继承关系"><span class="nav-text">1.继承关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-数组"><span class="nav-text">2.数组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-add"><span class="nav-text">3.add</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-remove"><span class="nav-text">3.remove</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-subList"><span class="nav-text">4.subList</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Array-asList"><span class="nav-text">Array.asList</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-equals"><span class="nav-text">5.equals</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-线程安全"><span class="nav-text">6.线程安全</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-LinkedList"><span class="nav-text">三.LinkedList</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-基本操作"><span class="nav-text">1.基本操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-查询"><span class="nav-text">2.查询</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-对比"><span class="nav-text">四.对比</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-[object Object]"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">海盗的帽子</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://rawgit.com/yishengma/147d4f60feb7cdc79c355ad2da83d513/raw/d624cffa8a67b4da07048d59ba0031e2860b1b2b/md5.min.js"></script>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '15e7b5ecca662534768c',
+          clientSecret: '26dc23d2d7a013bbcce94772f42f2e434247c6ba',
+          repo: 'yishengma.github.io',
+          owner: 'yishengma',
+          admin: ['yishengma'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2LveBulvcfzvQ6MBGz9b3URY-gzGzoHsz", "7mcKtxSVSDUSpSxFfdxBmyaP");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
