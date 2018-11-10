@@ -64,6 +64,7 @@
 
 
 
+  <meta name="keywords" content="框架," />
 
 
 
@@ -73,13 +74,22 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="海盗的帽子的博客">
-<meta property="og:url" content="https://yishengma.github.io/archives/index.html">
+
+<meta name="description" content="一.前言OkHttp 的处理网络请求的时候会有两个队列。一个是正在执行的队列，一个是等待执行的队列。12private final Deque&amp;lt;AsyncCall&amp;gt; readyAsyncCalls = new ArrayDeque&amp;lt;&amp;gt;();private final Deque&amp;lt;AsyncCall&amp;gt; runningAsyncCalls = new ArrayDe">
+<meta name="keywords" content="框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OkHttp的任务队列----ArrayDeque">
+<meta property="og:url" content="https://yishengma.github.io/2018/11/10/OkHttp的任务队列-ArrayDeque/index.html">
 <meta property="og:site_name" content="海盗的帽子的博客">
+<meta property="og:description" content="一.前言OkHttp 的处理网络请求的时候会有两个队列。一个是正在执行的队列，一个是等待执行的队列。12private final Deque&amp;lt;AsyncCall&amp;gt; readyAsyncCalls = new ArrayDeque&amp;lt;&amp;gt;();private final Deque&amp;lt;AsyncCall&amp;gt; runningAsyncCalls = new ArrayDe">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://yishengma.github.io/2018/11/10/OkHttp的任务队列-ArrayDeque/1.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/11/10/OkHttp的任务队列-ArrayDeque/2.png">
+<meta property="og:updated_time" content="2018-11-10T13:37:06.345Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="海盗的帽子的博客">
+<meta name="twitter:title" content="OkHttp的任务队列----ArrayDeque">
+<meta name="twitter:description" content="一.前言OkHttp 的处理网络请求的时候会有两个队列。一个是正在执行的队列，一个是等待执行的队列。12private final Deque&amp;lt;AsyncCall&amp;gt; readyAsyncCalls = new ArrayDeque&amp;lt;&amp;gt;();private final Deque&amp;lt;AsyncCall&amp;gt; runningAsyncCalls = new ArrayDe">
+<meta name="twitter:image" content="https://yishengma.github.io/2018/11/10/OkHttp的任务队列-ArrayDeque/1.png">
 
 
 
@@ -109,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="https://yishengma.github.io/archives/"/>
+  <link rel="canonical" href="https://yishengma.github.io/2018/11/10/OkHttp的任务队列-ArrayDeque/"/>
 
 
 
 
 
-  <title>归档 | 海盗的帽子的博客</title>
+  <title>OkHttp的任务队列----ArrayDeque | 海盗的帽子的博客</title>
   
 
 
@@ -134,7 +144,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -252,411 +262,213 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/11/10/OkHttp的任务队列-ArrayDeque/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="海盗的帽子">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/d.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="海盗的帽子的博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">OkHttp的任务队列----ArrayDeque</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-10T21:34:18+08:00">
+                2018-11-10
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-11-10T21:37:06+08:00">
+                2018-11-10
+              </time>
+            
+          </span>
+
           
-        
-        嗯..! 目前共计 19 篇日志。 继续努力。
-      </span>
 
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
+            
+          
 
-        
+          
+          
+             <span id="/2018/11/10/OkHttp的任务队列-ArrayDeque/" class="leancloud_visitors" data-flag-title="OkHttp的任务队列----ArrayDeque">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/10/OkHttp的任务队列-ArrayDeque/" itemprop="url">
-              
-                <span itemprop="name">OkHttp的任务队列----ArrayDeque</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-11-10T21:34:18+08:00"
-              content="2018-11-10" >
-          11-10
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+        </div>
+      </header>
+    
 
-
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/10/16/java集合-List/" itemprop="url">
-              
-                <span itemprop="name">java集合----List</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-10-16T22:52:01+08:00"
-              content="2018-10-16" >
-          10-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/10/14/Java-谈谈String/" itemprop="url">
-              
-                <span itemprop="name">Java----谈谈String</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-10-14T15:32:19+08:00"
-              content="2018-10-14" >
-          10-14
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <h2 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h2><p>OkHttp 的处理网络请求的时候会有两个队列。一个是正在执行的队列，一个是等待执行的队列。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">private final Deque&lt;AsyncCall&gt; readyAsyncCalls = new ArrayDeque&lt;&gt;();</span><br><span class="line">private final Deque&lt;AsyncCall&gt; runningAsyncCalls = new ArrayDeque&lt;&gt;();</span><br></pre></td></tr></table></figure></p>
+<p>可以看到他们的实现都是 ArrayDeque ,这是一个底层是循环数组的实现，所谓循环数组就是当不需要扩容的时候，数组在逻辑上是首位相连的一个圆，没有固定的头尾，当数组满的时候就进行扩容。</p>
+<p><img src="/2018/11/10/OkHttp的任务队列-ArrayDeque/1.png" alt="image.png"><br>下面主要就 JDK1.8 的源码分析 ArrayDeque 的原理，后面也会提及JDK 10  。</p>
+<h2 id="二-ArrayDeque"><a href="#二-ArrayDeque" class="headerlink" title="二.ArrayDeque"></a>二.ArrayDeque</h2><h4 id="1-源码中的介绍"><a href="#1-源码中的介绍" class="headerlink" title="1.源码中的介绍"></a>1.源码中的介绍</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Resizable-array implementation of the &#123;@link Deque&#125; interface.  Array</span><br><span class="line"> * deques have no capacity restrictions; they grow as necessary to support</span><br><span class="line"> * usage.  They are not thread-safe; in the absence of external</span><br><span class="line"> * synchronization, they do not support concurrent access by multiple threads.</span><br><span class="line"> * Null elements are prohibited.  This class is likely to be faster than</span><br><span class="line"> * &#123;@link Stack&#125; when used as a stack, and faster than &#123;@link LinkedList&#125;</span><br><span class="line"> * when used as a queue.</span><br><span class="line"> </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>上面对 ArrayDeque 的介绍可以分几点：</p>
+<ul>
+<li>ArrayDeque 没有内容的限制，当需要的时候可以进行扩容。</li>
+<li>是不是线程安全的，在多线程的情况下不支持并发安全。</li>
+<li>不允许元素为 null。</li>
+<li>在某些情况下，作为栈使用比 Stack 快，作为队列使用比 LinkedList 快。</li>
+</ul>
+<p>下面就看看具体的实现。</p>
+<h4 id="2-源码分析"><a href="#2-源码分析" class="headerlink" title="2.源码分析"></a>2.源码分析</h4><p>内部的实现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">transient Object[] elements; // non-private to simplify nested class access</span><br><span class="line"></span><br><span class="line">    //头元素下标</span><br><span class="line">    transient int head;</span><br><span class="line"></span><br><span class="line">    //尾部元素下一个位置的下标</span><br><span class="line">    transient int tail;</span><br><span class="line"></span><br><span class="line">    //最小的初始容量</span><br><span class="line">    private static final int MIN_INITIAL_CAPACITY = 8;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    //默认初始容量为  16 </span><br><span class="line">     public ArrayDeque() &#123;</span><br><span class="line">        elements = new Object[16];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   // 当指定的容量不是 2 的倍数的时候，转换为最接近的数</span><br><span class="line">   //比如 17 最近的是 16 </span><br><span class="line">    public ArrayTest(int numElements) &#123;</span><br><span class="line">        allocateElements(numElements);</span><br><span class="line">    &#125;</span><br><span class="line">    private void allocateElements(int numElements) &#123;</span><br><span class="line">        int initialCapacity = MIN_INITIAL_CAPACITY;</span><br><span class="line">        // Find the best power of two to hold elements.</span><br><span class="line">        // Tests &quot;&lt;=&quot; because arrays aren&apos;t kept full.</span><br><span class="line">        if (numElements &gt;= initialCapacity) &#123;</span><br><span class="line">            initialCapacity = numElements;</span><br><span class="line">            initialCapacity |= (initialCapacity &gt;&gt;&gt;  1);</span><br><span class="line">            initialCapacity |= (initialCapacity &gt;&gt;&gt;  2);</span><br><span class="line">            initialCapacity |= (initialCapacity &gt;&gt;&gt;  4);</span><br><span class="line">            initialCapacity |= (initialCapacity &gt;&gt;&gt;  8);</span><br><span class="line">            initialCapacity |= (initialCapacity &gt;&gt;&gt; 16);</span><br><span class="line">            initialCapacity++;</span><br><span class="line"></span><br><span class="line">            if (initialCapacity &lt; 0)    // Too many elements, must back off</span><br><span class="line">                initialCapacity &gt;&gt;&gt;= 1; // Good luck allocating 2^30 elements</span><br><span class="line">        &#125;</span><br><span class="line">        elements = new Object[initialCapacity];</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的源码可以看到一下几点：</p>
+<ul>
+<li>ArrayDeque 内部是基于数组实现的。维护一个头部小标和一个尾部后一个元素下标。</li>
+<li>默认初始量为 16 ，自己指定时也会转换为 2 的倍数。</li>
+</ul>
+<h5 id="获取队列头部元素"><a href="#获取队列头部元素" class="headerlink" title="获取队列头部元素"></a>获取队列头部元素</h5><p>element()， getFirst()，peek()，peekFirst() 操作，其都是调用 getFirst() 实现的，访问队列头部元素但不删除<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * @throws NoSuchElementException &#123;@inheritDoc&#125;</span><br><span class="line">    */</span><br><span class="line">   public E getFirst() &#123;</span><br><span class="line">       @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">       E result = (E) elements[head];</span><br><span class="line">       if (result == null)</span><br><span class="line">           throw new NoSuchElementException();</span><br><span class="line">       return result;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="删除队列头部"><a href="#删除队列头部" class="headerlink" title="删除队列头部"></a>删除队列头部</h4><p>remove()，removeFirst()，poll()，pollFirst() 操作，其都是调用 pollFirst() 实现的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public E pollFirst() &#123;</span><br><span class="line">       final Object[] elements = this.elements;</span><br><span class="line">       final int h = head;</span><br><span class="line">       @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">       E result = (E) elements[h];</span><br><span class="line">       // Element is null if deque empty</span><br><span class="line">       if (result != null) &#123;</span><br><span class="line">           elements[h] = null; // Must null out slot</span><br><span class="line">           head = (h + 1) &amp; (elements.length - 1);</span><br><span class="line">       &#125;</span><br><span class="line">       return result;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>对上面的步骤做一下解释：</p>
+<ul>
+<li>首先取出头部的元素，将其置为空。</li>
+<li>然后 head 这个下标就循环后移。</li>
+</ul>
+<p>这里的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">head = (h + 1) &amp; (elements.length - 1);</span><br></pre></td></tr></table></figure></p>
+<p>其实就跟<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">head =  (h + 1) % (elements.length)</span><br></pre></td></tr></table></figure></p>
+<p>是一样的作用，目的就是当 head 到达数组末尾的时候，+1 就能回到数组的起始下标 即 0 ，从而实现循环。之所以能用 &amp; 操作是因为在初始或者扩容的时候都要求数组的最后长度为 2 的倍数。比如默认长度 16 时， h + 1 的二进制为 0001 0000 ，length - 1二进制就为 0000 1111 ，相与就为 0 ，其他情况就正常加 1 .</p>
+<h5 id="添加元素"><a href="#添加元素" class="headerlink" title="添加元素"></a>添加元素</h5><p>添加元素到队列尾部的操作可以发现 add(E e)，offer(E e)，offerLast(E e)，addLast(E e) 操作都是调用 addLast(E e) 实现的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"> public void addLast(E e) &#123;</span><br><span class="line">        if (e == null)</span><br><span class="line">            throw new NullPointerException();</span><br><span class="line">        elements[tail] = e;</span><br><span class="line">        //判断头部下标和尾部下标是否重叠</span><br><span class="line">        if ( (tail = (tail + 1) &amp; (elements.length - 1)) == head)</span><br><span class="line">            //进行扩容</span><br><span class="line">            doubleCapacity();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">private void doubleCapacity() &#123;</span><br><span class="line">        assert head == tail;</span><br><span class="line">        int p = head;</span><br><span class="line">        int n = elements.length;</span><br><span class="line">        int r = n - p; // number of elements to the right of p </span><br><span class="line">        int newCapacity = n &lt;&lt; 1;</span><br><span class="line">        if (newCapacity &lt; 0)</span><br><span class="line">            throw new IllegalStateException(&quot;Sorry, deque too big&quot;);</span><br><span class="line">        Object[] a = new Object[newCapacity];</span><br><span class="line">        System.arraycopy(elements, p, a, 0, r);</span><br><span class="line">        System.arraycopy(elements, 0, a, r, p);</span><br><span class="line">        elements = a;</span><br><span class="line">        head = 0;</span><br><span class="line">        tail = n;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>首先，但添加的元素为 null 的时候就会抛出异常，说明 ArrayDeque 不能添加 null .</li>
+<li>添加完一个元素后就会判断 头部和尾部下标时候重叠，如果重叠就说明数组已经满了需要进行扩容。</li>
+<li>将数组容量直接 X2 ，然后将原本的元素调用  System.arraycopy 进行复制。</li>
+<li>重新指定 head ，tail 。</li>
+</ul>
+<p>具体的扩容可见下图：</p>
+<p><img src="/2018/11/10/OkHttp的任务队列-ArrayDeque/2.png" alt="image.png"></p>
+<h5 id="JDK-10-中源码"><a href="#JDK-10-中源码" class="headerlink" title="JDK 10 中源码"></a>JDK 10 中源码</h5><p>在JDK 10 对 ArrayDeque 的实现有些不同，就是不再直接扩容 X2 倍，而是根据需要 X2 或者增加原来的 1/2。因此对下标的循环加1 也就直接进行判断是否达到数组的尾部，是就直接置 0.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">static final int inc(int i, int modulus) &#123;</span><br><span class="line">        if (++i &gt;= modulus) i = 0;</span><br><span class="line">        return i;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="三-ArrayDeque-与-LinkedList"><a href="#三-ArrayDeque-与-LinkedList" class="headerlink" title="三.ArrayDeque 与 LinkedList"></a>三.ArrayDeque 与 LinkedList</h2><h4 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h4><p>LinkedList 实现了 List 接口又实现了 Deque 接口（Deque 是 Queue 的子接口），而 LinkedList 的实现是基于双向链表结构的，其容量没有限制，是非并发安全的队列，所以不仅可以当成列表使用，还可以当做双向队列使用，同时也可以当成栈使用（因为还实现了 pop 和 push 方法）。此外 LinkedList 的元素可以为 null 值</p>
+<p>ArrayDeque 是一个用循环数组实现的双端队列 Deque，满足可以同时在数组两端插入或删除元素的需求ArrayDeque 是非线程安全的，当多个线程同时使用的时候需要手动同步，不允许放 null 元素，没有索引位置，不能根据索引位置获取数组中的元素。</p>
+<h4 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h4><ul>
+<li>如果只需要 Deque 接口且从两端进行操作则一般来说 ArrayDeque 效率更高一些。</li>
+<li>如果同时需要根据索引位置进行操作或经常需要在中间进行插入和删除操作则应该优先选 LinkedList 效率高些。</li>
+</ul>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/10/13/java集合-Map/" itemprop="url">
-              
-                <span itemprop="name">java集合----Map</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-10-13T22:14:13+08:00"
-              content="2018-10-13" >
-          10-13
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/10/02/网络请求框架-OkHttp原理/" itemprop="url">
-              
-                <span itemprop="name">网络请求框架----OkHttp原理</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-10-02T17:23:19+08:00"
-              content="2018-10-02" >
-          10-02
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/29/网络请求框架-理解HTTPS/" itemprop="url">
-              
-                <span itemprop="name">网络请求框架----理解HTTPS</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-29T22:38:13+08:00"
-              content="2018-09-29" >
-          09-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/24/异步任务-AsyncTask解析/" itemprop="url">
-              
-                <span itemprop="name">异步任务----AsyncTask解析</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-24T20:20:40+08:00"
-              content="2018-09-24" >
-          09-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/21/View注解框架-ButterKnife/" itemprop="url">
-              
-                <span itemprop="name">View注解框架----ButterKnife</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-21T21:23:02+08:00"
-              content="2018-09-21" >
-          09-21
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/07/图片加载与图片加载框架-Glide/" itemprop="url">
-              
-                <span itemprop="name">图片加载与图片加载框架 Glide</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-07T22:46:32+08:00"
-              content="2018-09-07" >
-          09-07
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/01/设计模式-观察者模式在-Android-中的影子/" itemprop="url">
-              
-                <span itemprop="name">设计模式----观察者模式在 Android 中的影子</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-01T23:01:41+08:00"
-              content="2018-09-01" >
-          09-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/框架/" rel="tag"># 框架</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/16/java集合-List/" rel="next" title="java集合----List">
+                <i class="fa fa-chevron-left"></i> java集合----List
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -664,6 +476,12 @@
 
 
           
+
+  
+ <div id="gitalk-container"></div>
+  
+
+
 
         </div>
         
@@ -684,8 +502,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -756,6 +583,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-前言"><span class="nav-text">一.前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-ArrayDeque"><span class="nav-text">二.ArrayDeque</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-源码中的介绍"><span class="nav-text">1.源码中的介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-源码分析"><span class="nav-text">2.源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#获取队列头部元素"><span class="nav-text">获取队列头部元素</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除队列头部"><span class="nav-text">删除队列头部</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#添加元素"><span class="nav-text">添加元素</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#JDK-10-中源码"><span class="nav-text">JDK 10 中源码</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-ArrayDeque-与-LinkedList"><span class="nav-text">三.ArrayDeque 与 LinkedList</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#区别"><span class="nav-text">区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用场景"><span class="nav-text">使用场景</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -906,6 +749,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
 
   
 
@@ -946,6 +793,22 @@
 
 
 
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://rawgit.com/yishengma/147d4f60feb7cdc79c355ad2da83d513/raw/d624cffa8a67b4da07048d59ba0031e2860b1b2b/md5.min.js"></script>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '15e7b5ecca662534768c',
+          clientSecret: '26dc23d2d7a013bbcce94772f42f2e434247c6ba',
+          repo: 'yishengma.github.io',
+          owner: 'yishengma',
+          admin: ['yishengma'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
 
   
 
