@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16.ico?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android 基础," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.前言ListView 作为一个 Android 5.x 之前的一个用于显示数据列表的控件，或许在今天都已经被 RecyclerView 完全替代，但是其中的缓存机制仍然值得我们去了解，对后面学习 RecyclerView 的缓存机制有很大的帮助。 下面将根据 ListView 的三个过程彻底理解其缓存机制  OnLayout 过程，这个过程实践上有两次，而且两次是有区别的。 滑动一个 Item">
+<meta name="keywords" content="Android 基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="彻底理解 ListView----缓存机制">
+<meta property="og:url" content="https://yishengma.github.io/2018/11/16/彻底理解-ListView-缓存机制/index.html">
+<meta property="og:site_name" content="海盗的帽子的博客">
+<meta property="og:description" content="一.前言ListView 作为一个 Android 5.x 之前的一个用于显示数据列表的控件，或许在今天都已经被 RecyclerView 完全替代，但是其中的缓存机制仍然值得我们去了解，对后面学习 RecyclerView 的缓存机制有很大的帮助。 下面将根据 ListView 的三个过程彻底理解其缓存机制  OnLayout 过程，这个过程实践上有两次，而且两次是有区别的。 滑动一个 Item">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://yishengma.github.io/2018/11/16/彻底理解-ListView-缓存机制/1.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/11/16/彻底理解-ListView-缓存机制/2.png">
+<meta property="og:image" content="https://yishengma.github.io/2018/11/16/彻底理解-ListView-缓存机制/3.png">
+<meta property="og:updated_time" content="2018-11-16T13:04:00.475Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="彻底理解 ListView----缓存机制">
+<meta name="twitter:description" content="一.前言ListView 作为一个 Android 5.x 之前的一个用于显示数据列表的控件，或许在今天都已经被 RecyclerView 完全替代，但是其中的缓存机制仍然值得我们去了解，对后面学习 RecyclerView 的缓存机制有很大的帮助。 下面将根据 ListView 的三个过程彻底理解其缓存机制  OnLayout 过程，这个过程实践上有两次，而且两次是有区别的。 滑动一个 Item">
+<meta name="twitter:image" content="https://yishengma.github.io/2018/11/16/彻底理解-ListView-缓存机制/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yishengma.github.io/2018/11/16/彻底理解-ListView-缓存机制/"/>
+
+
+
+
+
+  <title>彻底理解 ListView----缓存机制 | 海盗的帽子的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">海盗的帽子的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/11/16/彻底理解-ListView-缓存机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="海盗的帽子">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/d.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="海盗的帽子的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">彻底理解 ListView----缓存机制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-16T20:58:28+08:00">
+                2018-11-16
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-11-16T21:04:00+08:00">
+                2018-11-16
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/11/16/彻底理解-ListView-缓存机制/" class="leancloud_visitors" data-flag-title="彻底理解 ListView----缓存机制">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h2><p>ListView 作为一个 Android 5.x 之前的一个用于显示数据列表的控件，或许在今天都已经被 RecyclerView 完全替代，但是其中的缓存机制仍然值得我们去了解，对后面学习 RecyclerView 的缓存机制有很大的帮助。</p>
+<p>下面将根据 ListView 的三个过程彻底理解其缓存机制</p>
+<ul>
+<li>OnLayout 过程，这个过程实践上有两次，而且两次是有区别的。</li>
+<li>滑动一个 Item ，即最上面的一个 item 移除屏幕，屏幕下面出现后一个 item 。</li>
+<li>滑动一个以上的item .</li>
+</ul>
+<h2 id="二-RecycleBin机制"><a href="#二-RecycleBin机制" class="headerlink" title="二.RecycleBin机制"></a>二.RecycleBin机制</h2><p>ListView 的缓存实际上都是由 RecyclerBin 类完成的，这是 ListView 的父类 AbsListView 的一个内部类，它也是 GridView 的一个父类，说明 ListView 的缓存和 GridView 的缓存实际上有很多相似的地方。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">class RecycleBin &#123;</span><br><span class="line">  </span><br><span class="line">    // 第一个可见的 item 的下标</span><br><span class="line">    private int mFirstActivePosition;</span><br><span class="line"></span><br><span class="line">   // 表示屏幕上可见的 itemView  </span><br><span class="line">    private View[] mActiveViews = new View[0];</span><br><span class="line">  </span><br><span class="line">    //表示废弃的 itemView ，即屏幕上被移除的 itemView </span><br><span class="line">    //就会添加到这里, 注意这里是个 数组，</span><br><span class="line">    //数组的每个元素都是 List ,因为 ListView 可能存在多个</span><br><span class="line">    //类型的 item ，因此用不同的 List 进行存储。</span><br><span class="line">    private ArrayList&lt;View&gt;[] mScrapViews;</span><br><span class="line"></span><br><span class="line">   // 表示不同类型的 itemView 的数量</span><br><span class="line">    private int mViewTypeCount;</span><br><span class="line"></span><br><span class="line">    // 表示mScrapViews 数组中一个元素，默认是 第一个</span><br><span class="line">    private ArrayList&lt;View&gt; mCurrentScrap;</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">       //下面就是初始化的过程。</span><br><span class="line">        ArrayList&lt;View&gt;[] scrapViews = new ArrayList[viewTypeCount];</span><br><span class="line">        for (int i = 0; i &lt; viewTypeCount; i++) &#123;</span><br><span class="line">            scrapViews[i] = new ArrayList&lt;View&gt;();</span><br><span class="line">        &#125;</span><br><span class="line">        mViewTypeCount = viewTypeCount;</span><br><span class="line">        mCurrentScrap = scrapViews[0];</span><br><span class="line">        mScrapViews = scrapViews;</span><br></pre></td></tr></table></figure></p>
+<p>与上面对应的有四个方法，分为两类，</p>
+<h5 id="对于可见的-itemView-有两个操作："><a href="#对于可见的-itemView-有两个操作：" class="headerlink" title="对于可见的 itemView 有两个操作："></a>对于可见的 itemView 有两个操作：</h5><ul>
+<li><p>fillActiveViews ，将屏幕上可见的 itemView 添加到  ActiveViews 数组。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">void fillActiveViews(int childCount, int firstActivePosition) &#123;</span><br><span class="line">           ...</span><br><span class="line">           final View[] activeViews = mActiveViews;</span><br><span class="line">           for (int i = 0; i &lt; childCount; i++) &#123;</span><br><span class="line">               View child = getChildAt(i);</span><br><span class="line">               AbsListView.LayoutParams lp = (AbsListView.LayoutParams) child.getLayoutParams();</span><br><span class="line">               if (lp != null &amp;&amp; lp.viewType != ITEM_VIEW_TYPE_HEADER_OR_FOOTER) &#123;</span><br><span class="line">               </span><br><span class="line">                   activeViews[i] = child;</span><br><span class="line">             </span><br><span class="line">                   lp.scrappedFromPosition = firstActivePosition + i;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>getActiveView(), 根据位置取出 ActiveViews 数组 中的 itemView ，并将最对应的数组元素置为 null。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">View getActiveView(int position) &#123;</span><br><span class="line">           int index = position - mFirstActivePosition;</span><br><span class="line">           final View[] activeViews = mActiveViews;</span><br><span class="line">           if (index &gt;=0 &amp;&amp; index &lt; activeViews.length) &#123;</span><br><span class="line">               final View match = activeViews[index];</span><br><span class="line">               activeViews[index] = null;</span><br><span class="line">               return match;</span><br><span class="line">           &#125;</span><br><span class="line">           return null;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h6 id="对于移除屏幕的-itemView-也有两个操作："><a href="#对于移除屏幕的-itemView-也有两个操作：" class="headerlink" title="对于移除屏幕的 itemView 也有两个操作："></a>对于移除屏幕的 itemView 也有两个操作：</h6><ul>
+<li><p>addScrapView() ,将移除 的 itemView 添加到 mScrapViews/mCurrentScrap 中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">void addScrapView(View scrap, int position) &#123;</span><br><span class="line">             ...</span><br><span class="line">              if (mViewTypeCount == 1) &#123;</span><br><span class="line">                  mCurrentScrap.add(scrap);</span><br><span class="line">              &#125; else &#123;</span><br><span class="line">                  mScrapViews[viewType].add(scrap);</span><br><span class="line">              &#125;</span><br><span class="line">          ...</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>getScrapView(),用于从废弃缓存中取出一个 ItemView,如果只有一个类型就直接从 mCurrentScrap 当中获取尾部的一个 view 进行返回，同样取出后就直接移除元素。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">View getScrapView(int position) &#123;</span><br><span class="line">          final int whichScrap = mAdapter.getItemViewType(position);</span><br><span class="line">          if (whichScrap &lt; 0) &#123;</span><br><span class="line">              return null;</span><br><span class="line">          &#125;</span><br><span class="line">          if (mViewTypeCount == 1) &#123;</span><br><span class="line">              return retrieveFromScrap(mCurrentScrap, position);</span><br><span class="line">          &#125; else if (whichScrap &lt; mScrapViews.length) &#123;</span><br><span class="line">              return retrieveFromScrap(mScrapViews[whichScrap], position);</span><br><span class="line">          &#125;</span><br><span class="line">          return null;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="三-OnLayout-过程"><a href="#三-OnLayout-过程" class="headerlink" title="三.OnLayout 过程"></a>三.OnLayout 过程</h2><p>一个 View 的绘制的时候至少会进行 2 次 onMeasure、onLayout，原因可参考这篇文章<br><a href="https://www.jianshu.com/p/733c7e9fb284" target="_blank" rel="noopener">View为什么会至少进行2次onMeasure、onLayout</a>,那么对于 ListView 这两次过程由于缓存机制的存在，就显得不一样。</p>
+<h3 id="1-第一次-OnLayout"><a href="#1-第一次-OnLayout" class="headerlink" title="(1)第一次 OnLayout"></a>(1)第一次 OnLayout</h3><p>对于 RecyclerBin 中的几个变量，因为还未添加任何 View 所以都为 0.</p>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>数量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mActiveViews (表示屏幕可见的itemView )</td>
+<td>0 个</td>
+</tr>
+<tr>
+<td>mCurrentScrap/mScrapViews[0] ((表示废弃移除的itemView ))</td>
+<td>0个</td>
+</tr>
+<tr>
+<td>getChildCount()/childCount</td>
+<td>0 个</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected void onLayout(boolean changed, int l, int t, int r, int b) &#123;</span><br><span class="line">    super.onLayout(changed, l, t, r, b);</span><br><span class="line"></span><br><span class="line">    mInLayout = true;</span><br><span class="line">    ...</span><br><span class="line">    //因为是第一次 OnLayout 所以  getChildCount </span><br><span class="line">    //还是 0 </span><br><span class="line">    final int childCount = getChildCount();</span><br><span class="line">    if (changed) &#123;</span><br><span class="line">        for (int i = 0; i &lt; childCount; i++) &#123;</span><br><span class="line">            getChildAt(i).forceLayout();</span><br><span class="line">        &#125;</span><br><span class="line">        mRecycler.markChildrenDirty();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   //直接进入  layoutChildren</span><br><span class="line">    layoutChildren();</span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">@Override</span><br><span class="line">protected void layoutChildren() &#123;</span><br><span class="line">    ...</span><br><span class="line">    // 因为 childcount 为 0 ，所以这里并没有什么作用</span><br><span class="line">    //但是 在第二次的时候 这里就需要注意</span><br><span class="line">    //现在可以先跳过。</span><br><span class="line">       // Pull all children into the RecycleBin.</span><br><span class="line">        // These views will be reused if possible</span><br><span class="line">        final int firstPosition = mFirstPosition;</span><br><span class="line">        final RecycleBin recycleBin = mRecycler;</span><br><span class="line">        if (dataChanged) &#123;</span><br><span class="line">            for (int i = 0; i &lt; childCount; i++) &#123;</span><br><span class="line">                recycleBin.addScrapView(getChildAt(i), firstPosition+i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            recycleBin.fillActiveViews(childCount, firstPosition);</span><br><span class="line">        &#125;</span><br><span class="line">        //和上面的一样</span><br><span class="line">        // Clear out old views</span><br><span class="line">        detachAllViewsFromParent();</span><br><span class="line"> //</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">switch 里面</span><br><span class="line"> default:</span><br><span class="line">               if (childCount == 0) &#123;</span><br><span class="line">                   if (!mStackFromBottom) &#123;</span><br><span class="line">                       final int position = lookForSelectablePosition(0, true);</span><br><span class="line">                       setSelectedPositionInt(position);</span><br><span class="line">                       // 到这里方法</span><br><span class="line">                       sel = fillFromTop(childrenTop);</span><br><span class="line">                   &#125; else &#123;</span><br><span class="line">                       final int position = lookForSelectablePosition(mItemCount - 1, false);</span><br><span class="line">                       setSelectedPositionInt(position);</span><br><span class="line">                       sel = fillUp(mItemCount - 1, childrenBottom);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br></pre></td></tr></table></figure>
+<p>因为是第一次 OnLayout ，因此有效的操作实际上就到  fillFromTop 这个方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">private View fillFromTop(int nextTop) &#123;</span><br><span class="line">      mFirstPosition = Math.min(mFirstPosition, mSelectedPosition);</span><br><span class="line">      mFirstPosition = Math.min(mFirstPosition, mItemCount - 1);</span><br><span class="line">      if (mFirstPosition &lt; 0) &#123;</span><br><span class="line">          mFirstPosition = 0;</span><br><span class="line">      &#125;</span><br><span class="line">      return fillDown(mFirstPosition, nextTop);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>fillFromTop-&gt;fillDown 这两个方法就是进行第一次往 ListView 添加 View 。<br>其中的 fillDown 有个具体的循环。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">private View fillDown(int pos, int nextTop) &#123;</span><br><span class="line">   View selectedView = null;</span><br><span class="line">   ...</span><br><span class="line">   int end = (mBottom - mTop);</span><br><span class="line">   ...</span><br><span class="line">   //进入一个循环</span><br><span class="line">   while (nextTop &lt; end &amp;&amp; pos &lt; mItemCount) &#123;</span><br><span class="line">    </span><br><span class="line">       View child = makeAndAddView(pos, nextTop, true, mListPadding.left, selected);</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的循环就是 根据屏幕的大下，对 ListView 添加满屏幕的 ItemView 。重点关注一下 makeAndView<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">private View makeAndAddView(int position, int y, boolean flow, int childrenLeft,</span><br><span class="line">        boolean selected) &#123;</span><br><span class="line">    if (!mDataChanged) &#123;</span><br><span class="line">        // Try to use an existing view for this position.</span><br><span class="line">        //尝试从 getActiveView 获取，但是这个时候为 0</span><br><span class="line">        //所以 activeView 为 null</span><br><span class="line">        final View activeView = mRecycler.getActiveView(position);</span><br><span class="line">        if (activeView != null) &#123;</span><br><span class="line">            // Found it. We&apos;re reusing an existing child, so it just needs</span><br><span class="line">            // to be positioned like a scrap view.</span><br><span class="line">            setupChild(activeView, position, y, flow, childrenLeft, selected, true);</span><br><span class="line">            return activeView;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //通过 obtainView 获取</span><br><span class="line">    // Make a new view for this position, or convert an unused view if</span><br><span class="line">    // possible.</span><br><span class="line">    final View child = obtainView(position, mIsScrap);</span><br><span class="line"></span><br><span class="line">    // This needs to be positioned and measured.</span><br><span class="line">    setupChild(child, position, y, flow, childrenLeft, selected, mIsScrap[0]);</span><br><span class="line"></span><br><span class="line">    return child;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">View obtainView(int position, boolean[] outMetadata) &#123;</span><br><span class="line"> ...</span><br><span class="line">  //首先会获取一个 ScrapView 缓存废弃的 itemView ，因为这个时候为 0 </span><br><span class="line">  //所以 会将 null 传到 mAdapter.getView 这个方法中。</span><br><span class="line">  final View scrapView = mRecycler.getScrapView(position);</span><br><span class="line">     final View child = mAdapter.getView(position, scrapView, this);</span><br><span class="line">      ...</span><br><span class="line">       return child;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>我们可以知道 mAdapter.getView 方法就是 BaseAdapter 中的 getView 方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">          public View getView(int position, View convertView, ViewGroup parent) &#123;</span><br><span class="line">              if (convertView==null)&#123;</span><br><span class="line">                  convertView = LayoutInflater.from(Main2Activity.this).inflate(R.layout.item,null);</span><br><span class="line">              &#125;</span><br><span class="line">              TextView textView = convertView.findViewById(R.id.tv_text);</span><br><span class="line">              textView.setText((position + &quot;:对应为&quot; + convertView).replace(&quot;android.widget.&quot;,&quot;&quot;));</span><br><span class="line">              return convertView;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br></pre></td></tr></table></figure></p>
+<p>此时 convertView  就是 scrapView ，因为这时为 null ，所以就通过 LayoutInflater 进行加载。这样 obainView 放回一个 加载的 View , 最后回到 setupChild ,在 setupChild 就将 ItemView 添加到 ListViewGoup 并 mChildrenCount ++ .<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">private void addInArray(View child, int index) &#123;</span><br><span class="line">        View[] children = mChildren;</span><br><span class="line">        final int count = mChildrenCount;</span><br><span class="line">        ...</span><br><span class="line">            children[index] = child;</span><br><span class="line">            mChildrenCount++;</span><br><span class="line">           ...</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/2018/11/16/彻底理解-ListView-缓存机制/1.png" alt="image.png"></p>
+<h3 id="2-第二次-OnLayout"><a href="#2-第二次-OnLayout" class="headerlink" title="(2)第二次 OnLayout"></a>(2)第二次 OnLayout</h3><p>经过一次 OnLayout 后之前的三个变量变化如下：<br>| 变量                                                     | 数量           |<br>| ——————————————————– | ————– |<br>| mActiveViews (表示屏幕可见的itemView )                   | 0 个           |<br>| mCurrentScrap/mScrapViews[0] ((表示废弃移除的itemView )) | 0个            |<br>| getChildCount()/childCount                               | 占满屏幕的数量 |<br>首先还是还是 从 layoutChildren 开始<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">  protected void layoutChildren() &#123;</span><br><span class="line">      ...</span><br><span class="line">      // 因为 childcount 这个时候就有值了 n ，</span><br><span class="line">      //假设为  n</span><br><span class="line">      // 首先判断有没有数据改变  dataChanged </span><br><span class="line">      // 没有就进入 else </span><br><span class="line">         // Pull all children into the RecycleBin.</span><br><span class="line">          // These views will be reused if possible</span><br><span class="line">          final int firstPosition = mFirstPosition;</span><br><span class="line">          final RecycleBin recycleBin = mRecycler;</span><br><span class="line">          if (dataChanged) &#123;</span><br><span class="line">              for (int i = 0; i &lt; childCount; i++) &#123;</span><br><span class="line">                  recycleBin.addScrapView(getChildAt(i), firstPosition+i);</span><br><span class="line">              &#125;</span><br><span class="line">          &#125; else &#123;</span><br><span class="line">             // 这里就将 屏幕上的 itemView 添加到 </span><br><span class="line">              //ActiveViews  中 ，ActiveViews 就是表示屏幕上的 itemView </span><br><span class="line">              //集合</span><br><span class="line">              recycleBin.fillActiveViews(childCount, firstPosition);</span><br><span class="line">          &#125;</span><br><span class="line">           //然后就将 所有的 View 从 ListView 中先移除</span><br><span class="line">           //这是为了后面操作导致重复添加。</span><br><span class="line">          // Clear out old views</span><br><span class="line">          detachAllViewsFromParent();</span><br><span class="line">   //</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的逻辑就是将 ListView 中的itemView 添加到 ActiveViews 数组中，然后就先移除，因为保存到了 ActiveViews 中，所以不用担心会重新 LayoutInflate 的问题。<br>| 变量                                                     | 数量 |<br>| ——————————————————– | —- |<br>| mActiveViews (表示屏幕可见的itemView )                   | n 个 |<br>| mCurrentScrap/mScrapViews[0] ((表示废弃移除的itemView )) | 0个  |<br>| getChildCount()/childCount                               | n 个 |<br>因为是第二次 onLayout ，所以不会进入 fillTop -&gt;fillDown ，而是进入 fillSpecific，但是最后还是回到 makeAndaddView<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private View fillSpecific(int position, int top) &#123;</span><br><span class="line">        boolean tempIsSelected = position == mSelectedPosition;</span><br><span class="line">        View temp = makeAndAddView(position, top, true, mListPadding.left, </span><br><span class="line">        ....</span><br><span class="line">        ....</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">private View makeAndAddView(int position, int y, boolean flow, int childrenLeft,</span><br><span class="line">        boolean selected) &#123;</span><br><span class="line">    if (!mDataChanged) &#123;</span><br><span class="line">        // Try to use an existing view for this position.</span><br><span class="line">        final View activeView = mRecycler.getActiveView(position);</span><br><span class="line">        if (activeView != null) &#123;</span><br><span class="line">            // Found it. We&apos;re reusing an existing child, so it just needs</span><br><span class="line">            // to be positioned like a scrap view.</span><br><span class="line">            setupChild(activeView, position, y, flow, childrenLeft, selected, true);</span><br><span class="line">            return activeView;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为 ActiveView 不为 null 了，所以这里就将之前保存的 每个 itemView 重新添加到 ListView ViewGroup . 而且 ActiveView 每次get 都会进行删除。<br>这样三个变量的结果就为<br>| 变量                                                     | 数量 |<br>| ——————————————————– | —- |<br>| mActiveViews (表示屏幕可见的itemView )                   | 0 个 |<br>| mCurrentScrap/mScrapViews[0] ((表示废弃移除的itemView )) | 0个  |<br>| getChildCount()/childCount                               | n 个 |</p>
+<p><img src="/2018/11/16/彻底理解-ListView-缓存机制/2.png" alt="image.png"></p>
+<h2 id="四-滑动一个-item"><a href="#四-滑动一个-item" class="headerlink" title="四.滑动一个 item"></a>四.滑动一个 item</h2><p>因为是 滑动所以肯定在 onTouchEvent 的 MOVE 里面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">  public boolean onTouchEvent(MotionEvent ev) &#123;</span><br><span class="line">   </span><br><span class="line">      ....</span><br><span class="line">      switch (actionMasked) &#123;</span><br><span class="line">           ....</span><br><span class="line">          case MotionEvent.ACTION_MOVE: &#123;</span><br><span class="line">              onTouchMove(ev, vtev);</span><br><span class="line">              break;</span><br><span class="line">          &#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">private void onTouchMove(MotionEvent ev, MotionEvent vtev) &#123;</span><br><span class="line">       // 这里又回到 layoutChildren</span><br><span class="line">      if (mDataChanged) &#123;</span><br><span class="line">          // Re-sync everything if data has been changed</span><br><span class="line">          // since the scroll operation can query the adapter.</span><br><span class="line">          layoutChildren();</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+<p>在 layoutChildren 最后又会回到 makeAndAddView<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">private View makeAndAddView(int position, int y, boolean flow, int childrenLeft,</span><br><span class="line">         boolean selected) &#123;</span><br><span class="line">     if (!mDataChanged) &#123;</span><br><span class="line">         // Try to use an existing view for this position.</span><br><span class="line">         final View activeView = mRecycler.getActiveView(position);</span><br><span class="line">         if (activeView != null) &#123;</span><br><span class="line">             // Found it. We&apos;re reusing an existing child, so it just needs</span><br><span class="line">             // to be positioned like a scrap view.</span><br><span class="line">             setupChild(activeView, position, y, flow, childrenLeft, selected, true);</span><br><span class="line">             return activeView;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line">      // 执行下面的</span><br><span class="line">     // Make a new view for this position, or convert an unused view if</span><br><span class="line">     // possible.</span><br><span class="line">     final View child = obtainView(position, mIsScrap);</span><br><span class="line"></span><br><span class="line">     // This needs to be positioned and measured.</span><br><span class="line">     setupChild(child, position, y, flow, childrenLeft, selected, mIsScrap[0]);</span><br><span class="line"></span><br><span class="line">     return child;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里因为 之前的 getActiveView 已经将所有的 item取出，所以还是会通过  obtainView 去加载一个 item.而且在 onTouchMove 最后还会调用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">for (int i = childCount - 1; i &gt;= 0; i--) &#123;</span><br><span class="line">              final View child = getChildAt(i);</span><br><span class="line">              if (child.getTop() &lt;= bottom) &#123;</span><br><span class="line">                  break;</span><br><span class="line">              &#125; else &#123;</span><br><span class="line">                   ....</span><br><span class="line">                   // 将移除屏幕的 itemView 添加到 ScrapView </span><br><span class="line">                      mRecycler.addScrapView(child, position);</span><br><span class="line">                  &#125;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个时候那个几个变量的变化为<br>mActiveViews (表示屏幕可见的itemView )| 0 个<br>mCurrentScrap/mScrapViews[0] ((表示废弃移除的itemView )) | 1个<br>getChildCount()/childCount | n+1 个</p>
+<h2 id="五-继续滑动"><a href="#五-继续滑动" class="headerlink" title="五.继续滑动"></a>五.继续滑动</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">private View makeAndAddView(int position, int y, boolean flow, int childrenLeft,</span><br><span class="line">          boolean selected) &#123;</span><br><span class="line">     </span><br><span class="line">      final View child = obtainView(position, mIsScrap);</span><br><span class="line"></span><br><span class="line">      // This needs to be positioned and measured.</span><br><span class="line">      setupChild(child, position, y, flow, childrenLeft, selected, mIsScrap[0]);</span><br><span class="line"></span><br><span class="line">      return child;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">final View scrapView = mRecycler.getScrapView(position);</span><br><span class="line">      //这个时候和第一次就不同了 因为 这个时候 的 scrapView</span><br><span class="line">      //就不为  null, 因此 scrapView 和 convertView 就不为null.</span><br><span class="line">      final View child = mAdapter.getView(position, scrapView, this);</span><br><span class="line">      if (scrapView != null) &#123;</span><br><span class="line">          if (child != scrapView) &#123;</span><br><span class="line">              // Failed to re-bind the data, return scrap to the heap.</span><br><span class="line">              mRecycler.addScrapView(scrapView, position);</span><br><span class="line">          &#125; else if (child.isTemporarilyDetached()) &#123;</span><br><span class="line">              outMetadata[0] = true;</span><br><span class="line"></span><br><span class="line">              // Finish the temporary detach started in addScrapView().</span><br><span class="line">              child.dispatchFinishTemporaryDetach();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+<p>上面的过程实际上就是将之前移除屏幕的 itemView  重新获取并设置到  mAdapter.getView 中，这也是 我们在写 getView 方法的时候需要对 convertView 进行判断，因为这样就可以利用 ListView 的缓存机制，不用重新进行 LayoutInflate 。</p>
+<h4 id="最后："><a href="#最后：" class="headerlink" title="最后："></a>最后：</h4><ul>
+<li>一个 ListView 共创建的 itemView 数就是屏幕显示的 数量+1 ，这个原因在滑动一个 item 的时候就说明。</li>
+</ul>
+<p>为了证明这个说法，最后做一下验证。<br><img src="/2018/11/16/彻底理解-ListView-缓存机制/3.png" alt="image.png"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android-基础/" rel="tag"># Android 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/10/OkHttp的任务队列-ArrayDeque/" rel="next" title="OkHttp的任务队列----ArrayDeque">
+                <i class="fa fa-chevron-left"></i> OkHttp的任务队列----ArrayDeque
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+ <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/d.jpg"
+                alt="海盗的帽子" />
+            
+              <p class="site-author-name" itemprop="name">海盗的帽子</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yishengma" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/m0_38089373" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-copyright"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-前言"><span class="nav-text">一.前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-RecycleBin机制"><span class="nav-text">二.RecycleBin机制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#对于可见的-itemView-有两个操作："><span class="nav-text">对于可见的 itemView 有两个操作：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#对于移除屏幕的-itemView-也有两个操作："><span class="nav-text">对于移除屏幕的 itemView 也有两个操作：</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-OnLayout-过程"><span class="nav-text">三.OnLayout 过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-第一次-OnLayout"><span class="nav-text">(1)第一次 OnLayout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-第二次-OnLayout"><span class="nav-text">(2)第二次 OnLayout</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-滑动一个-item"><span class="nav-text">四.滑动一个 item</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五-继续滑动"><span class="nav-text">五.继续滑动</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#最后："><span class="nav-text">最后：</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-[object Object]"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">海盗的帽子</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://rawgit.com/yishengma/147d4f60feb7cdc79c355ad2da83d513/raw/d624cffa8a67b4da07048d59ba0031e2860b1b2b/md5.min.js"></script>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '15e7b5ecca662534768c',
+          clientSecret: '26dc23d2d7a013bbcce94772f42f2e434247c6ba',
+          repo: 'yishengma.github.io',
+          owner: 'yishengma',
+          admin: ['yishengma'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2LveBulvcfzvQ6MBGz9b3URY-gzGzoHsz", "7mcKtxSVSDUSpSxFfdxBmyaP");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
