@@ -85,7 +85,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://yishengma.github.io/2018/10/14/Java-谈谈String/1.png">
 <meta property="og:image" content="https://yishengma.github.io/2018/10/14/Java-谈谈String/2.png">
-<meta property="og:updated_time" content="2018-10-14T07:34:08.957Z">
+<meta property="og:updated_time" content="2018-12-23T06:47:10.681Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java----谈谈String">
 <meta name="twitter:description" content="一.简介String 是 Java 中使用得最频繁的一个类了，不管是作为开发者的业务使用，还是一些系统级别的字符使用， String 都发挥着重要的作用。又因 String 是不可变的、final的 且 Java 在运行时也保存了一个字符串池(String pool) ，就使得 String 变得很特殊。 二.==/equalsString 对象的创建有两种方式：12String strCompl">
@@ -321,8 +321,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-14T15:34:08+08:00">
-                2018-10-14
+              <time title="更新于" itemprop="dateModified" datetime="2018-12-23T14:47:10+08:00">
+                2018-12-23
               </time>
             
           </span>
@@ -392,7 +392,7 @@
 <h5 id="3-引申"><a href="#3-引申" class="headerlink" title="(3)引申"></a>(3)引申</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String strNew = new String(&quot;A&quot;);</span><br></pre></td></tr></table></figure>
 <p>对于这行代码，前面说过会在堆保存对象的实例数据，然后在常量池保存了 “A” 这个常量。所以这一句实际涉及了两个 String 对象。</p>
 <h2 id="三-final"><a href="#三-final" class="headerlink" title="三.final"></a>三.final</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public final class String</span><br><span class="line">    implements java.io.Serializable, Comparable&lt;String&gt;, CharSequence &#123;&#125;</span><br></pre></td></tr></table></figure>
-<p>总所周知，String 是 final ，也就是String 是不可变的。即一个 String 对象创建之后所有对它修改后的字符串都是新生成的 String  对象。</p>
+<p>众所周知，String 类是 final ，也就是String 是不可继承的。且对于内部的实现 char 数组也是通过 final 修饰的，加上使用 privvate 进行修饰，且对 String 的所有修改都不会设计 char 数组 的修改吗，即一个 String 对象创建之后所有对它修改后的字符串都是新生成的 String  对象，因此 String 是不可变得。</p>
 <p>String 设计成 final 主要有下的原因：</p>
 <ul>
 <li>实现字符串常量池，只有当字符串是不可变时字符串池才有可能实现，字符串池的实现可以在运行时节约很多 heap 空间，因为不同的字符串变量都指向池中的同一个字符串，即可以实现多个变量引用 JVM 内存中的同一个字符串实例，如果字符串不是不变的，String interning 将不能实现(String interning 是指对不同的字符串仅仅只保存一个，即不会保存多个相同的字符串)，因为这样的话，如果变量改变了它的值，那么其它指向这个值的变量的值也会一起改变。</li>
