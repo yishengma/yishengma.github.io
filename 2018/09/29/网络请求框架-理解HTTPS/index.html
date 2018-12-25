@@ -75,13 +75,13 @@
 
 
 
-<meta name="description" content="一.前言学习过计算机网络的都知道对于计算机网络的系统结构，如果以五层协议为标准可以将整个体系划分为五层，即物理层，数据链路层，网络层，运输层和最后的应用层，应用层的任务是通过应用进程间的交互来完成特定的网络应用，应用层的协议定义的是应用进程间的通信和交互的规则，具体的实现则是由下一层去实现，以 Android 来说就是 Android 客户端应用进程和服务器应用进程的通信。而 HTTP / HTT">
+<meta name="description" content="一.前言学习过计算机网络的都知道对于计算机网络的体系结构，如果以五层协议为标准可以将整个体系划分为五层，即物理层，数据链路层，网络层，运输层和最后的应用层，应用层的任务是通过应用进程间的交互来完成特定的网络应用，应用层的协议定义的是应用进程间的通信和交互的规则，具体的实现则是由下一层去实现，以 Android 来说就是 Android 客户端应用进程和服务器应用进程的通信。而 HTTP / HTT">
 <meta name="keywords" content="Android 框架">
 <meta property="og:type" content="article">
 <meta property="og:title" content="网络请求框架----理解HTTPS">
 <meta property="og:url" content="https://yishengma.github.io/2018/09/29/网络请求框架-理解HTTPS/index.html">
 <meta property="og:site_name" content="海盗的帽子的博客">
-<meta property="og:description" content="一.前言学习过计算机网络的都知道对于计算机网络的系统结构，如果以五层协议为标准可以将整个体系划分为五层，即物理层，数据链路层，网络层，运输层和最后的应用层，应用层的任务是通过应用进程间的交互来完成特定的网络应用，应用层的协议定义的是应用进程间的通信和交互的规则，具体的实现则是由下一层去实现，以 Android 来说就是 Android 客户端应用进程和服务器应用进程的通信。而 HTTP / HTT">
+<meta property="og:description" content="一.前言学习过计算机网络的都知道对于计算机网络的体系结构，如果以五层协议为标准可以将整个体系划分为五层，即物理层，数据链路层，网络层，运输层和最后的应用层，应用层的任务是通过应用进程间的交互来完成特定的网络应用，应用层的协议定义的是应用进程间的通信和交互的规则，具体的实现则是由下一层去实现，以 Android 来说就是 Android 客户端应用进程和服务器应用进程的通信。而 HTTP / HTT">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://yishengma.github.io/2018/09/29/网络请求框架-理解HTTPS/1.png">
 <meta property="og:image" content="https://yishengma.github.io/2018/09/29/网络请求框架-理解HTTPS/2.png">
@@ -94,10 +94,10 @@
 <meta property="og:image" content="https://yishengma.github.io/2018/09/29/网络请求框架-理解HTTPS/9.png">
 <meta property="og:image" content="https://yishengma.github.io/2018/09/29/网络请求框架-理解HTTPS/10.png">
 <meta property="og:image" content="https://yishengma.github.io/2018/09/29/网络请求框架-理解HTTPS/11.png">
-<meta property="og:updated_time" content="2018-09-29T15:02:15.574Z">
+<meta property="og:updated_time" content="2018-12-25T13:18:19.287Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络请求框架----理解HTTPS">
-<meta name="twitter:description" content="一.前言学习过计算机网络的都知道对于计算机网络的系统结构，如果以五层协议为标准可以将整个体系划分为五层，即物理层，数据链路层，网络层，运输层和最后的应用层，应用层的任务是通过应用进程间的交互来完成特定的网络应用，应用层的协议定义的是应用进程间的通信和交互的规则，具体的实现则是由下一层去实现，以 Android 来说就是 Android 客户端应用进程和服务器应用进程的通信。而 HTTP / HTT">
+<meta name="twitter:description" content="一.前言学习过计算机网络的都知道对于计算机网络的体系结构，如果以五层协议为标准可以将整个体系划分为五层，即物理层，数据链路层，网络层，运输层和最后的应用层，应用层的任务是通过应用进程间的交互来完成特定的网络应用，应用层的协议定义的是应用进程间的通信和交互的规则，具体的实现则是由下一层去实现，以 Android 来说就是 Android 客户端应用进程和服务器应用进程的通信。而 HTTP / HTT">
 <meta name="twitter:image" content="https://yishengma.github.io/2018/09/29/网络请求框架-理解HTTPS/1.png">
 
 
@@ -330,8 +330,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-09-29T23:02:15+08:00">
-                2018-09-29
+              <time title="更新于" itemprop="dateModified" datetime="2018-12-25T21:18:19+08:00">
+                2018-12-25
               </time>
             
           </span>
@@ -375,7 +375,7 @@
       
 
       
-        <h2 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h2><p>学习过计算机网络的都知道对于计算机网络的系统结构，如果以五层协议为标准可以将整个体系划分为五层，即物理层，数据链路层，网络层，运输层和最后的应用层，应用层的任务是通过应用进程间的交互来完成特定的网络应用，应用层的协议定义的是应用进程间的通信和交互的规则，具体的实现则是由下一层去实现，以 Android 来说就是 Android 客户端应用进程和服务器应用进程的通信。而 HTTP / HTTPs 等协议就是属于应用层的协议。</p>
+        <h2 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h2><p>学习过计算机网络的都知道对于计算机网络的体系结构，如果以五层协议为标准可以将整个体系划分为五层，即物理层，数据链路层，网络层，运输层和最后的应用层，应用层的任务是通过应用进程间的交互来完成特定的网络应用，应用层的协议定义的是应用进程间的通信和交互的规则，具体的实现则是由下一层去实现，以 Android 来说就是 Android 客户端应用进程和服务器应用进程的通信。而 HTTP / HTTPs 等协议就是属于应用层的协议。</p>
 <h2 id="二-HTTP"><a href="#二-HTTP" class="headerlink" title="二. HTTP"></a>二. HTTP</h2><h4 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h4><p>HTTP 翻译为超文本传输协议，定义了客户进程如何向服务器请求资源以及服务器如何将资源返回给客户端。HTTP 使用的是面向连接的 TCP 的运输层协议，保证数据的可靠传输，但是 HTTP 是无连接的，也就是说在应用层面交换报文的时候不会先进行连接。</p>
 <p><img src="/2018/09/29/网络请求框架-理解HTTPS/1.png" alt="image.png"></p>
 <h4 id="2-HTTP-是无状态的"><a href="#2-HTTP-是无状态的" class="headerlink" title="2.HTTP 是无状态的"></a>2.HTTP 是无状态的</h4><p>HTTP 是无状态的意思就是说对于同一客户端的每一次请求服务器的处理都是一样的，不会记录客户端的上一次访问，也不记得客户端访问过多少次，因此使得服务器更能支持大量的并发操作。</p>

@@ -86,7 +86,7 @@
 <meta property="og:image" content="https://yishengma.github.io/2018/10/02/网络请求框架-OkHttp原理/1.png">
 <meta property="og:image" content="https://yishengma.github.io/2018/10/02/网络请求框架-OkHttp原理/2.png">
 <meta property="og:image" content="https://yishengma.github.io/2018/10/02/网络请求框架-OkHttp原理/3.png">
-<meta property="og:updated_time" content="2018-10-02T09:26:03.496Z">
+<meta property="og:updated_time" content="2018-12-25T13:21:12.427Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络请求框架----OkHttp原理">
 <meta name="twitter:description" content="一.前言在 Android 中，网络请求是一个必不可少的功能，因此就有许多代表网络请求客户端的组件库，具有代表性的有下面三种：  Apache 的 HTTP 客户端组件 HttpClient。 Java  JDK 自带的 HttpURLConnection  标准库。 重写应用层代码的 HTTP 组件库。  HttpClient这是 Android 6.0 之前经常会使用的 API ,但是因为不支">
@@ -322,8 +322,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-02T17:26:03+08:00">
-                2018-10-02
+              <time title="更新于" itemprop="dateModified" datetime="2018-12-25T21:21:12+08:00">
+                2018-12-25
               </time>
             
           </span>
@@ -543,7 +543,7 @@
 <li>如果此时host域也相同，则符合条件，可以被复用</li>
 <li>如果host不相同，在HTTP/2的域名切片场景下一样可以复用.</li>
 </ul>
-<p>对于连接的清楚，ConnectPool 有一个独立的线程进行清理的工作：</p>
+<p>对于连接的清除，ConnectPool 有一个独立的线程进行清理的工作：</p>
 <ul>
 <li>遍历连接池中所有连接，标记泄露连接（即空闲时间即将达到5分钟）</li>
 <li>如果被标记的连接满足(空闲 socket 连接超过5个&amp;&amp; keepalive 时间大于5分钟)，就将此 连接从 Deque 中移除，并关闭连接，返回 0，也就是将要执行 wait(0)，提醒立刻再次扫描</li>
