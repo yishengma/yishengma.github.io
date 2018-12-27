@@ -75,20 +75,20 @@
 
 
 
-<meta name="description" content="一.简介String 是 Java 中使用得最频繁的一个类了，不管是作为开发者的业务使用，还是一些系统级别的字符使用， String 都发挥着重要的作用。又因 String 是不可变的、final的 且 Java 在运行时也保存了一个字符串池(String pool) ，就使得 String 变得很特殊。 二.==/equalsString 对象的创建有两种方式：12String strCompl">
+<meta name="description" content="一.简介String 可以说是 Java 中使用得最频繁的一个类了，不管是作为开发者的业务使用，还是一些系统级别的字符使用， String 都发挥着重要的作用。又因 String 是不可变的、f且 Java 在运行时也保存了一个字符串池(String pool) ，就使得 String 变得很特殊。 二.==/equalsString 对象的创建有两种方式：12String strComplier">
 <meta name="keywords" content="Java 基础">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java----谈谈String">
 <meta property="og:url" content="https://yishengma.github.io/2018/10/14/Java-谈谈String/index.html">
 <meta property="og:site_name" content="海盗的帽子的博客">
-<meta property="og:description" content="一.简介String 是 Java 中使用得最频繁的一个类了，不管是作为开发者的业务使用，还是一些系统级别的字符使用， String 都发挥着重要的作用。又因 String 是不可变的、final的 且 Java 在运行时也保存了一个字符串池(String pool) ，就使得 String 变得很特殊。 二.==/equalsString 对象的创建有两种方式：12String strCompl">
+<meta property="og:description" content="一.简介String 可以说是 Java 中使用得最频繁的一个类了，不管是作为开发者的业务使用，还是一些系统级别的字符使用， String 都发挥着重要的作用。又因 String 是不可变的、f且 Java 在运行时也保存了一个字符串池(String pool) ，就使得 String 变得很特殊。 二.==/equalsString 对象的创建有两种方式：12String strComplier">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://yishengma.github.io/2018/10/14/Java-谈谈String/1.png">
 <meta property="og:image" content="https://yishengma.github.io/2018/10/14/Java-谈谈String/2.png">
-<meta property="og:updated_time" content="2018-12-23T06:47:10.681Z">
+<meta property="og:updated_time" content="2018-12-27T13:43:01.075Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java----谈谈String">
-<meta name="twitter:description" content="一.简介String 是 Java 中使用得最频繁的一个类了，不管是作为开发者的业务使用，还是一些系统级别的字符使用， String 都发挥着重要的作用。又因 String 是不可变的、final的 且 Java 在运行时也保存了一个字符串池(String pool) ，就使得 String 变得很特殊。 二.==/equalsString 对象的创建有两种方式：12String strCompl">
+<meta name="twitter:description" content="一.简介String 可以说是 Java 中使用得最频繁的一个类了，不管是作为开发者的业务使用，还是一些系统级别的字符使用， String 都发挥着重要的作用。又因 String 是不可变的、f且 Java 在运行时也保存了一个字符串池(String pool) ，就使得 String 变得很特殊。 二.==/equalsString 对象的创建有两种方式：12String strComplier">
 <meta name="twitter:image" content="https://yishengma.github.io/2018/10/14/Java-谈谈String/1.png">
 
 
@@ -321,8 +321,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-12-23T14:47:10+08:00">
-                2018-12-23
+              <time title="更新于" itemprop="dateModified" datetime="2018-12-27T21:43:01+08:00">
+                2018-12-27
               </time>
             
           </span>
@@ -366,10 +366,10 @@
       
 
       
-        <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一.简介"></a>一.简介</h2><p>String 是 Java 中使用得最频繁的一个类了，不管是作为开发者的业务使用，还是一些系统级别的字符使用， String 都发挥着重要的作用。又因 String 是不可变的、final的 且 Java 在运行时也保存了一个字符串池(String pool) ，就使得 String 变得很特殊。</p>
+        <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一.简介"></a>一.简介</h2><p>String 可以说是 Java 中使用得最频繁的一个类了，不管是作为开发者的业务使用，还是一些系统级别的字符使用， String 都发挥着重要的作用。又因 String 是不可变的、f且 Java 在运行时也保存了一个字符串池(String pool) ，就使得 String 变得很特殊。</p>
 <h2 id="二-equals"><a href="#二-equals" class="headerlink" title="二.==/equals"></a>二.==/equals</h2><p>String 对象的创建有两种方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String strComplier = &quot;A&quot;;</span><br><span class="line">String strNew = new String(&quot;A&quot;);</span><br></pre></td></tr></table></figure></p>
 <p>虽然同样是创建字符串 “A” ,但是这两种方式在内存分配上是由区别的。</p>
-<h4 id="1-String-strComplier-“A”"><a href="#1-String-strComplier-“A”" class="headerlink" title="1.String strComplier = “A”;"></a>1.String strComplier = “A”;</h4><p>Java 程序在运行的时候会维护者一个常量池，编译期生成的各种字面量和符号引用会在类加载后进入方法区的运行时常量池。对于 上述这种实现字符串的方式就可以在编译的时候确定字符串的内容，因此这一行生成的内存结构就如下图。<br><img src="/2018/10/14/Java-谈谈String/1.png" alt="image.png"></p>
+<h4 id="1-String-strComplier-“A”"><a href="#1-String-strComplier-“A”" class="headerlink" title="1.String strComplier = “A”;"></a>1.String strComplier = “A”;</h4><p>Java 程序在运行的时候会维护一个常量池，编译期生成的各种字面量和符号引用会在类加载后进入方法区的运行时常量池。对于 上述这种实现字符串的方式就可以在编译的时候确定字符串的内容，因此这一行生成的内存结构就如下图。<br><img src="/2018/10/14/Java-谈谈String/1.png" alt="image.png"></p>
 <p>不严谨的讲：虚拟机栈中的 strComplier 存储的就是 A 在常量池中的地址。</p>
 <h4 id="2-String-strNew-new-String-“A”"><a href="#2-String-strNew-new-String-“A”" class="headerlink" title="2. String strNew = new String(“A”);"></a>2. String strNew = new String(“A”);</h4><p>因为使用的 new 的方式，所以这句代码只有的运行的时候才能确定字符串的内容。而对于 new 关键字，java 是将对象的实例数据存放堆上的，但是又因 String 常量池的存在，因此实际上在堆上的 String 对象的数据又指向了字符串常量池。</p>
 <p><img src="/2018/10/14/Java-谈谈String/2.png" alt="image.png"></p>
