@@ -64,7 +64,7 @@
 
 
 
-  <meta name="keywords" content="算法," />
+  <meta name="keywords" content="java 基础," />
 
 
 
@@ -75,22 +75,18 @@
 
 
 
-<meta name="description" content="问题实现一个二叉搜索树迭代器。你将使用二叉搜索树的根节点初始化迭代器。 调用 next() 将返回二叉搜索树中的下一个最小的数。 示例： 12345678910BSTIterator iterator = new BSTIterator(root);iterator.next();    // 返回 3iterator.next();    // 返回 7iterator.hasNext(); /">
-<meta name="keywords" content="算法">
+<meta name="description" content="一.前言今天面试，上来第一个问题就是关于 Set 集合,因为之前做的准备都是什么 HashMap 啊, List 之类的，但是对于 et 集合没有做过多的了解，所以一时语塞。看来基础是不能挑着学的。全部掌握才不怕。 二.Set 接口1.简介 以下内容引用自 源码中的注释   Set  集合是一个不包含重复元素的集合。更确切地讲，set 不包含满足对于两个存在Set 中对象 e1 和 e2， e1.">
+<meta name="keywords" content="java 基础">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode173----二叉搜索树迭代器">
-<meta property="og:url" content="https://yishengma.github.io/2019/01/12/LeetCode173-二叉搜索树迭代器/index.html">
+<meta property="og:title" content="java集合----Set">
+<meta property="og:url" content="https://yishengma.github.io/2019/01/16/java集合-Set/index.html">
 <meta property="og:site_name" content="海盗的帽子的博客">
-<meta property="og:description" content="问题实现一个二叉搜索树迭代器。你将使用二叉搜索树的根节点初始化迭代器。 调用 next() 将返回二叉搜索树中的下一个最小的数。 示例： 12345678910BSTIterator iterator = new BSTIterator(root);iterator.next();    // 返回 3iterator.next();    // 返回 7iterator.hasNext(); /">
+<meta property="og:description" content="一.前言今天面试，上来第一个问题就是关于 Set 集合,因为之前做的准备都是什么 HashMap 啊, List 之类的，但是对于 et 集合没有做过多的了解，所以一时语塞。看来基础是不能挑着学的。全部掌握才不怕。 二.Set 接口1.简介 以下内容引用自 源码中的注释   Set  集合是一个不包含重复元素的集合。更确切地讲，set 不包含满足对于两个存在Set 中对象 e1 和 e2， e1.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://yishengma.github.io/2019/01/12/LeetCode173-二叉搜索树迭代器/12401">
-<meta property="og:image" content="https://yishengma.github.io/2019/01/12/LeetCode173-二叉搜索树迭代器/12402">
-<meta property="og:image" content="https://yishengma.github.io/2019/01/12/LeetCode173-二叉搜索树迭代器/12403">
-<meta property="og:updated_time" content="2019-01-12T12:25:15.177Z">
+<meta property="og:updated_time" content="2019-01-16T13:00:03.536Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LeetCode173----二叉搜索树迭代器">
-<meta name="twitter:description" content="问题实现一个二叉搜索树迭代器。你将使用二叉搜索树的根节点初始化迭代器。 调用 next() 将返回二叉搜索树中的下一个最小的数。 示例： 12345678910BSTIterator iterator = new BSTIterator(root);iterator.next();    // 返回 3iterator.next();    // 返回 7iterator.hasNext(); /">
-<meta name="twitter:image" content="https://yishengma.github.io/2019/01/12/LeetCode173-二叉搜索树迭代器/12401">
+<meta name="twitter:title" content="java集合----Set">
+<meta name="twitter:description" content="一.前言今天面试，上来第一个问题就是关于 Set 集合,因为之前做的准备都是什么 HashMap 啊, List 之类的，但是对于 et 集合没有做过多的了解，所以一时语塞。看来基础是不能挑着学的。全部掌握才不怕。 二.Set 接口1.简介 以下内容引用自 源码中的注释   Set  集合是一个不包含重复元素的集合。更确切地讲，set 不包含满足对于两个存在Set 中对象 e1 和 e2， e1.">
 
 
 
@@ -120,13 +116,13 @@
 
 
 
-  <link rel="canonical" href="https://yishengma.github.io/2019/01/12/LeetCode173-二叉搜索树迭代器/"/>
+  <link rel="canonical" href="https://yishengma.github.io/2019/01/16/java集合-Set/"/>
 
 
 
 
 
-  <title>LeetCode173----二叉搜索树迭代器 | 海盗的帽子的博客</title>
+  <title>java集合----Set | 海盗的帽子的博客</title>
   
 
 
@@ -277,7 +273,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2019/01/12/LeetCode173-二叉搜索树迭代器/">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2019/01/16/java集合-Set/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="海盗的帽子">
@@ -294,7 +290,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">LeetCode173----二叉搜索树迭代器</h1>
+          <h1 class="post-title" itemprop="name headline">java集合----Set</h1>
         
 
         <div class="post-meta">
@@ -306,8 +302,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-12T20:20:55+08:00">
-                2019-01-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-16T20:58:47+08:00">
+                2019-01-16
               </time>
             
 
@@ -322,8 +318,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-01-12T20:25:15+08:00">
-                2019-01-12
+              <time title="更新于" itemprop="dateModified" datetime="2019-01-16T21:00:03+08:00">
+                2019-01-16
               </time>
             
           </span>
@@ -336,7 +332,7 @@
 
           
           
-             <span id="/2019/01/12/LeetCode173-二叉搜索树迭代器/" class="leancloud_visitors" data-flag-title="LeetCode173----二叉搜索树迭代器">
+             <span id="/2019/01/16/java集合-Set/" class="leancloud_visitors" data-flag-title="java集合----Set">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -367,35 +363,19 @@
       
 
       
-        <h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>实现一个二叉搜索树迭代器。你将使用二叉搜索树的根节点初始化迭代器。</p>
-<p>调用 next() 将返回二叉搜索树中的下一个最小的数。</p>
-<p>示例：</p>
-<p><img src="/2019/01/12/LeetCode173-二叉搜索树迭代器/12401" alt="image.png"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">BSTIterator iterator = new BSTIterator(root);</span><br><span class="line">iterator.next();    // 返回 3</span><br><span class="line">iterator.next();    // 返回 7</span><br><span class="line">iterator.hasNext(); // 返回 true</span><br><span class="line">iterator.next();    // 返回 9</span><br><span class="line">iterator.hasNext(); // 返回 true</span><br><span class="line">iterator.next();    // 返回 15</span><br><span class="line">iterator.hasNext(); // 返回 true</span><br><span class="line">iterator.next();    // 返回 20</span><br><span class="line">iterator.hasNext(); // 返回 false</span><br></pre></td></tr></table></figure></p>
-<p>提示：</p>
-<ul>
-<li>next() 和 hasNext() 操作的时间复杂度是 O(1)，并使用 O(h) 内存，其中 h 是树的高度。</li>
-<li>你可以假设 next() 调用总是有效的，也就是说，当调用 next() 时，BST 中至少存在一个下一个最小的数。</li>
-</ul>
-<h4 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h4><ul>
-<li>题目的意思就是放回根据搜索二叉树的排序顺序，迭代返回节点。</li>
-<li>首先要了解搜索二叉树的一些特性</li>
-<li><ul>
-<li>对于一个节点，其左孩子比它小，右孩子比它大。</li>
-</ul>
-</li>
-<li><ul>
-<li>其左右子树都满足搜索二叉树的特性</li>
-</ul>
-</li>
-</ul>
-<p><img src="/2019/01/12/LeetCode173-二叉搜索树迭代器/12402" alt="image.png"></p>
-<p>以这个图为例：<br><img src="/2019/01/12/LeetCode173-二叉搜索树迭代器/12403" alt="image.png"></p>
-<p>总结：</p>
-<ul>
-<li>初始化的时候，首先将根节点的左孩子入栈，然后再将其左孩子的左孩子入栈，知道没有左孩子。</li>
-<li>next 方法，从栈中 pop 出返回，再返回之前判断其右孩子为不为空，不为空就将其右孩子入栈，并从其右孩子开始，将其左孩子入栈，操作和初始化将根节点一样。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Definition for a binary tree node.</span><br><span class="line"> * public class TreeNode &#123;</span><br><span class="line"> *     int val;</span><br><span class="line"> *     TreeNode left;</span><br><span class="line"> *     TreeNode right;</span><br><span class="line"> *     TreeNode(int x) &#123; val = x; &#125;</span><br><span class="line"> * &#125;</span><br><span class="line"> */</span><br><span class="line">class BSTIterator &#123;</span><br><span class="line">    TreeNode node ;</span><br><span class="line">    Stack&lt;TreeNode&gt; stack;</span><br><span class="line">    public BSTIterator(TreeNode root) &#123;</span><br><span class="line">        node = root;</span><br><span class="line">        stack = new Stack&lt;&gt;();</span><br><span class="line">        while(node!=null)&#123;</span><br><span class="line">            stack.push(node);</span><br><span class="line">            node = node.left;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /** @return the next smallest number */</span><br><span class="line">    public int next() &#123;</span><br><span class="line">        int val ;</span><br><span class="line">         node = stack.pop();</span><br><span class="line">        val = node.val;</span><br><span class="line">        node = node.right;</span><br><span class="line">        while(node!=null)&#123;</span><br><span class="line">            stack.push(node);</span><br><span class="line">            node = node.left;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        return val;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    /** @return whether we have a next smallest number */</span><br><span class="line">    public boolean hasNext() &#123;</span><br><span class="line">        return !stack.isEmpty();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Your BSTIterator object will be instantiated and called as such:</span><br><span class="line"> * BSTIterator obj = new BSTIterator(root);</span><br><span class="line"> * int param_1 = obj.next();</span><br><span class="line"> * boolean param_2 = obj.hasNext();</span><br><span class="line"> */</span><br></pre></td></tr></table></figure>
+        <h4 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h4><p>今天面试，上来第一个问题就是关于 Set 集合,因为之前做的准备都是什么 HashMap 啊, List 之类的，但是对于 et 集合没有做过多的了解，所以一时语塞。看来基础是不能挑着学的。全部掌握才不怕。</p>
+<h4 id="二-Set-接口"><a href="#二-Set-接口" class="headerlink" title="二.Set 接口"></a>二.Set 接口</h4><h6 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h6><blockquote>
+<p>以下内容引用自 源码中的注释</p>
+</blockquote>
+<blockquote>
+<p>Set  集合是一个不包含重复元素的集合。更确切地讲，set 不包含满足对于两个存在Set 中对象 e1 和 e2， e1.equals(e2) 的元素，并且最多包含一个 null 元素。</p>
+</blockquote>
+<blockquote>
+<p>注：如果将可变对象用作 set 元素，那么必须极其小心。如果对象是 set 中某个元素，如果以一种影响 equals 比较的方式改变对象的值，那么 set 的行为就是不确定的。此项禁止的一个特殊情况是不允许某个 set 包含其自身作为元素。</p>
+</blockquote>
+<p>总的来说：就是 Set 集合中存储的元素是不能存在重复的，且存储在 Set 集合中的元素如果一个可变的对象，则对对象的操作就千万不能使这个对象的 equals 方法发生变化，否则就会使 Set 集合处于未知的状态，因为 Set 集合保证对象唯一的条件的是通过 equals 方法来判断的。</p>
+<h6 id="2-Set-接口"><a href="#2-Set-接口" class="headerlink" title="2.Set 接口"></a>2.Set 接口</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Set</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Collection</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">//返回 Set 集合元素的数量，最多为 Integer.MAX_VALUE</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">size</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//判断是否包含元素</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//判断 Set 集合是否包含一个指定的元素 o,</span></span><br><span class="line">    <span class="comment">//更确切地讲，是判断 Set 是否存在一个元素 o1</span></span><br><span class="line">    <span class="comment">//使得 o1.equals(o) 返回 true.</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object o)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//返回一个 Set 集合的迭代器，具体元素的顺序交给子类去实现。</span></span><br><span class="line">    <span class="function">Iterator&lt;E&gt; <span class="title">iterator</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//以数组的形式返回集合中的元素，顺序和上面的 iterator 一样。</span></span><br><span class="line">    Object[] toArray();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//返回一个包含此 set 中所有元素的数组；返回数组的运行时类型是指定数组的类型。</span></span><br><span class="line">    &lt;T&gt; T[] toArray(T[] a);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   <span class="comment">//添加一个不重复的元素，更确切地讲是添加一个元素，并保证集合中的</span></span><br><span class="line">   <span class="comment">//任意一个元素 o 都不会使 o.equals(e) 返回 true.</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移除以一个元素</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//判断Set 是否包含了 集合 c 的所有元素</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">containsAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//向Set  添加集合 c  中的元素</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(Collection&lt;? extends E&gt; c)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//删除所有没有在集合 c 中的元素</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">retainAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//删除所有在集合 c 的元素</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">removeAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//清除所有元素</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//Set 集合自己的equals/hashCode 方法。</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span></span>;</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">   <span class="comment">//创建一个可以分割的迭代器</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">default</span> Spliterator&lt;E&gt; <span class="title">spliterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Spliterators.spliterator(<span class="keyword">this</span>, Spliterator.DISTINCT);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">     <span class="comment">//返回一个不可变的 Set 集合</span></span><br><span class="line">     <span class="comment">//下面几个方法都是，参数为集合中固定的元素。</span></span><br><span class="line">    <span class="keyword">static</span> &lt;E&gt; <span class="function">Set&lt;E&gt; <span class="title">of</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ImmutableCollections.Set0.instance();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">    <span class="keyword">static</span> &lt;E&gt; <span class="function">Set&lt;E&gt; <span class="title">of</span><span class="params">(E e1)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ImmutableCollections.Set1&lt;&gt;(e1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">    <span class="keyword">static</span> &lt;E&gt; <span class="function">Set&lt;E&gt; <span class="title">of</span><span class="params">(E e1, E e2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ImmutableCollections.Set2&lt;&gt;(e1, e2);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> &lt;E&gt; <span class="function">Set&lt;E&gt; <span class="title">of</span><span class="params">(E e1, E e2, E e3)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ImmutableCollections.SetN&lt;&gt;(e1, e2, e3);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> &lt;E&gt; <span class="function">Set&lt;E&gt; <span class="title">of</span><span class="params">(E e1, E e2, E e3, E e4)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ImmutableCollections.SetN&lt;&gt;(e1, e2, e3, e4);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    <span class="keyword">static</span> &lt;E&gt; <span class="function">Set&lt;E&gt; <span class="title">of</span><span class="params">(E e1, E e2, E e3, E e4, E e5)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ImmutableCollections.SetN&lt;&gt;(e1, e2, e3, e4, e5);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">    <span class="keyword">static</span> &lt;E&gt; <span class="function">Set&lt;E&gt; <span class="title">of</span><span class="params">(E e1, E e2, E e3, E e4, E e5, E e6)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ImmutableCollections.SetN&lt;&gt;(e1, e2, e3, e4, e5,</span><br><span class="line">                                               e6);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">    <span class="keyword">static</span> &lt;E&gt; <span class="function">Set&lt;E&gt; <span class="title">of</span><span class="params">(E e1, E e2, E e3, E e4, E e5, E e6, E e7)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ImmutableCollections.SetN&lt;&gt;(e1, e2, e3, e4, e5,</span><br><span class="line">                                               e6, e7);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    <span class="keyword">static</span> &lt;E&gt; <span class="function">Set&lt;E&gt; <span class="title">of</span><span class="params">(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ImmutableCollections.SetN&lt;&gt;(e1, e2, e3, e4, e5,</span><br><span class="line">                                               e6, e7, e8);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &lt;E&gt; <span class="function">Set&lt;E&gt; <span class="title">of</span><span class="params">(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ImmutableCollections.SetN&lt;&gt;(e1, e2, e3, e4, e5,</span><br><span class="line">                                               e6, e7, e8, e9);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">static</span> &lt;E&gt; <span class="function">Set&lt;E&gt; <span class="title">of</span><span class="params">(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ImmutableCollections.SetN&lt;&gt;(e1, e2, e3, e4, e5,</span><br><span class="line">                                               e6, e7, e8, e9, e10);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SafeVarargs</span></span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"varargs"</span>)</span><br><span class="line">    <span class="keyword">static</span> &lt;E&gt; <span class="function">Set&lt;E&gt; <span class="title">of</span><span class="params">(E... elements)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">switch</span> (elements.length) &#123; <span class="comment">// implicit null check of elements</span></span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> ImmutableCollections.Set0.instance();</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> ImmutableCollections.Set1&lt;&gt;(elements[<span class="number">0</span>]);</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> ImmutableCollections.Set2&lt;&gt;(elements[<span class="number">0</span>], elements[<span class="number">1</span>]);</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> ImmutableCollections.SetN&lt;&gt;(elements);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//复制一个 Set 集合，返回的是一个不可变得Set 集合</span></span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">    <span class="keyword">static</span> &lt;E&gt; <span class="function">Set&lt;E&gt; <span class="title">copyOf</span><span class="params">(Collection&lt;? extends E&gt; coll)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (coll <span class="keyword">instanceof</span> ImmutableCollections.AbstractImmutableSet) &#123;</span><br><span class="line">            <span class="keyword">return</span> (Set&lt;E&gt;)coll;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> (Set&lt;E&gt;)Set.of(<span class="keyword">new</span> HashSet&lt;&gt;(coll).toArray());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
       
     </div>
     
@@ -412,7 +392,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/算法/" rel="tag"># 算法</a>
+            <a href="/tags/java-基础/" rel="tag"># java 基础</a>
           
         </div>
       
@@ -425,8 +405,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/11/LeetCode144-94-145-二叉树的前序-中序-后序遍历/" rel="next" title="LeetCode144-94-145----二叉树的前序-中序-后序遍历">
-                <i class="fa fa-chevron-left"></i> LeetCode144-94-145----二叉树的前序-中序-后序遍历
+              <a href="/2019/01/12/LeetCode173-二叉搜索树迭代器/" rel="next" title="LeetCode173----二叉搜索树迭代器">
+                <i class="fa fa-chevron-left"></i> LeetCode173----二叉搜索树迭代器
               </a>
             
           </div>
@@ -434,10 +414,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/01/16/java集合-Set/" rel="prev" title="java集合----Set">
-                java集合----Set <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -582,7 +558,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#问题"><span class="nav-text">问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解法"><span class="nav-text">解法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一-前言"><span class="nav-text">一.前言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二-Set-接口"><span class="nav-text">二.Set 接口</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-简介"><span class="nav-text">1.简介</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-Set-接口"><span class="nav-text">2.Set 接口</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
