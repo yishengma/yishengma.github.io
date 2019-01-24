@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16.ico?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android Binder," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.前言 Android 的 Binder 机制,是作为 Android 进阶学习中一个必学的知识点。 之前,通过学习 《Android 开发艺术探索》以及 网上的一些博客, 大致了解 Android Binder 机制的过程,自以为已掌握 Binder 机制的大致过程,写下博客 Android—-IPC机制（Binder） ,但是实际上只是了解了皮毛，没有深入整个流程，于是重新学习，将新的体会记">
+<meta name="keywords" content="Android Binder">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android----Binder机制（进阶篇）">
+<meta property="og:url" content="https://yishengma.github.io/2019/01/24/Android-Binder机制（进阶篇）/index.html">
+<meta property="og:site_name" content="海盗的帽子的博客">
+<meta property="og:description" content="一.前言 Android 的 Binder 机制,是作为 Android 进阶学习中一个必学的知识点。 之前,通过学习 《Android 开发艺术探索》以及 网上的一些博客, 大致了解 Android Binder 机制的过程,自以为已掌握 Binder 机制的大致过程,写下博客 Android—-IPC机制（Binder） ,但是实际上只是了解了皮毛，没有深入整个流程，于是重新学习，将新的体会记">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://yishengma.github.io/2019/01/24/Android-Binder机制（进阶篇）/1240">
+<meta property="og:image" content="https://yishengma.github.io/2019/01/24/Android-Binder机制（进阶篇）/12401">
+<meta property="og:image" content="https://yishengma.github.io/2019/01/24/Android-Binder机制（进阶篇）/12402">
+<meta property="og:image" content="https://yishengma.github.io/2019/01/24/Android-Binder机制（进阶篇）/12403">
+<meta property="og:image" content="https://yishengma.github.io/2019/01/24/Android-Binder机制（进阶篇）/12404">
+<meta property="og:image" content="https://yishengma.github.io/2019/01/24/Android-Binder机制（进阶篇）/12405">
+<meta property="og:updated_time" content="2019-01-24T06:45:26.953Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android----Binder机制（进阶篇）">
+<meta name="twitter:description" content="一.前言 Android 的 Binder 机制,是作为 Android 进阶学习中一个必学的知识点。 之前,通过学习 《Android 开发艺术探索》以及 网上的一些博客, 大致了解 Android Binder 机制的过程,自以为已掌握 Binder 机制的大致过程,写下博客 Android—-IPC机制（Binder） ,但是实际上只是了解了皮毛，没有深入整个流程，于是重新学习，将新的体会记">
+<meta name="twitter:image" content="https://yishengma.github.io/2019/01/24/Android-Binder机制（进阶篇）/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yishengma.github.io/2019/01/24/Android-Binder机制（进阶篇）/"/>
+
+
+
+
+
+  <title>Android----Binder机制（进阶篇） | 海盗的帽子的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">海盗的帽子的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2019/01/24/Android-Binder机制（进阶篇）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="海盗的帽子">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/d.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="海盗的帽子的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android----Binder机制（进阶篇）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T14:41:04+08:00">
+                2019-01-24
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-01-24T14:45:26+08:00">
+                2019-01-24
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/01/24/Android-Binder机制（进阶篇）/" class="leancloud_visitors" data-flag-title="Android----Binder机制（进阶篇）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h2><p> Android 的 Binder 机制,是作为 Android 进阶学习中一个必学的知识点。 之前,通过学习 《Android 开发艺术探索》以及 网上的一些博客, 大致了解 Android Binder 机制的过程,自以为已掌握 Binder 机制的大致过程,写下博客 <a href="https://blog.csdn.net/m0_38089373/article/details/81206893" target="_blank" rel="noopener">Android—-IPC机制（Binder）</a> ,但是实际上只是了解了皮毛，没有深入整个流程，于是重新学习，将新的体会记录成这篇 进阶篇。</p>
+<p> 阅读这篇文章之前需要具备基本的 Binder 机制的流程,具体可通过这些博客学习</p>
+<ul>
+<li><a href="https://blog.csdn.net/m0_38089373/article/details/81206893" target="_blank" rel="noopener">Android—-IPC机制（Binder）</a></li>
+<li><a href="http://weishu.me/2016/01/12/binder-index-for-newer/" target="_blank" rel="noopener">Binder学习指南</a></li>
+<li><a href="https://www.jianshu.com/p/4ee3fd07da14" target="_blank" rel="noopener">图文详解 Android Binder跨进程通信的原理</a></li>
+<li>手动实现 Binder 的通信,不依靠 AIDL 自动生成。</li>
+</ul>
+<h2 id="二-跨进程"><a href="#二-跨进程" class="headerlink" title="二.跨进程"></a>二.跨进程</h2><h3 id="一-用户空间-内核空间"><a href="#一-用户空间-内核空间" class="headerlink" title="(一).用户空间/内核空间"></a>(一).用户空间/内核空间</h3><ul>
+<li>内核空间是 Linux 系统中内核的运行空间,在内核空间可以随意访问系统的资源,系统内核对资源进行同一的管理。</li>
+<li>用户空间是每个用户进程运行的空间,这个空间是进程独有的,不能和其他进程进行内存共享,主要是用于保存进程中的数据等,由于可能存在有恶意的用户进程对系统进行破坏,且系统资源是宝贵的,这就需要保证系统的安全,所以一个进程的用户空间不能直接访问系统资源。</li>
+</ul>
+<p>那么一个用户空间如何访问系统资源呢？</p>
+<p>通过内核提供的接口,向内核发出指令,然后交由内核去访问系统资源。</p>
+<p>大致情况如下图：</p>
+<p><img src="/2019/01/24/Android-Binder机制（进阶篇）/1240" alt="image.png"></p>
+<h3 id="二-Binder-驱动"><a href="#二-Binder-驱动" class="headerlink" title="(二).Binder 驱动"></a>(二).Binder 驱动</h3><p>虽然两个进程的用户空间互不共享,但是一个进程除了有用户空间,还有内核空间,且内核空间是共有的,所以两个进程想要进行通信,那么就可以通过一个在内核空间的中介进行数据的交互，这个中介就是 Binder 驱动。</p>
+<p>Binder 驱动是 Android 在 Linux 内核上添加的一个内核模块，作为内核的一部分在内核空间上运行里运行,两个进程通过这个在内核空间运行的 Binder 驱动就可以进行通信。<br><img src="/2019/01/24/Android-Binder机制（进阶篇）/12401" alt="image.png"></p>
+<h3 id="三-内核启动"><a href="#三-内核启动" class="headerlink" title="(三).内核启动"></a>(三).内核启动</h3><p>Binder 驱动是运行在内核空间的,在内核启动的时候 就会将 Binder 注册成 misc device 类型的驱动,也就是内核驱动。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">static int __init binder_init(void)</span><br><span class="line">&#123;</span><br><span class="line">	int ret;</span><br><span class="line">	char *device_name, *device_names;</span><br><span class="line">	struct binder_device *device;</span><br><span class="line">	struct hlist_node *tmp;</span><br><span class="line">	</span><br><span class="line">	while ((device_name = strsep(&amp;device_names, &quot;,&quot;))) &#123;</span><br><span class="line">	    //初始化 Binder 设备</span><br><span class="line">		ret = init_binder_device(device_name);</span><br><span class="line">		if (ret)</span><br><span class="line">			goto err_init_binder_device_failed;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return ret;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">static int __init init_binder_device(const char *name)</span><br><span class="line">&#123;</span><br><span class="line">	int ret;</span><br><span class="line">	struct binder_device *binder_device;</span><br><span class="line">    </span><br><span class="line">    //1.为 Binder 设备开辟空间</span><br><span class="line">	binder_device = kzalloc(sizeof(*binder_device), GFP_KERNEL);</span><br><span class="line">	if (!binder_device)</span><br><span class="line">		return -ENOMEM;</span><br><span class="line">    //2.初始化 Binder </span><br><span class="line">	binder_device-&gt;miscdev.fops = &amp;binder_fops;</span><br><span class="line">	binder_device-&gt;miscdev.minor = MISC_DYNAMIC_MINOR;</span><br><span class="line">	binder_device-&gt;miscdev.name = name;</span><br><span class="line"></span><br><span class="line">	binder_device-&gt;context.binder_context_mgr_uid = INVALID_UID;</span><br><span class="line">	binder_device-&gt;context.name = name;</span><br><span class="line">    //2.注册 Binder  设备</span><br><span class="line">	ret = misc_register(&amp;binder_device-&gt;miscdev);</span><br><span class="line">	if (ret &lt; 0) &#123;</span><br><span class="line">		kfree(binder_device);</span><br><span class="line">		return ret;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	hlist_add_head(&amp;binder_device-&gt;hlist, &amp;binder_devices);</span><br><span class="line"></span><br><span class="line">	return ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/2019/01/24/Android-Binder机制（进阶篇）/12402" alt="image.png"></p>
+<h2 id="三-ServiceManager"><a href="#三-ServiceManager" class="headerlink" title="三.ServiceManager"></a>三.ServiceManager</h2><p>有大致了解过的 Binder 的人都知道 Binder 机制涉及到四个对象</p>
+<ul>
+<li>客户端</li>
+<li>服务端</li>
+<li>Binder 驱动</li>
+<li>ServiceManager</li>
+</ul>
+<p>前三个相信大家都清楚是什么,至于第四个 ServiceManager,从名字上就可以看出,它的作用就是对服务端进行管理,进程间的通信时一个常见的功能,每个进程都可以作为客户端或服务端通过 Binder 驱动参与进程间的通信,而且通信的前提就是找到通信的另一方,并建立联系,ServiceManager 的作用就在于此，其记录了所有的服务端,当一个客户端想要和服务端进行通信的时候，首先就会去 ServiceManager 找到对应的服务端。这好比打电话, Binder 驱动就是信号基站,而 ServiceManager 就是一个通信录，进行 A 要和 进程 B 进行通信,首先就要去 通信录找到进程 B 的电话号码是多少,然后就可通过这个电话号码,将数据通过信号基站传递给进程 B ，这就完成了进程通信。</p>
+<p>但是 ServiceManager 本身也是一个进程,这是一个 native 进程,客户端获取电话号码的过程也本应该是一个跨进程的通信(实际上并没有),那么客户端是如何首先获取 ServiceManager 的对应的 Binder 引用的呢?</p>
+<p>这就是本篇文章要解决的第一个问题。</p>
+<h3 id="一-ServiceManager-的启动"><a href="#一-ServiceManager-的启动" class="headerlink" title="(一).ServiceManager 的启动"></a>(一).ServiceManager 的启动</h3><p>ServiceManager 是一个 native 进程,其源码自然是 C/C++ ,但是不用担心,这里只关注一些重要的地方,通过函数的名字就可以看出其作用。</p>
+<h4 id="1-init-进程"><a href="#1-init-进程" class="headerlink" title="1.init 进程"></a>1.init 进程</h4><p>在 Android 系统中 init 进程是系统启动的第一个进程, 在内核启动后就会启动 init 进程 ,它启动后就会去解析 init.c 这个文件，然后启动其他的 native 进程,而 ServiceManager 作为一个 native 进程,自然也是由它启动的。</p>
+<p>在解析 init.rc 文件的时候去启动 servicemanager.rc<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">service servicemanager /system/bin/servicemanager</span><br><span class="line">    class core animation</span><br><span class="line">    user system</span><br><span class="line">    group system readproc</span><br><span class="line">    critical</span><br><span class="line">    onrestart restart healthd</span><br><span class="line">    onrestart restart zygote</span><br><span class="line">    onrestart restart audioserver</span><br><span class="line">    onrestart restart media</span><br><span class="line">    onrestart restart surfaceflinger</span><br><span class="line">    onrestart restart inputflinger</span><br><span class="line">    onrestart restart drm</span><br><span class="line">    onrestart restart cameraserver</span><br><span class="line">    onrestart restart keystore</span><br><span class="line">    onrestart restart gatekeeperd</span><br><span class="line">    writepid /dev/cpuset/system-background/tasks</span><br><span class="line">    shutdown critical</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-servicemanager-的启动"><a href="#2-servicemanager-的启动" class="headerlink" title="2.servicemanager 的启动"></a>2.servicemanager 的启动</h4><p>servicemanager 的启动 的 启动从 servicemanager.c 文件中的 main 方法开始的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// native\native\cmds\servicemanager\servicemanager.c</span><br><span class="line"></span><br><span class="line">int main(int argc, char** argv)</span><br><span class="line">&#123;</span><br><span class="line">    struct binder_state *bs;</span><br><span class="line">    </span><br><span class="line">    // 1.打开 Binder 驱动</span><br><span class="line">    //并设置 servicemanager 进行地址映射的大小为  128 KB </span><br><span class="line">    bs = binder_open(driver, 128*1024);</span><br><span class="line">    </span><br><span class="line">    // 2.将 servicemanager 驱动设置为唯一的管理者，也就是系统内核只有一个servicemanager</span><br><span class="line">    if (binder_become_context_manager(bs)) &#123;</span><br><span class="line">        ALOGE(&quot;cannot become context manager (%s)\n&quot;, strerror(errno));</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    //3.启动循环，不断处理客户端的请求</span><br><span class="line">    binder_loop(bs, svcmgr_handler);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="1-binder-open"><a href="#1-binder-open" class="headerlink" title="(1).binder_open"></a>(1).binder_open</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> // native\native\cmds\servicemanager\binder.c</span><br><span class="line"> </span><br><span class="line">struct binder_state *binder_open(const char* driver, size_t mapsize)</span><br><span class="line">&#123;</span><br><span class="line">    struct binder_state *bs;</span><br><span class="line">    struct binder_version vers;</span><br><span class="line"></span><br><span class="line">    bs = malloc(sizeof(*bs));</span><br><span class="line">   </span><br><span class="line">    //进入系统内核 打开 Binder 设备</span><br><span class="line">    bs-&gt;fd = open(driver, O_RDWR | O_CLOEXEC);</span><br><span class="line">   </span><br><span class="line">    //地址映射</span><br><span class="line">    bs-&gt;mapsize = mapsize;</span><br><span class="line">    bs-&gt;mapped = mmap(NULL, mapsize, PROT_READ, MAP_PRIVATE, bs-&gt;fd, 0);</span><br><span class="line">    </span><br><span class="line">    return bs;</span><br></pre></td></tr></table></figure>
+<h6 id="系统内核打开-Binder-设备"><a href="#系统内核打开-Binder-设备" class="headerlink" title="系统内核打开 Binder 设备"></a>系统内核打开 Binder 设备</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">static int binder_open(struct inode *nodp, struct file *filp)</span><br><span class="line">&#123;</span><br><span class="line">	struct binder_proc *proc;</span><br><span class="line">	struct binder_device *binder_dev;</span><br><span class="line"></span><br><span class="line">    //为当前进程 创建一个 proc 结构体</span><br><span class="line">    //这里就是为 ServiceManager 创建一个结构体</span><br><span class="line">	proc = kzalloc(sizeof(*proc), GFP_KERNEL);</span><br><span class="line">	//初始化结构体的 todo 队列</span><br><span class="line">	</span><br><span class="line">	INIT_LIST_HEAD(&amp;proc-&gt;todo);  </span><br><span class="line">	//初始化结构体的 wait 队列</span><br><span class="line">	init_waitqueue_head(&amp;proc-&gt;wait);</span><br><span class="line">	</span><br><span class="line">	//加锁</span><br><span class="line">	binder_lock(__func__);</span><br><span class="line"></span><br><span class="line">	binder_stats_created(BINDER_STAT_PROC);</span><br><span class="line">	//将当前进程,也就是  ServiceManager 的结构体添加到 Binder 的一个全局队列中</span><br><span class="line">	hlist_add_head(&amp;proc-&gt;proc_node, &amp;binder_procs);</span><br><span class="line">	proc-&gt;pid = current-&gt;group_leader-&gt;pid;</span><br><span class="line">	INIT_LIST_HEAD(&amp;proc-&gt;delivered_death);</span><br><span class="line">	filp-&gt;private_data = proc;</span><br><span class="line"></span><br><span class="line">   //释放锁</span><br><span class="line">	binder_unlock(__func__);</span><br><span class="line"></span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先我们需要知道的是每一个作为服务端的进程,都对应在 Binder 驱动中的一个节点</li>
+<li>todo 队列保存的是请求的事务，如果一个客户端发起一个请求,那么就会向 todo 队列添加一个事务。</li>
+<li>wait 队列,将客户端发起请求后等待响应添加到 wait  等待队列,待服务端执行完后就唤醒。</li>
+<li>由于发起 Binder 线程的情况有很多但是每个进程只创建一个对应的结构体添加到链表里，因此就需要加锁。</li>
+</ul>
+<p>ServiceManager 注册后的情况就是如下图：<br><img src="/2019/01/24/Android-Binder机制（进阶篇）/12403" alt="image.png"></p>
+<h5 id="2-将-servicemanager-驱动设置为唯一的管理者-并设置为-0-号-handler"><a href="#2-将-servicemanager-驱动设置为唯一的管理者-并设置为-0-号-handler" class="headerlink" title="(2)将 servicemanager 驱动设置为唯一的管理者,并设置为 0 号 handler"></a>(2)将 servicemanager 驱动设置为唯一的管理者,并设置为 0 号 handler</h5><p>前面说过 servicemanager 管理者其他服务端,客户端可以通过 serviceManger 查询对应的 Binder 服务端,这个查询的过程就是寻找服务端进程对应的在 binder 中的 “号码”, 这些号码由 servicemanager 统一管理,那么 servicemanager 自己的号码注册为 0 号。</p>
+<p>这好比网络传输中获取服务端的 ip 地址首先要通过 DNS 查询,而这个 DNS 的 ip 地址都是已知的。</p>
+<p>这里的就是 0 号,“号码”称为 handler<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// </span><br><span class="line">   if (binder_become_context_manager(bs)) &#123;</span><br><span class="line">        ALOGE(&quot;cannot become context manager (%s)\n&quot;, strerror(errno));</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">int binder_become_context_manager(struct binder_state *bs)</span><br><span class="line">&#123;</span><br><span class="line">    return ioctl(bs-&gt;fd, BINDER_SET_CONTEXT_MGR, 0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>//调用到内核的 ioctl,参数是 BINDER_SET_CONTEXT_MGR<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">static int binder_ioctl_set_ctx_mgr(struct file *filp)</span><br><span class="line">&#123;</span><br><span class="line">	int ret = 0;</span><br><span class="line">	struct binder_proc *proc = filp-&gt;private_data;</span><br><span class="line">	struct binder_context *context = proc-&gt;context;</span><br><span class="line"></span><br><span class="line">    //新建一个节点 ，第二个参数是 0 </span><br><span class="line">	context-&gt;binder_context_mgr_node = binder_new_node(proc, 0, 0);</span><br><span class="line">	</span><br><span class="line">	return ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">static struct binder_node *binder_new_node(struct binder_proc *proc,</span><br><span class="line">					   binder_uintptr_t ptr,</span><br><span class="line">					   binder_uintptr_t cookie)</span><br><span class="line">&#123;</span><br><span class="line">	struct rb_node **p = &amp;proc-&gt;nodes.rb_node;</span><br><span class="line">	struct rb_node *parent = NULL;</span><br><span class="line">	struct binder_node *node;</span><br><span class="line"></span><br><span class="line">    //插入这个节点</span><br><span class="line">	while (*p) &#123;</span><br><span class="line">		parent = *p;</span><br><span class="line">		node = rb_entry(parent, struct binder_node, rb_node);</span><br><span class="line"></span><br><span class="line">		if (ptr &lt; node-&gt;ptr)</span><br><span class="line">			p = &amp;(*p)-&gt;rb_left;</span><br><span class="line">		else if (ptr &gt; node-&gt;ptr)</span><br><span class="line">			p = &amp;(*p)-&gt;rb_right;</span><br><span class="line">		else</span><br><span class="line">			return NULL;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	node-&gt;proc = proc;</span><br><span class="line">	</span><br><span class="line">	//ptr 指的就是用户空间的一个引用，因此这个参数为 0</span><br><span class="line">	//所以 serviceManger 在客户端的对应的 binder 对象就是 0 号引用获得的。</span><br><span class="line">	node-&gt;ptr = ptr;</span><br><span class="line">	</span><br><span class="line">	return node;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="二-ServiceManager-Binder-的获取"><a href="#二-ServiceManager-Binder-的获取" class="headerlink" title="(二).ServiceManager Binder 的获取"></a>(二).ServiceManager Binder 的获取</h3><p>我们知道 ServiceManager 作为一个进程,客户端于其的通信也是一种进程通信,从上面可以知道  ServiceManager 对应的 Binder 是 0 号引用,那么客户端是是如何获取的到 0 号引用即 ServiceManager 的 Binder 对象呢？</p>
+<p>以 bindService 为例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//base\core\java\android\app\ContextImpl.java</span><br><span class="line">  private boolean bindServiceCommon(Intent service, ServiceConnection conn, int flags, Handler</span><br><span class="line">            handler, UserHandle user) &#123;</span><br><span class="line">           ...</span><br><span class="line">           //bindService 是通过 ActivityManager.getService() 去调用的</span><br><span class="line">            int res = ActivityManager.getService().bindService(</span><br><span class="line">                mMainThread.getApplicationThread(), getActivityToken(), service,</span><br><span class="line">                service.resolveTypeIfNeeded(getContentResolver()),</span><br><span class="line">                sd, flags, getOpPackageName(), user.getIdentifier());</span><br><span class="line">           ...</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>在 ActivityManager 中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">//base\core\java\android\app\ActivityManager.java</span><br><span class="line">public static IActivityManager getService() &#123;</span><br><span class="line">        return IActivityManagerSingleton.get();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static final Singleton&lt;IActivityManager&gt; IActivityManagerSingleton =</span><br><span class="line">            new Singleton&lt;IActivityManager&gt;() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                protected IActivityManager create() &#123;</span><br><span class="line">                //要获取 IActivityManager 对象,就要通过 ServiceManager 去查询并获取</span><br><span class="line">                    final IBinder b = ServiceManager.getService(Context.ACTIVITY_SERVICE);</span><br><span class="line">                    final IActivityManager am = IActivityManager.Stub.asInterface(b);</span><br><span class="line">                    return am;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">// base\core\java\android\os\ServiceManager.java</span><br><span class="line"></span><br><span class="line">//通过一个 服务的名字去获取对应的 Binder </span><br><span class="line">  public static IBinder getService(String name) &#123;</span><br><span class="line">      try &#123;</span><br><span class="line">          IBinder service = sCache.get(name);</span><br><span class="line">          if (service != null) &#123;</span><br><span class="line">              return service;</span><br><span class="line">          &#125; else &#123;</span><br><span class="line">              //这里就是先通过 getIServiceManager 去查询,再返回</span><br><span class="line">              return</span><br><span class="line">              Binder.allowBlocking(getIServiceManager().getService(name));</span><br><span class="line">          &#125;</span><br><span class="line">      &#125; catch (RemoteException e) &#123;</span><br><span class="line">          Log.e(TAG, &quot;error in getService&quot;, e);</span><br><span class="line">      &#125;</span><br><span class="line">      return null;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">  //获取 ServiceManager Binder 对象 IServiceManager 就在这个 方法里</span><br><span class="line"> private static IServiceManager getIServiceManager() &#123;</span><br><span class="line">      if (sServiceManager != null) &#123;</span><br><span class="line">          return sServiceManager;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      // Find the service manager</span><br><span class="line">      //关键是这里的 BinderInternal.getContextObject();</span><br><span class="line">      sServiceManager = ServiceManagerNative</span><br><span class="line">              .asInterface(Binder.allowBlocking(BinderInternal.getContextObject()));</span><br><span class="line">      return sServiceManager;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>//显然对应的方法就在 BinderInternal.getContextObject();<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//base\core\java\com\android\internal\os\BinderInternal.java</span><br><span class="line"> public static final native IBinder getContextObject();</span><br></pre></td></tr></table></figure></p>
+<p>这是个 native 方法对应 c++ 实现如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//base\core\jni\android_util_Binder.cpp</span><br><span class="line">static jobject android_os_BinderInternal_getContextObject(JNIEnv* env, jobject clazz)</span><br><span class="line">&#123;</span><br><span class="line">    sp&lt;IBinder&gt; b = ProcessState::self()-&gt;getContextObject(NULL);</span><br><span class="line">    return javaObjectForIBinder(env, b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>android_util_Binder 的作用就是将 c/c++ 的 Binder 对象转换为 java 层。<br>接着看 ProcessState 的 getContextObject 方法 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// native\native\libs\binder\ProcessState.cpp</span><br><span class="line">sp&lt;IBinder&gt; ProcessState::getContextObject(const sp&lt;IBinder&gt;&amp; /*caller*/)</span><br><span class="line">&#123;</span><br><span class="line">    return getStrongProxyForHandle(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个 0 就是之前说过的 ServiceManager 在 Binder 驱动中对应的引用号  hanler，这里就为 0 .即  ServiceManager 为 0 号。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">sp&lt;IBinder&gt; ProcessState::getStrongProxyForHandle(int32_t handle)</span><br><span class="line">&#123;</span><br><span class="line">    sp&lt;IBinder&gt; result;</span><br><span class="line">    </span><br><span class="line">    handle_entry* e = lookupHandleLocked(handle);</span><br><span class="line"></span><br><span class="line">    if (e != nullptr) &#123;</span><br><span class="line">        </span><br><span class="line">        IBinder* b = e-&gt;binder;</span><br><span class="line">       if (b == nullptr || !e-&gt;refs-&gt;attemptIncWeak(this)) &#123;</span><br><span class="line">       </span><br><span class="line">       //当 handle == 0 的时候</span><br><span class="line">            if (handle == 0) &#123;</span><br><span class="line">            //在 handle == 0 的情况下</span><br><span class="line">            //因为 ServiceManager 唯一我们在创建其代理类的时候</span><br><span class="line">            //不需要持有其引用的对象，因为其引用号已知为 0 </span><br><span class="line">            //所以通过简单的远程访问确定其已经注册否则 </span><br><span class="line">            //ServiceManager 就不能使用。</span><br><span class="line">                Parcel data;</span><br><span class="line">                status_t status = IPCThreadState::self()-&gt;transact(</span><br><span class="line">                        0, IBinder::PING_TRANSACTION, data, nullptr, 0);</span><br><span class="line">                if (status == DEAD_OBJECT)</span><br><span class="line">                   return nullptr;</span><br><span class="line">            &#125;</span><br><span class="line">          </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在说明  new BpBinder(handle) 的作用之前,这里记录下一个疑问</p>
+<blockquote>
+<p>ServiceManager 对应在 native 层的是 IServiceManager.cpp 但是从上面的调用链来看并没有涉及到,可能是 c/c++ 的语法或者是有部分源码看漏了,这里先借用其他文章的思路,直接看 IServiceManager。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">//native\native\libs\binder\IServiceManager.cpp</span><br><span class="line">sp&lt;IServiceManager&gt; defaultServiceManager()</span><br><span class="line">&#123;</span><br><span class="line">    if (gDefaultServiceManager != nullptr) return gDefaultServiceManager;</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        AutoMutex _l(gDefaultServiceManagerLock);</span><br><span class="line">        while (gDefaultServiceManager == nullptr) &#123;</span><br><span class="line">            gDefaultServiceManager = interface_cast&lt;IServiceManager&gt;(</span><br><span class="line">                ProcessState::self()-&gt;getContextObject(nullptr));</span><br><span class="line">            if (gDefaultServiceManager == nullptr)</span><br><span class="line">                sleep(1);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return gDefaultServiceManager;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个获取 的过程可以参考 <a href="https://blog.csdn.net/luoshengyang/article/details/6627260" target="_blank" rel="noopener">浅谈Android系统进程间通信（IPC）机制Binder中的Server和Client获得Service Manager接口之路</a></p>
+<p>总结</p>
+<ul>
+<li>一般跨进程的通信首先要需要通过 ServiceManager 获取对方的代理接口才能通信,但是 对于 ServiceManager 自己的代理接口的获取过程不需要跨进程,因为其引用号已知 为 0.</li>
+<li>如果是同一个进程的的通信,客户端 透过 Binder 驱动向 服务端 请求一个 Binder 代理对象时，Binder 驱动发现它们是同一个进程，就向 客户端 进程返回一个 Binder 本地对象，而不是 Binder 代理对象。<br><img src="/2019/01/24/Android-Binder机制（进阶篇）/12404" alt="image.png"></li>
+</ul>
+<h2 id="四-通信"><a href="#四-通信" class="headerlink" title="四.通信"></a>四.通信</h2><p>在客户端拿到 IServiceManager 的 Binder 对象后就将其封装成为一个 代理对象 Proxy<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//base\core\java\android\os\ServiceManager.java</span><br><span class="line">private static IServiceManager getIServiceManager() &#123;</span><br><span class="line">        if (sServiceManager != null) &#123;</span><br><span class="line">            return sServiceManager;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // Find the service manager</span><br><span class="line">        </span><br><span class="line">        sServiceManager = ServiceManagerNative</span><br><span class="line">                .asInterface(Binder.allowBlocking(BinderInternal.getContextObject()));</span><br><span class="line">        return sServiceManager;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>下面具体看 ServiceManagerNative的asInterface<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">static public IServiceManager asInterface(IBinder obj)</span><br><span class="line">    &#123;</span><br><span class="line">        if (obj == null) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        IServiceManager in =</span><br><span class="line">            (IServiceManager)obj.queryLocalInterface(descriptor);</span><br><span class="line">        if (in != null) &#123;</span><br><span class="line">            return in;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        return new ServiceManagerProxy(obj);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这部分代码对于手动写过 Binder 客户端服务端的人都比较熟悉,主要是判断获取的接口是位于同一进程还是 不同进程，如果是统一进程,则不需要进行跨进程的通信,所以返回本地接口/对象就像就行，如果是不同进程,就返回一个代理对象,下面看如何通过跨进程通信。</p>
+<p>以向 SericeManager 获取服务为例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class ServiceManagerProxy implements IServiceManager &#123;</span><br><span class="line">    public ServiceManagerProxy(IBinder remote) &#123;</span><br><span class="line">        mRemote = remote;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public IBinder asBinder() &#123;</span><br><span class="line">        return mRemote;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public IBinder getService(String name) throws RemoteException &#123;</span><br><span class="line">        Parcel data = Parcel.obtain();</span><br><span class="line">        Parcel reply = Parcel.obtain();</span><br><span class="line">        data.writeInterfaceToken(IServiceManager.descriptor);</span><br><span class="line">        data.writeString(name);</span><br><span class="line">        mRemote.transact(GET_SERVICE_TRANSACTION, data, reply, 0);</span><br><span class="line">        IBinder binder = reply.readStrongBinder();</span><br><span class="line">        reply.recycle();</span><br><span class="line">        data.recycle();</span><br><span class="line">        return binder;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>下面就对 getService 的几个变量做一下说明</p>
+<ul>
+<li>data ,向 SericeManager (服务端)传递的参数 上面 writeString 写入数据，writeInterfaceToken 写入接口标识</li>
+<li>reply ,SericeManager (服务端 ) 执行后的往 reply 写入返回值</li>
+<li>mRemote.transact 进行跨进程传输，这个返回会阻塞于 Binder 线程池，因为要等待其 SericeManager (服务端) 返回</li>
+<li>reply.readStrongBinder() 服务端返回后唤醒当前 Binder 线程,读取查询后的 Binder 对象。</li>
+</ul>
+<h4 id="1-Parcel"><a href="#1-Parcel" class="headerlink" title="1.Parcel"></a>1.Parcel</h4><p>Parcel 是传递的数据的载体,在 java 层和 native 都有对应的类。主要的传输过程都在  transact 函数中。</p>
+<h4 id="2-transact"><a href="#2-transact" class="headerlink" title="2.transact"></a>2.transact</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">//base\core\jni\android_util_Binder.cpp</span><br><span class="line">static jboolean android_os_BinderProxy_transact(JNIEnv* env, jobject obj,</span><br><span class="line">        jint code, jobject dataObj, jobject replyObj, jint flags) // throws RemoteException</span><br><span class="line">&#123;</span><br><span class="line">    //将 java 层的对应的 Parcel 对应到 native 层</span><br><span class="line">    Parcel* data = parcelForJavaObject(env, dataObj);</span><br><span class="line">   </span><br><span class="line">    Parcel* reply = parcelForJavaObject(env, replyObj);</span><br><span class="line">   </span><br><span class="line">     //获取native 层的Binder 对象</span><br><span class="line">    IBinder* target = getBPNativeData(env, obj)-&gt;mObject.get();</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    //调用 native 层的 Binder 的 方法</span><br><span class="line">    status_t err = target-&gt;transact(code, *data, reply, flags);</span><br><span class="line">    </span><br><span class="line">    reply-&gt;print();</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">    return JNI_FALSE;</span><br></pre></td></tr></table></figure>
+<p>最后都会调用 Binder 驱动的 binder_transaction 方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">static void binder_transaction(struct binder_proc *proc,</span><br><span class="line">               struct binder_thread *thread,</span><br><span class="line">               struct binder_transaction_data *tr, int reply)&#123;</span><br><span class="line">   </span><br><span class="line">            // 由 handle 找到相应 binder 引用, 由binder引用 找到相应 binder 节点</span><br><span class="line">            ref = binder_get_ref(proc, tr-&gt;target.handle);</span><br><span class="line">            target_node = ref-&gt;node;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            target_node = binder_context_mgr_node;</span><br><span class="line">        &#125;</span><br><span class="line">        // 由 binder 节点 找到相应 binder proc 结构体</span><br><span class="line">        target_proc = target_node-&gt;proc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">    //从目标进程 proc 中分配内存空间</span><br><span class="line">    t-&gt;buffer = binder_alloc_buf(target_proc, tr-&gt;data_size,</span><br><span class="line">        tr-&gt;offsets_size, !reply &amp;&amp; (t-&gt;flags &amp; TF_ONE_WAY));</span><br><span class="line"></span><br><span class="line">    //分别拷贝用户空间的 binder_transaction_data  到目标进程的 binder 缓冲区</span><br><span class="line">    copy_from_user(t-&gt;buffer-&gt;data,</span><br><span class="line">        (const void __user *)(uintptr_t)tr-&gt;data.ptr.buffer, tr-&gt;data_size);</span><br><span class="line">    copy_from_user(offp,</span><br><span class="line">        (const void __user *)(uintptr_t)tr-&gt;data.ptr.offsets, tr-&gt;offsets_size);</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">   ...</span><br><span class="line">    return;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>流程如下</p>
+<p><img src="/2019/01/24/Android-Binder机制（进阶篇）/12405" alt="image.png"></p>
+<p>通过这种方式数据的传递就从 A 进程到了 Service 进程。</p>
+<p>关于 Binder 的机制,这里只是记录笔者的自己理一遍的思路，如果想要深入学习，可以参考一下博客，本篇也是参考其博客才写下的。</p>
+<p><a href="http://gityuan.com/tags/#binder" target="_blank" rel="noopener">Gityuan 的 Binder系列</a></p>
+<p><a href="http://weishu.me/2016/01/12/binder-index-for-newer/" target="_blank" rel="noopener">Binder学习指南</a></p>
+<p><a href="https://blog.csdn.net/universus/article/details/6211589#t1" target="_blank" rel="noopener">Android Bander设计与实现 - 设计篇</a></p>
+<p><a href="https://blog.csdn.net/freekiteyu/article/details/70082302" target="_blank" rel="noopener">一篇文章了解相见恨晚的 Android Binder 进程间通讯机制</a></p>
+<p><a href="https://blog.csdn.net/luoshengyang/article/details/6618363" target="_blank" rel="noopener">Android进程间通信（IPC）机制Binder简要介绍和学习计划</a></p>
+<p><a href="https://www.jianshu.com/p/4ee3fd07da14" target="_blank" rel="noopener">图文详解 Android Binder跨进程通信的原理</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android-Binder/" rel="tag"># Android Binder</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/17/java集合-TreeSet/" rel="next" title="java集合----TreeSet">
+                <i class="fa fa-chevron-left"></i> java集合----TreeSet
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+ <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/d.jpg"
+                alt="海盗的帽子" />
+            
+              <p class="site-author-name" itemprop="name">海盗的帽子</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yishengma" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/m0_38089373" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-copyright"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-前言"><span class="nav-text">一.前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-跨进程"><span class="nav-text">二.跨进程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-用户空间-内核空间"><span class="nav-text">(一).用户空间/内核空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-Binder-驱动"><span class="nav-text">(二).Binder 驱动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-内核启动"><span class="nav-text">(三).内核启动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-ServiceManager"><span class="nav-text">三.ServiceManager</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-ServiceManager-的启动"><span class="nav-text">(一).ServiceManager 的启动</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-init-进程"><span class="nav-text">1.init 进程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-servicemanager-的启动"><span class="nav-text">2.servicemanager 的启动</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-binder-open"><span class="nav-text">(1).binder_open</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#系统内核打开-Binder-设备"><span class="nav-text">系统内核打开 Binder 设备</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-将-servicemanager-驱动设置为唯一的管理者-并设置为-0-号-handler"><span class="nav-text">(2)将 servicemanager 驱动设置为唯一的管理者,并设置为 0 号 handler</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-ServiceManager-Binder-的获取"><span class="nav-text">(二).ServiceManager Binder 的获取</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-通信"><span class="nav-text">四.通信</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Parcel"><span class="nav-text">1.Parcel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-transact"><span class="nav-text">2.transact</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-[object Object]"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">海盗的帽子</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://rawgit.com/yishengma/147d4f60feb7cdc79c355ad2da83d513/raw/d624cffa8a67b4da07048d59ba0031e2860b1b2b/md5.min.js"></script>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '15e7b5ecca662534768c',
+          clientSecret: '26dc23d2d7a013bbcce94772f42f2e434247c6ba',
+          repo: 'yishengma.github.io',
+          owner: 'yishengma',
+          admin: ['yishengma'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2LveBulvcfzvQ6MBGz9b3URY-gzGzoHsz", "7mcKtxSVSDUSpSxFfdxBmyaP");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
