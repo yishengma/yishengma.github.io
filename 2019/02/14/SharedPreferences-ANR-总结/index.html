@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16.ico?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android 基础," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.简介SharedPreferences 是 Android 中一种轻量级的数据存储方式,数据以键值对,文件以 xml 的形式存储在 /data/data//shared_prefs目录下(在真机上需要 root 权限才能查看) 在源码中 SharedPreferences 是一个接口,具体的实现是SharedPreferencesImpl1234567891011121314151617181">
+<meta name="keywords" content="Android 基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SharedPreferences ANR 总结">
+<meta property="og:url" content="https://yishengma.github.io/2019/02/14/SharedPreferences-ANR-总结/index.html">
+<meta property="og:site_name" content="海盗的帽子的博客">
+<meta property="og:description" content="一.简介SharedPreferences 是 Android 中一种轻量级的数据存储方式,数据以键值对,文件以 xml 的形式存储在 /data/data//shared_prefs目录下(在真机上需要 root 权限才能查看) 在源码中 SharedPreferences 是一个接口,具体的实现是SharedPreferencesImpl1234567891011121314151617181">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://yishengma.github.io/2019/02/14/SharedPreferences-ANR-总结/1240">
+<meta property="og:image" content="https://yishengma.github.io/2019/02/14/SharedPreferences-ANR-总结/12401">
+<meta property="og:image" content="https://yishengma.github.io/2019/02/14/SharedPreferences-ANR-总结/12402">
+<meta property="og:updated_time" content="2019-02-14T11:16:56.627Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SharedPreferences ANR 总结">
+<meta name="twitter:description" content="一.简介SharedPreferences 是 Android 中一种轻量级的数据存储方式,数据以键值对,文件以 xml 的形式存储在 /data/data//shared_prefs目录下(在真机上需要 root 权限才能查看) 在源码中 SharedPreferences 是一个接口,具体的实现是SharedPreferencesImpl1234567891011121314151617181">
+<meta name="twitter:image" content="https://yishengma.github.io/2019/02/14/SharedPreferences-ANR-总结/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yishengma.github.io/2019/02/14/SharedPreferences-ANR-总结/"/>
+
+
+
+
+
+  <title>SharedPreferences ANR 总结 | 海盗的帽子的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">海盗的帽子的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2019/02/14/SharedPreferences-ANR-总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="海盗的帽子">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/d.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="海盗的帽子的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SharedPreferences ANR 总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-14T19:14:55+08:00">
+                2019-02-14
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-02-14T19:16:56+08:00">
+                2019-02-14
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/02/14/SharedPreferences-ANR-总结/" class="leancloud_visitors" data-flag-title="SharedPreferences ANR 总结">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="一-简介"><a href="#一-简介" class="headerlink" title="一.简介"></a>一.简介</h4><p>SharedPreferences 是 Android 中一种轻量级的数据存储方式,数据以键值对,文件以 xml 的形式存储在 /data/data/<package name="">/shared_prefs目录下(在真机上需要 root 权限才能查看)</package></p>
+<p>在源码中 SharedPreferences 是一个接口,具体的实现是<br>SharedPreferencesImpl<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Interface for accessing and modifying preference data returned by &#123;@link</span><br><span class="line"> * Context#getSharedPreferences&#125;.  For any particular set of preferences,</span><br><span class="line"> * there is a single instance of this class that all clients share.</span><br><span class="line"> * Modifications to the preferences must go through an &#123;@link Editor&#125; object</span><br><span class="line"> * to ensure the preference values remain in a consistent state and control</span><br><span class="line"> * when they are committed to storage.  Objects that are returned from the</span><br><span class="line"> * various &lt;code&gt;get&lt;/code&gt; methods must be treated as immutable by the application.</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;&lt;em&gt;Note: This class does not support use across multiple processes.&lt;/em&gt;</span><br><span class="line"> *</span><br><span class="line"> * ...</span><br><span class="line"> */</span><br><span class="line">public interface SharedPreferences &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">final class SharedPreferencesImpl implements SharedPreferences &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在注释中对 SharedPreferences 以下称（SP）解释如下：</p>
+<ul>
+<li>对于任何特定的 SP ，所有客户端共享此类的单个实例（也就是应该使用单例模式）。对 SP 数据的修改必须通过一个 SharedPreferences.Editor  对象来确保 SP 数据保持一致状态，并在它们提交存储时进行控制。从各种get 方法返回的对象必须被应用程序视为不可变的。</li>
+</ul>
+<p>注意：此类提供强大的一致性保证。它使用昂贵的操作可能会减慢应用程序的速度。经常改变可以容忍损失的属性或属性应该使用其他机制。有关详细信息读取上的评论 SharedPreferences.Editor.commit() 和SharedPreferences.Editor.apply()。<br>（换句话说就是 commit 和 apply 用于对数据进行保存,为了保证一致性这个过程可能会减慢应用程序的速度，如果对一致性要求不高则可以使用其他数据存储机制。）<br>==注意：此类不支持跨多个进程使用。==</p>
+<h4 id="二-获取-Sp"><a href="#二-获取-Sp" class="headerlink" title="二.获取 Sp"></a>二.获取 Sp</h4><p>获取一个 Sp 有三种方式</p>
+<ul>
+<li>在一个 Activity 中调用  getPreferences(int mode)</li>
+<li>使用 PreferenceManager.getDefaultSharedPreferences(Context context)</li>
+<li>context.getSharedPreferences(String name, int mode)</li>
+</ul>
+<p>第一种方式和第二种方式最后都会使用 第三种方式，不同的使用的名字不同，模式现在都是为 MODE_PRIVATE 其他的都已经废弃不使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">//第一种</span><br><span class="line">//Activity </span><br><span class="line">//</span><br><span class="line">public SharedPreferences getPreferences(@Context.PreferencesMode int mode) &#123;</span><br><span class="line">        return getSharedPreferences(getLocalClassName(), mode);</span><br><span class="line">    &#125;</span><br><span class="line">//第二种</span><br><span class="line">//PreferenceManager</span><br><span class="line">public static SharedPreferences getDefaultSharedPreferences(Context context) &#123;</span><br><span class="line">        return context.getSharedPreferences(getDefaultSharedPreferencesName(context),</span><br><span class="line">                getDefaultSharedPreferencesMode());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Returns the name used for storing default shared preferences.</span><br><span class="line">     *</span><br><span class="line">     * @see #getDefaultSharedPreferences(Context)</span><br><span class="line">     * @see Context#getSharedPreferencesPath(String)</span><br><span class="line">     */</span><br><span class="line">    public static String getDefaultSharedPreferencesName(Context context) &#123;</span><br><span class="line">        return context.getPackageName() + &quot;_preferences&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static int getDefaultSharedPreferencesMode() &#123;</span><br><span class="line">        return Context.MODE_PRIVATE;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>下面到  context 的具体实现类 contextImpl 中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">   public SharedPreferences getSharedPreferences(String name, int mode) &#123;</span><br><span class="line">       // At least one application in the world actually passes in a null</span><br><span class="line">       // name.  This happened to work because when we generated the file name</span><br><span class="line">       // we would stringify it to &quot;null.xml&quot;.  Nice.</span><br><span class="line">       </span><br><span class="line">       // 允许名字为 null, 即文件的名字为 null.xml </span><br><span class="line">       if (mLoadedApk.getApplicationInfo().targetSdkVersion &lt;</span><br><span class="line">               Build.VERSION_CODES.KITKAT) &#123;</span><br><span class="line">           if (name == null) &#123;</span><br><span class="line">               name = &quot;null&quot;;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       File file;</span><br><span class="line">       synchronized (ContextImpl.class) &#123;</span><br><span class="line">       //mSharedPrefsPaths 的数据结构为  ArrayMap&lt;String, File&gt; </span><br><span class="line">       //用于保存名字 和对应的文件</span><br><span class="line">           if (mSharedPrefsPaths == null) &#123;</span><br><span class="line">               mSharedPrefsPaths = new ArrayMap&lt;&gt;();</span><br><span class="line">           &#125;</span><br><span class="line">           file = mSharedPrefsPaths.get(name);</span><br><span class="line">           //如果没有这个文件就创建这个文件</span><br><span class="line">           if (file == null) &#123;</span><br><span class="line">               file = getSharedPreferencesPath(name);</span><br><span class="line">               mSharedPrefsPaths.put(name, file);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       return getSharedPreferences(file, mode);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   @Override</span><br><span class="line">   public SharedPreferences getSharedPreferences(File file, int mode) &#123;</span><br><span class="line">       SharedPreferencesImpl sp;</span><br><span class="line">       //使用 synchronized 进行线程安全的保证</span><br><span class="line">       synchronized (ContextImpl.class) &#123;</span><br><span class="line">           //一个 SP xml 文件对应 一个 SharedPreferencesImpl 实例</span><br><span class="line">           final ArrayMap&lt;File, SharedPreferencesImpl&gt; cache = getSharedPreferencesCacheLocked();</span><br><span class="line">           sp = cache.get(file);</span><br><span class="line">           if (sp == null) &#123;</span><br><span class="line">               checkMode(mode);</span><br><span class="line">               ...</span><br><span class="line">               //创建 SharedPreferencesImpl </span><br><span class="line">               sp = new SharedPreferencesImpl(file, mode);</span><br><span class="line">               cache.put(file, sp);</span><br><span class="line">               return sp;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       ....</span><br><span class="line">       return sp;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">  // 获取用于缓存 SharedPreferencesImpl 的 packagePrefs, 一个包名对应一个 </span><br><span class="line">  // packagePrefs </span><br><span class="line">   private ArrayMap&lt;File, SharedPreferencesImpl&gt; getSharedPreferencesCacheLocked() &#123;</span><br><span class="line">       if (sSharedPrefsCache == null) &#123;</span><br><span class="line">           sSharedPrefsCache = new ArrayMap&lt;&gt;();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       final String packageName = getPackageName();</span><br><span class="line">       ArrayMap&lt;File, SharedPreferencesImpl&gt; packagePrefs = sSharedPrefsCache.get(packageName);</span><br><span class="line">       if (packagePrefs == null) &#123;</span><br><span class="line">           packagePrefs = new ArrayMap&lt;&gt;();</span><br><span class="line">           sSharedPrefsCache.put(packageName, packagePrefs);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       return packagePrefs;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>下面就到 SharedPreferencesImpl.java 中 查看创建一个 SharedPreferencesImpl 的过程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">//SharedPreferencesImpl 的构造器</span><br><span class="line"> SharedPreferencesImpl(File file, int mode) &#123;</span><br><span class="line">        mFile = file;</span><br><span class="line">        mBackupFile = makeBackupFile(file);//创建备份文件，用于 xml 写失败时进行恢复</span><br><span class="line">        mMode = mode;</span><br><span class="line">        mLoaded = false;//判断从磁盘加载到内存的标志</span><br><span class="line">        mMap = null;</span><br><span class="line">        mThrowable = null;</span><br><span class="line">        startLoadFromDisk();//创建 SharedPreferencesImpl 的时候就将 xml 文件中的数据从磁盘加载到内存 </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void startLoadFromDisk() &#123;</span><br><span class="line">        synchronized (mLock) &#123;</span><br><span class="line">            mLoaded = false;</span><br><span class="line">        &#125;</span><br><span class="line">        //开启一个线程进行加载 </span><br><span class="line">        new Thread(&quot;SharedPreferencesImpl-load&quot;) &#123;</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                loadFromDisk();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void loadFromDisk() &#123;</span><br><span class="line">        synchronized (mLock) &#123;</span><br><span class="line">            //如果已经加载完成就返回</span><br><span class="line">            if (mLoaded) &#123;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            if (mBackupFile.exists()) &#123;</span><br><span class="line">                mFile.delete();</span><br><span class="line">                mBackupFile.renameTo(mFile);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">       </span><br><span class="line"></span><br><span class="line">        Map&lt;String, Object&gt; map = null;</span><br><span class="line">        StructStat stat = null;</span><br><span class="line">        Throwable thrown = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            stat = Os.stat(mFile.getPath());</span><br><span class="line">            if (mFile.canRead()) &#123;</span><br><span class="line">                BufferedInputStream str = null;</span><br><span class="line">                try &#123;</span><br><span class="line">                    str = new BufferedInputStream(</span><br><span class="line">                            new FileInputStream(mFile), 16 * 1024);</span><br><span class="line">                    map = (Map&lt;String, Object&gt;)</span><br><span class="line">                    //从 xml 文件中加载数据到 map </span><br><span class="line">                    //键值对为 String 和 Object</span><br><span class="line">                    XmlUtils.readMapXml(str);</span><br><span class="line">                &#125; catch (Exception e) &#123;</span><br><span class="line">                    Log.w(TAG, &quot;Cannot read &quot; + mFile.getAbsolutePath(), e);</span><br><span class="line">                &#125; finally &#123;</span><br><span class="line">                    IoUtils.closeQuietly(str);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (ErrnoException e) &#123;</span><br><span class="line">            // An errno exception means the stat failed. Treat as empty/non-existing by</span><br><span class="line">            // ignoring.</span><br><span class="line">        &#125; catch (Throwable t) &#123;</span><br><span class="line">            thrown = t;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        synchronized (mLock) &#123;</span><br><span class="line">            // 设置加载完成</span><br><span class="line">            mLoaded = true;</span><br><span class="line">            mThrowable = thrown;</span><br><span class="line"></span><br><span class="line">            //对出现异常情况进行处理</span><br><span class="line">            try &#123;</span><br><span class="line">                if (thrown == null) &#123;</span><br><span class="line">                    if (map != null) &#123;</span><br><span class="line">                        mMap = map;</span><br><span class="line">                        mStatTimestamp = stat.st_mtim;</span><br><span class="line">                        mStatSize = stat.st_size;</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        mMap = new HashMap&lt;&gt;();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                //</span><br><span class="line">            &#125; catch (Throwable t) &#123;</span><br><span class="line">                mThrowable = t;</span><br><span class="line">            &#125; finally &#123;</span><br><span class="line">            //注意这一句，唤醒其他等待的线程</span><br><span class="line">                mLock.notifyAll();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h6 id="获取-SharedPreferences-总结："><a href="#获取-SharedPreferences-总结：" class="headerlink" title="获取 SharedPreferences 总结："></a>获取 SharedPreferences 总结：</h6><ul>
+<li>获取 SP 的过程是通过 synchronized 关键字保证多线程安全的。</li>
+<li>通过 Map 进行缓存 Sp 实例，因此多次调用 getSharedPreferences 几乎没有性能上的差别。</li>
+<li>获取 Sp 的时候就会通过一个线程将 xml 数据从磁盘加载到内存中。这个过程会加锁，加载完成后会设置 mLoaded 标志，并唤醒其他线程。<h4 id="三-get-方法"><a href="#三-get-方法" class="headerlink" title="三.get 方法"></a>三.get 方法</h4>Sp 支持的数据类型为 int , long , float, boolean ,String 和 Set<string> .</string></li>
+</ul>
+<p>下面以 getString 为例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//SharedPreferencesImpl.java </span><br><span class="line">  @Override</span><br><span class="line">    @Nullable</span><br><span class="line">    public String getString(String key, @Nullable String defValue) &#123;</span><br><span class="line">    //进行线程安全保证 </span><br><span class="line">        synchronized (mLock) &#123;</span><br><span class="line">        //等待加载完成后才能读</span><br><span class="line">            awaitLoadedLocked();</span><br><span class="line">            String v = (String)mMap.get(key);</span><br><span class="line">            return v != null ? v : defValue;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">@GuardedBy(&quot;mLock&quot;)</span><br><span class="line">   private void awaitLoadedLocked() &#123;</span><br><span class="line">      //如果没有加载就开启一个线程进行加载</span><br><span class="line">       if (!mLoaded) &#123;</span><br><span class="line">           // Raise an explicit StrictMode onReadFromDisk for this</span><br><span class="line">           // thread, since the real read will be in a different</span><br><span class="line">           // thread and otherwise ignored by StrictMode.</span><br><span class="line">           BlockGuard.getThreadPolicy().onReadFromDisk();</span><br><span class="line">       &#125;</span><br><span class="line">       //循环判断</span><br><span class="line">       while (!mLoaded) &#123;</span><br><span class="line">           try &#123;</span><br><span class="line">           //在上面的分析知道只有加载后 mLoaded 就设置 为 true</span><br><span class="line">           //并调用 notifyAll 唤醒其他线程</span><br><span class="line">           //所以这个时候从 wait 进行返回</span><br><span class="line">               mLock.wait();</span><br><span class="line">           &#125; catch (InterruptedException unused) &#123;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       if (mThrowable != null) &#123;</span><br><span class="line">           throw new IllegalStateException(mThrowable);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h6 id="getXXX-方法-总结："><a href="#getXXX-方法-总结：" class="headerlink" title="getXXX 方法 总结："></a>getXXX 方法 总结：</h6><ul>
+<li>通过 synchronized 进行线程安全保证</li>
+<li>在主线程进行获取，但是需要等加载的完成后才能进行读，所以get 方法可能造成主线程阻塞,从而导致 ANR 。</li>
+<li>加载完成后读的过程只涉及内存的读。</li>
+</ul>
+<h4 id="四-putXXX-和-apply-commit"><a href="#四-putXXX-和-apply-commit" class="headerlink" title="四.putXXX 和 apply/commit"></a>四.putXXX 和 apply/commit</h4><p>提交数据的时候首先要获取 Editor 对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">   public Editor edit() &#123;</span><br><span class="line">       //这里也是需要等待加载 xml 文件到内存完成后</span><br><span class="line">       //才能创建 EditorImpl</span><br><span class="line">       synchronized (mLock) &#123;</span><br><span class="line">           awaitLoadedLocked();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       return new EditorImpl();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>以 putString 为例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">       public Editor putString(String key, @Nullable String value) &#123;</span><br><span class="line">       //使用 synchronized 进行线程安全保证</span><br><span class="line">           synchronized (mEditorLock) &#123;</span><br><span class="line">           //将数据暂时保存到 mModified 这个 Map 中</span><br><span class="line">               mModified.put(key, value);</span><br><span class="line">               return this;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure></p>
+<h5 id="1-apply"><a href="#1-apply" class="headerlink" title="1.apply"></a>1.apply</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">       public void apply() &#123;</span><br><span class="line">           final long startTime = System.currentTimeMillis();</span><br><span class="line">           //将修改先写入内存 </span><br><span class="line">           final MemoryCommitResult mcr = commitToMemory(); </span><br><span class="line">           //先看 commitToMemory 方法</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">private MemoryCommitResult commitToMemory() &#123;</span><br><span class="line">          ...</span><br><span class="line">          //将 mModified 的中暂存的数据写入内存</span><br><span class="line">                  for (Map.Entry&lt;String, Object&gt; e : mModified.entrySet()) &#123;</span><br><span class="line">                      String k = e.getKey();</span><br><span class="line">                      Object v = e.getValue();</span><br><span class="line">                      // &quot;this&quot; is the magic value for a removal mutation. In addition,</span><br><span class="line">                      // setting a value to &quot;null&quot; for a given key is specified to be</span><br><span class="line">                      // equivalent to calling remove on that key.</span><br><span class="line">                      if (v == this || v == null) &#123;</span><br><span class="line">                          if (!mapToWriteToDisk.containsKey(k)) &#123;</span><br><span class="line">                              continue;</span><br><span class="line">                          &#125;</span><br><span class="line">                          mapToWriteToDisk.remove(k);</span><br><span class="line">                      &#125; else &#123;</span><br><span class="line">                          if (mapToWriteToDisk.containsKey(k)) &#123;</span><br><span class="line">                              Object existingValue = mapToWriteToDisk.get(k);</span><br><span class="line">                              if (existingValue != null &amp;&amp; existingValue.equals(v)) &#123;</span><br><span class="line">                                  continue;</span><br><span class="line">                              &#125;</span><br><span class="line">                          &#125;</span><br><span class="line">                          mapToWriteToDisk.put(k, v);</span><br><span class="line">                      &#125;</span><br><span class="line"></span><br><span class="line">                      changesMade = true;</span><br><span class="line">                      if (hasListeners) &#123;</span><br><span class="line">                          keysModified.add(k);</span><br><span class="line">                      &#125;</span><br><span class="line">                  &#125;</span><br><span class="line"></span><br><span class="line">                  mModified.clear();</span><br><span class="line"></span><br><span class="line">                 ....</span><br><span class="line">                 //返回一个 MemoryCommitResult 对象。</span><br><span class="line">          return new MemoryCommitResult(memoryStateGeneration, keysModified, listeners,</span><br><span class="line">                  mapToWriteToDisk);</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      //MemoryCommitResult 的实现</span><br><span class="line">      private static class MemoryCommitResult &#123;</span><br><span class="line">      final long memoryStateGeneration;</span><br><span class="line">      @Nullable final List&lt;String&gt; keysModified;</span><br><span class="line">      @Nullable final Set&lt;OnSharedPreferenceChangeListener&gt; listeners;</span><br><span class="line">      final Map&lt;String, Object&gt; mapToWriteToDisk;</span><br><span class="line">      final CountDownLatch writtenToDiskLatch = new CountDownLatch(1);//注意这里 有一个 CountDownLatch 设置为 1，说明只要有一个线程调用了 countDown 就可以从 writtenToDiskLatch.await(); 返回</span><br><span class="line"></span><br><span class="line">      @GuardedBy(&quot;mWritingToDiskLock&quot;)</span><br><span class="line">      volatile boolean writeToDiskResult = false;</span><br><span class="line">      boolean wasWritten = false;</span><br><span class="line"></span><br><span class="line">      private MemoryCommitResult(long memoryStateGeneration, @Nullable List&lt;String&gt; keysModified,</span><br><span class="line">              @Nullable Set&lt;OnSharedPreferenceChangeListener&gt; listeners,</span><br><span class="line">              Map&lt;String, Object&gt; mapToWriteToDisk) &#123;</span><br><span class="line">          this.memoryStateGeneration = memoryStateGeneration;</span><br><span class="line">          this.keysModified = keysModified;</span><br><span class="line">          this.listeners = listeners;</span><br><span class="line">          this.mapToWriteToDisk = mapToWriteToDisk;</span><br><span class="line">      &#125;</span><br><span class="line">       //调用这个就会从 执行 countDown ，相应的 writtenToDiskLatch.await() 就能返回</span><br><span class="line">      void setDiskWriteResult(boolean wasWritten, boolean result) &#123;</span><br><span class="line">          this.wasWritten = wasWritten;</span><br><span class="line">          writeToDiskResult = result;</span><br><span class="line">          writtenToDiskLatch.countDown();</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>回到 apply 方法中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">        public void apply() &#123;</span><br><span class="line">            final long startTime = System.currentTimeMillis();</span><br><span class="line">            //将修改先写入内存 </span><br><span class="line">            final MemoryCommitResult mcr = commitToMemory(); </span><br><span class="line">            //这里只是创建了一个 Runnable ，并不是一个线程</span><br><span class="line">            final Runnable awaitCommit = new Runnable() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public void run() &#123;</span><br><span class="line">                        try &#123;</span><br><span class="line">                           //注意这里会进行等待也就是 需要 MemoryCommitResult 的 setDiskWriteResult 方法执行后</span><br><span class="line">                           //才能返回 </span><br><span class="line">                           </span><br><span class="line">                            mcr.writtenToDiskLatch.await();</span><br><span class="line">                        &#125; catch (InterruptedException ignored) &#123;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        if (DEBUG &amp;&amp; mcr.wasWritten) &#123;</span><br><span class="line">                            Log.d(TAG, mFile.getName() + &quot;:&quot; + mcr.memoryStateGeneration</span><br><span class="line">                                    + &quot; applied after &quot; + (System.currentTimeMillis() - startTime)</span><br><span class="line">                                    + &quot; ms&quot;);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;;</span><br><span class="line">            </span><br><span class="line">            //添加到队列中</span><br><span class="line">            QueuedWork.addFinisher(awaitCommit);</span><br><span class="line"></span><br><span class="line">            //这里也只创建一个 Runnable </span><br><span class="line">            Runnable postWriteRunnable = new Runnable() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public void run() &#123;</span><br><span class="line">                    //这里执行了上面的 awaitCommit 的 run 方法</span><br><span class="line">                    //不是 start </span><br><span class="line">                    //并将队列中的 awaitCommit 移除</span><br><span class="line">                        awaitCommit.run();</span><br><span class="line">                        QueuedWork.removeFinisher(awaitCommit);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;;</span><br><span class="line">            //添加到队列中</span><br><span class="line">            SharedPreferencesImpl.this.enqueueDiskWrite(mcr, postWriteRunnable);</span><br><span class="line"></span><br><span class="line">            // Okay to notify the listeners before it&apos;s hit disk</span><br><span class="line">            // because the listeners should always get the same</span><br><span class="line">            // SharedPreferences instance back, which has the</span><br><span class="line">            // changes reflected in memory.</span><br><span class="line">            notifyListeners(mcr);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">private void enqueueDiskWrite(final MemoryCommitResult mcr,</span><br><span class="line">                                  final Runnable postWriteRunnable) &#123;</span><br><span class="line">        final boolean isFromSyncCommit = (postWriteRunnable == null);</span><br><span class="line">        //创建一个 Runnable ，同样也没有 start </span><br><span class="line">        final Runnable writeToDiskRunnable = new Runnable() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void run() &#123;</span><br><span class="line">                    synchronized (mWritingToDiskLock) &#123;</span><br><span class="line">                        writeToFile(mcr, isFromSyncCommit);</span><br><span class="line">                    &#125;</span><br><span class="line">                    synchronized (mLock) &#123;</span><br><span class="line">                        mDiskWritesInFlight--;</span><br><span class="line">                    &#125;</span><br><span class="line">                    if (postWriteRunnable != null) &#123;</span><br><span class="line">                        postWriteRunnable.run();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;;</span><br><span class="line">         //如果是 commit 则执行这里并返回</span><br><span class="line">        // Typical #commit() path with fewer allocations, doing a write on</span><br><span class="line">        // the current thread.</span><br><span class="line">        if (isFromSyncCommit) &#123;</span><br><span class="line">            boolean wasEmpty = false;</span><br><span class="line">            synchronized (mLock) &#123;</span><br><span class="line">                wasEmpty = mDiskWritesInFlight == 1;</span><br><span class="line">            &#125;</span><br><span class="line">            if (wasEmpty) &#123;</span><br><span class="line">                writeToDiskRunnable.run();</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">         //如果是 apply 就执行这里</span><br><span class="line">        QueuedWork.queue(writeToDiskRunnable, !isFromSyncCommit);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>在 QueuedWork.java 中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public static void queue(Runnable work, boolean shouldDelay) &#123;</span><br><span class="line">   //getHandler 获取的是一个 handlerThread 的hanlder ,也就是一个子线程</span><br><span class="line">    Handler handler = getHandler();</span><br><span class="line"></span><br><span class="line">    synchronized (sLock) &#123;</span><br><span class="line">        sWork.add(work);</span><br><span class="line"></span><br><span class="line">        if (shouldDelay &amp;&amp; sCanDelay) &#123;</span><br><span class="line">        //发送一个消息 MSG_RUN 到 handler 所在线程，也就是 handlerThread 子线程中去</span><br><span class="line">            handler.sendEmptyMessageDelayed(QueuedWorkHandler.MSG_RUN, DELAY);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            handler.sendEmptyMessage(QueuedWorkHandler.MSG_RUN);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private static Handler getHandler() &#123;</span><br><span class="line">    synchronized (sLock) &#123;</span><br><span class="line">        if (sHandler == null) &#123;</span><br><span class="line">        //创建一个 handlerThread ，并执行 start 方法</span><br><span class="line">        //这就是 apply 写到磁盘的线程</span><br><span class="line">            HandlerThread handlerThread = new HandlerThread(&quot;queued-work-looper&quot;,</span><br><span class="line">                    Process.THREAD_PRIORITY_FOREGROUND);</span><br><span class="line">            handlerThread.start();</span><br><span class="line"></span><br><span class="line">            sHandler = new QueuedWorkHandler(handlerThread.getLooper());</span><br><span class="line">        &#125;</span><br><span class="line">        return sHandler;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">// Handler 的处理</span><br><span class="line">private static class QueuedWorkHandler extends Handler &#123;</span><br><span class="line">        static final int MSG_RUN = 1;</span><br><span class="line"></span><br><span class="line">        QueuedWorkHandler(Looper looper) &#123;</span><br><span class="line">            super(looper);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public void handleMessage(Message msg) &#123;</span><br><span class="line">            if (msg.what == MSG_RUN) &#123;</span><br><span class="line">                processPendingWork();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    private static void processPendingWork() &#123;</span><br><span class="line">        long startTime = 0;</span><br><span class="line"></span><br><span class="line">       </span><br><span class="line">        synchronized (sProcessingWork) &#123;</span><br><span class="line">            LinkedList&lt;Runnable&gt; work;</span><br><span class="line"></span><br><span class="line">            synchronized (sLock) &#123;</span><br><span class="line">             //复制前面的工作队列 </span><br><span class="line">                work = (LinkedList&lt;Runnable&gt;) sWork.clone();</span><br><span class="line">                sWork.clear();</span><br><span class="line"></span><br><span class="line">                // Remove all msg-s as all work will be processed now</span><br><span class="line">                getHandler().removeMessages(QueuedWorkHandler.MSG_RUN);</span><br><span class="line">            &#125;</span><br><span class="line">            //一个一个执行 run 方法，</span><br><span class="line">            if (work.size() &gt; 0) &#123;</span><br><span class="line">                for (Runnable w : work) &#123;</span><br><span class="line">                    w.run();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/2019/02/14/SharedPreferences-ANR-总结/1240" alt="image.png"></p>
+<h5 id="QueuedWork-addFinisher-awaitCommit"><a href="#QueuedWork-addFinisher-awaitCommit" class="headerlink" title="QueuedWork.addFinisher(awaitCommit);"></a>QueuedWork.addFinisher(awaitCommit);</h5><p>在上面的方法中注意到 对每个 apply 都会创建一个相应的 awaitCommit，并添加到 QueuedWork 的一个队列中，但是在 QueuedWork 注意到有这样一个方法 waitToFinish<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Trigger queued work to be processed immediately. The queued work is processed on a separate</span><br><span class="line"> * thread asynchronous. While doing that run and process all finishers on this thread. The</span><br><span class="line"> * finishers can be implemented in a way to check weather the queued work is finished.</span><br><span class="line"> *</span><br><span class="line"> * Is called from the Activity base class&apos;s onPause(), after BroadcastReceiver&apos;s onReceive,</span><br><span class="line"> * after Service command handling, etc. (so async work is never lost)</span><br><span class="line"> */</span><br><span class="line">public static void waitToFinish() &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个方法会在 Activity 暂停时或者 BroadcastReceiver 的 onReceive 方法调用后或者 service 的命令处理后被调用，并且调用这个方法的目的是为了确保异步任务被及时完成。<br><img src="/2019/02/14/SharedPreferences-ANR-总结/12401" alt="image.png"></p>
+<p>可以看到 waitToFinish 都是在 ActivityThread 中，也就是主线程调用的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">public static void waitToFinish() &#123;</span><br><span class="line">       </span><br><span class="line">        boolean hadMessages = false;</span><br><span class="line"></span><br><span class="line">        Handler handler = getHandler();</span><br><span class="line"></span><br><span class="line">        synchronized (sLock) &#123;</span><br><span class="line">            if (handler.hasMessages(QueuedWorkHandler.MSG_RUN)) &#123;</span><br><span class="line">                // Delayed work will be processed at processPendingWork() below</span><br><span class="line">                handler.removeMessages(QueuedWorkHandler.MSG_RUN);</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            // We should not delay any work as this might delay the finishers</span><br><span class="line">            sCanDelay = false;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();</span><br><span class="line">        try &#123;</span><br><span class="line">        //这个方法就会执行 所有的 Runnable 的run 返回</span><br><span class="line">        //这个时候 processPendingWork 是执行在主线程中</span><br><span class="line">        </span><br><span class="line">            processPendingWork();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            StrictMode.setThreadPolicy(oldPolicy);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                Runnable finisher;</span><br><span class="line"></span><br><span class="line">                synchronized (sLock) &#123;</span><br><span class="line">                    finisher = sFinishers.poll();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                if (finisher == null) &#123;</span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                finisher.run();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            sCanDelay = true;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">       ...</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这种设计是为了保证 SP 可靠的、保证写入完成的存储机制。</p>
+<h5 id="apply-总结"><a href="#apply-总结" class="headerlink" title="apply 总结"></a>apply 总结</h5><ul>
+<li>apply 没有返回值</li>
+<li>apply 是在主线程将修改数据提交到内存, 然后再子线程（HandleThread）提交到磁盘</li>
+<li>apply 会将 Runnble 添加到 QueueWork 中，如果主线程 Activity 暂停时或者 BroadcastReceiver 的 onReceive 方法调用后或者 service 的命令处理，就会在主线程执行 提交到硬盘的方法，这个过程就会造成主线程 ANR</li>
+</ul>
+<h5 id="2-commit"><a href="#2-commit" class="headerlink" title="2.commit"></a>2.commit</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public boolean commit() &#123;</span><br><span class="line">           long startTime = 0;</span><br><span class="line"></span><br><span class="line">           if (DEBUG) &#123;</span><br><span class="line">               startTime = System.currentTimeMillis();</span><br><span class="line">           &#125;</span><br><span class="line">           //这个也是先写入内存 </span><br><span class="line">           MemoryCommitResult mcr = commitToMemory();</span><br><span class="line">   </span><br><span class="line">   </span><br><span class="line">           //这里传入 null 即 postWriteRunnable 为 null</span><br><span class="line">           SharedPreferencesImpl.this.enqueueDiskWrite(</span><br><span class="line">               mcr, null /* sync write on this thread okay */);</span><br><span class="line">           try &#123;</span><br><span class="line">               mcr.writtenToDiskLatch.await();</span><br><span class="line">           &#125; catch (InterruptedException e) &#123;</span><br><span class="line">               return false;</span><br><span class="line">           &#125; finally &#123;</span><br><span class="line">               if (DEBUG) &#123;</span><br><span class="line">                   Log.d(TAG, mFile.getName() + &quot;:&quot; + mcr.memoryStateGeneration</span><br><span class="line">                           + &quot; committed after &quot; + (System.currentTimeMillis() - startTime)</span><br><span class="line">                           + &quot; ms&quot;);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           notifyListeners(mcr);</span><br><span class="line">           return mcr.writeToDiskResult;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">private void enqueueDiskWrite(final MemoryCommitResult mcr,</span><br><span class="line">                                 final Runnable postWriteRunnable) &#123;</span><br><span class="line">       final boolean isFromSyncCommit = (postWriteRunnable == null);</span><br><span class="line"></span><br><span class="line">       final Runnable writeToDiskRunnable = new Runnable() &#123;</span><br><span class="line">               @Override</span><br><span class="line">               public void run() &#123;</span><br><span class="line">                   synchronized (mWritingToDiskLock) &#123;</span><br><span class="line">                       writeToFile(mcr, isFromSyncCommit);</span><br><span class="line">                   &#125;</span><br><span class="line">                   synchronized (mLock) &#123;</span><br><span class="line">                       mDiskWritesInFlight--;</span><br><span class="line">                   &#125;</span><br><span class="line">                   if (postWriteRunnable != null) &#123;</span><br><span class="line">                       postWriteRunnable.run();</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;;</span><br><span class="line"></span><br><span class="line">       // Typical #commit() path with fewer allocations, doing a write on</span><br><span class="line">       // the current thread.</span><br><span class="line">       // 为 true </span><br><span class="line">       // 直接在主线程中执行 run 方法。</span><br><span class="line">       if (isFromSyncCommit) &#123;</span><br><span class="line">           boolean wasEmpty = false;</span><br><span class="line">           synchronized (mLock) &#123;</span><br><span class="line">               wasEmpty = mDiskWritesInFlight == 1;</span><br><span class="line">           &#125;</span><br><span class="line">           if (wasEmpty) &#123;</span><br><span class="line">               writeToDiskRunnable.run();</span><br><span class="line">               return;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/2019/02/14/SharedPreferences-ANR-总结/12402" alt="image.png"></p>
+<h6 id="commit-总结"><a href="#commit-总结" class="headerlink" title="commit 总结"></a>commit 总结</h6><ul>
+<li>commit 有返回值</li>
+<li>commit 是在主线程将修改数据提交到内存, 然后再在主线程提交到磁盘</li>
+<li>用 commit 方法最保险。如果担心在主线程调用 commit 方法会出现 ANR，可以将所有的 commit 任务放到单线程池的线程里去执行。</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>Sp 主线程 getXX 方法会 ANR</li>
+<li>Sp apply 方法会 ANR</li>
+<li>Sp 主线程调用 commit 方法 ANR</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android-基础/" rel="tag"># Android 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/03/自定义View总结/" rel="next" title="自定义View总结">
+                <i class="fa fa-chevron-left"></i> 自定义View总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+ <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/d.jpg"
+                alt="海盗的帽子" />
+            
+              <p class="site-author-name" itemprop="name">海盗的帽子</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yishengma" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/m0_38089373" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-copyright"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一-简介"><span class="nav-text">一.简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二-获取-Sp"><span class="nav-text">二.获取 Sp</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#获取-SharedPreferences-总结："><span class="nav-text">获取 SharedPreferences 总结：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三-get-方法"><span class="nav-text">三.get 方法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#getXXX-方法-总结："><span class="nav-text">getXXX 方法 总结：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四-putXXX-和-apply-commit"><span class="nav-text">四.putXXX 和 apply/commit</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-apply"><span class="nav-text">1.apply</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#QueuedWork-addFinisher-awaitCommit"><span class="nav-text">QueuedWork.addFinisher(awaitCommit);</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#apply-总结"><span class="nav-text">apply 总结</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-commit"><span class="nav-text">2.commit</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#commit-总结"><span class="nav-text">commit 总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-[object Object]"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">海盗的帽子</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://rawgit.com/yishengma/147d4f60feb7cdc79c355ad2da83d513/raw/d624cffa8a67b4da07048d59ba0031e2860b1b2b/md5.min.js"></script>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '15e7b5ecca662534768c',
+          clientSecret: '26dc23d2d7a013bbcce94772f42f2e434247c6ba',
+          repo: 'yishengma.github.io',
+          owner: 'yishengma',
+          admin: ['yishengma'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2LveBulvcfzvQ6MBGz9b3URY-gzGzoHsz", "7mcKtxSVSDUSpSxFfdxBmyaP");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
