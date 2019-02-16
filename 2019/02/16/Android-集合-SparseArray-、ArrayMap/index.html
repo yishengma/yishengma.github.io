@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16.ico?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android 基础," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.前言SparseArray 和 ArrayMap 是 Android 系统 api 中用于存储键值对数据的集合,相比于 java  集合的 HashMap ,SparseArray 和 ArrayMap 在某些场景下能够以时间换空间策略,带来内存上效率的提升,因此更适合移动设备。 二.SparseArray1.简介1234567891011121314151617181920212223242">
+<meta name="keywords" content="Android 基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 集合----SparseArray 、ArrayMap">
+<meta property="og:url" content="https://yishengma.github.io/2019/02/16/Android-集合-SparseArray-、ArrayMap/index.html">
+<meta property="og:site_name" content="海盗的帽子的博客">
+<meta property="og:description" content="一.前言SparseArray 和 ArrayMap 是 Android 系统 api 中用于存储键值对数据的集合,相比于 java  集合的 HashMap ,SparseArray 和 ArrayMap 在某些场景下能够以时间换空间策略,带来内存上效率的提升,因此更适合移动设备。 二.SparseArray1.简介1234567891011121314151617181920212223242">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://yishengma.github.io/2019/02/16/Android-集合-SparseArray-、ArrayMap/12402">
+<meta property="og:image" content="https://yishengma.github.io/2019/02/16/Android-集合-SparseArray-、ArrayMap/12401">
+<meta property="og:image" content="https://yishengma.github.io/2019/02/16/Android-集合-SparseArray-、ArrayMap/1240">
+<meta property="og:updated_time" content="2019-02-16T14:06:00.062Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android 集合----SparseArray 、ArrayMap">
+<meta name="twitter:description" content="一.前言SparseArray 和 ArrayMap 是 Android 系统 api 中用于存储键值对数据的集合,相比于 java  集合的 HashMap ,SparseArray 和 ArrayMap 在某些场景下能够以时间换空间策略,带来内存上效率的提升,因此更适合移动设备。 二.SparseArray1.简介1234567891011121314151617181920212223242">
+<meta name="twitter:image" content="https://yishengma.github.io/2019/02/16/Android-集合-SparseArray-、ArrayMap/12402">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yishengma.github.io/2019/02/16/Android-集合-SparseArray-、ArrayMap/"/>
+
+
+
+
+
+  <title>Android 集合----SparseArray 、ArrayMap | 海盗的帽子的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">海盗的帽子的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2019/02/16/Android-集合-SparseArray-、ArrayMap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="海盗的帽子">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/d.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="海盗的帽子的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android 集合----SparseArray 、ArrayMap</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-16T22:04:24+08:00">
+                2019-02-16
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-02-16T22:06:00+08:00">
+                2019-02-16
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/02/16/Android-集合-SparseArray-、ArrayMap/" class="leancloud_visitors" data-flag-title="Android 集合----SparseArray 、ArrayMap">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h3><p>SparseArray 和 ArrayMap 是 Android 系统 api 中用于存储键值对数据的集合,相比于 java  集合的 HashMap ,SparseArray 和 ArrayMap 在某些场景下能够以时间换空间策略,带来内存上效率的提升,因此更适合移动设备。</p>
+<h3 id="二-SparseArray"><a href="#二-SparseArray" class="headerlink" title="二.SparseArray"></a>二.SparseArray</h3><h4 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * SparseArrays map integers to Objects.  Unlike a normal array of Objects,</span><br><span class="line"> * there can be gaps in the indices.  It is intended to be more memory efficient</span><br><span class="line"> * than using a HashMap to map Integers to Objects, both because it avoids</span><br><span class="line"> * auto-boxing keys and its data structure doesn&apos;t rely on an extra entry object</span><br><span class="line"> * for each mapping.</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;Note that this container keeps its mappings in an array data structure,</span><br><span class="line"> * using a binary search to find keys.  The implementation is not intended to be appropriate for</span><br><span class="line"> * data structures</span><br><span class="line"> * that may contain large numbers of items.  It is generally slower than a traditional</span><br><span class="line"> * HashMap, since lookups require a binary search and adds and removes require inserting</span><br><span class="line"> * and deleting entries in the array.  For containers holding up to hundreds of items,</span><br><span class="line"> * the performance difference is not significant, less than 50%.&lt;/p&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;To help with performance, the container includes an optimization when removing</span><br><span class="line"> * keys: instead of compacting its array immediately, it leaves the removed entry marked</span><br><span class="line"> * as deleted.  The entry can then be re-used for the same key, or compacted later in</span><br><span class="line"> * a single garbage collection step of all removed entries.  This garbage collection will</span><br><span class="line"> * need to be performed at any time the array needs to be grown or the the map size or</span><br><span class="line"> * entry values are retrieved.&lt;/p&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;It is possible to iterate over the items in this container using</span><br><span class="line"> * &#123;@link #keyAt(int)&#125; and &#123;@link #valueAt(int)&#125;. Iterating over the keys using</span><br><span class="line"> * &lt;code&gt;keyAt(int)&lt;/code&gt; with ascending values of the index will return the</span><br><span class="line"> * keys in ascending order, or the values corresponding to the keys in ascending</span><br><span class="line"> * order in the case of &lt;code&gt;valueAt(int)&lt;/code&gt;.&lt;/p&gt;</span><br><span class="line"> */</span><br><span class="line">  public class SparseArray&lt;E&gt; implements Cloneable &#123;</span><br><span class="line">      ...</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>在源码中对 SparseArray 的介绍就如上面的注释,从中就可以知道以下几点：</p>
+<h6 id="1"><a href="#1" class="headerlink" title="(1)."></a>(1).</h6><p>SparseArray 存储 int -&gt; Objects 映射关系（不是 Integer ）,类似的类还有 SparseBooleanArray ，SparseIntArray ， SparseLongArray ，LongSparseArray。对应的映射关系如下：</p>
+<table>
+<thead>
+<tr>
+<th>类</th>
+<th>映射关系</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SparseArray</td>
+<td>int -&gt; Objects</td>
+</tr>
+<tr>
+<td>SparseBooleanArray</td>
+<td>int -&gt; boolean</td>
+</tr>
+<tr>
+<td>SparseIntArray</td>
+<td>int -&gt; int</td>
+</tr>
+<tr>
+<td>SparseLongArray</td>
+<td>int -&gt; long</td>
+</tr>
+<tr>
+<td>LongSparseArray</td>
+<td>long -&gt; Objects</td>
+</tr>
+</tbody>
+</table>
+<h6 id="2"><a href="#2" class="headerlink" title="(2)."></a>(2).</h6><p>不像其他的数组结构下标是连续的，它能够允许某些下标不存在，因此称为 SparseArray (稀疏数组),因为避免了自动装拆箱,且不用创建其他的实体（HashMap 需要创建 Entry），因此在内存上有更高的效率。</p>
+<h6 id="3"><a href="#3" class="headerlink" title="(3)."></a>(3).</h6><p>与 HashMap 中使用 hash 值定位下标的方式不同，SparseArray 使用的是二分查找的方式,因此当有大量数据的时候，SparseArray 的速度将明显慢于 HashMap</p>
+<h6 id="4"><a href="#4" class="headerlink" title="(4)."></a>(4).</h6><p>在删除的元素的时候，SparseArray 不是立即对数组进行压缩（去除数组中为 空的元素），而是使用一个标志，对删除的位置进行标志，只有在数组扩容或者 键值对数量和某个元素需要恢复的时候，才会统一进行压缩。</p>
+<h4 id="2-源码"><a href="#2-源码" class="headerlink" title="2.源码"></a>2.源码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class SparseArray&lt;E&gt; implements Cloneable &#123;</span><br><span class="line">    private static final Object DELETED = new Object(); //删除的标志</span><br><span class="line">    private boolean mGarbage = false; //压缩标志</span><br><span class="line"></span><br><span class="line">    private int[] mKeys; //int 类型的数组，存储 key</span><br><span class="line">    private Object[] mValues; //Object 类型的数组，存储 value</span><br><span class="line">    private int mSize; // 键值对的数量</span><br><span class="line"></span><br><span class="line">     //默认构造器，初始化 数量为 10 </span><br><span class="line">    public SparseArray() &#123;</span><br><span class="line">        this(10);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   //指定数量的构造器</span><br><span class="line">    public SparseArray(int initialCapacity) &#123;</span><br><span class="line">        if (initialCapacity == 0) &#123;</span><br><span class="line">            mKeys = EmptyArray.INT;</span><br><span class="line">            mValues = EmptyArray.OBJECT;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            mValues = ArrayUtils.newUnpaddedObjectArray(initialCapacity);</span><br><span class="line">            mKeys = new int[mValues.length];</span><br><span class="line">        &#125;</span><br><span class="line">        mSize = 0;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="1-put-方法"><a href="#1-put-方法" class="headerlink" title="1.put 方法"></a>1.put 方法</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public void put(int key, E value) &#123;</span><br><span class="line">    //先二分查找对应的下标</span><br><span class="line">    int i = ContainerHelpers.binarySearch(mKeys, mSize, key);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>put 方法首先要就要查找对应的需要插入的位置，因为 SparseArray 是一个稀疏数组即可能有这样的情况 （0 ，1 ，3 ，5，6） 因此首先就要找到对应的插入位置。二分查找对应的算法如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">static int binarySearch(int[] array, int size, int value) &#123;</span><br><span class="line">        int lo = 0;</span><br><span class="line">        int hi = size - 1;</span><br><span class="line"></span><br><span class="line">        while (lo &lt;= hi) &#123;</span><br><span class="line">            final int mid = (lo + hi) &gt;&gt;&gt; 1;</span><br><span class="line">            final int midVal = array[mid];</span><br><span class="line"></span><br><span class="line">            if (midVal &lt; value) &#123;</span><br><span class="line">                lo = mid + 1;</span><br><span class="line">            &#125; else if (midVal &gt; value) &#123;</span><br><span class="line">                hi = mid - 1;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                return mid;  // value found</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return ~lo;  // value not present</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>当查找成功就返回对应的下标，但是查找失败的时候注意最后返回的是 ~lo,而不是简单的 -1, 其实 ~lo 对应的就是需要插入的位置，比如 （0 ，1 ，3 ，5，6）查找 2，返回的就是 -2 ，取反可以将正数转为负数，如果是负数就说明查找失败，比如返回 -2 就说明查找失败，插入的位置为 2 .</p>
+<p>接着回到 put 方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">public void put(int key, E value) &#123;</span><br><span class="line">        //使用二分查找</span><br><span class="line">        int i = ContainerHelpers.binarySearch(mKeys, mSize, key);</span><br><span class="line">        </span><br><span class="line">        //i&gt;0</span><br><span class="line">        //说明查找成功，直接更新</span><br><span class="line">        if (i &gt;= 0) &#123;</span><br><span class="line">            mValues[i] = value;</span><br><span class="line">        //查找失败的话</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">        //取反获取对应的插入的位置</span><br><span class="line">            i = ~i;</span><br><span class="line"></span><br><span class="line">            //如果下标 小于 元素数量并且之前被标志位删除的话</span><br><span class="line">            //重新赋值即可</span><br><span class="line">            if (i &lt; mSize &amp;&amp; mValues[i] == DELETED) &#123;</span><br><span class="line">                mKeys[i] = key;</span><br><span class="line">                mValues[i] = value;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line"> </span><br><span class="line">           //否则判断是否需要进行数组压缩</span><br><span class="line">           //需要的话就调用 gc 方法进行压缩</span><br><span class="line">           //并重新二分查找获取下标</span><br><span class="line">            if (mGarbage &amp;&amp; mSize &gt;= mKeys.length) &#123;</span><br><span class="line">                gc();</span><br><span class="line"></span><br><span class="line">                // Search again because indices may have changed.</span><br><span class="line">                i = ~ContainerHelpers.binarySearch(mKeys, mSize, key);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            //对数组进行扩容 并复制</span><br><span class="line">            //GrowingArrayUtils.insert 使用的是  System.arraycopy</span><br><span class="line">            mKeys = GrowingArrayUtils.insert(mKeys, mSize, i, key);</span><br><span class="line">            mValues = GrowingArrayUtils.insert(mValues, mSize, i, value);</span><br><span class="line">            mSize++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>gc 压缩数组的源码如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">private void gc() &#123;</span><br><span class="line">        // Log.e(&quot;SparseArray&quot;, &quot;gc start with &quot; + mSize);</span><br><span class="line"></span><br><span class="line">        int n = mSize;</span><br><span class="line">        int o = 0;</span><br><span class="line">        int[] keys = mKeys;</span><br><span class="line">        Object[] values = mValues;</span><br><span class="line"></span><br><span class="line">        for (int i = 0; i &lt; n; i++) &#123;</span><br><span class="line">            Object val = values[i];</span><br><span class="line"></span><br><span class="line">            if (val != DELETED) &#123;</span><br><span class="line">                if (i != o) &#123;</span><br><span class="line">                    keys[o] = keys[i];</span><br><span class="line">                    values[o] = val;</span><br><span class="line">                    values[i] = null;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                o++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        mGarbage = false;</span><br><span class="line">        mSize = o;</span><br><span class="line"></span><br><span class="line">        // Log.e(&quot;SparseArray&quot;, &quot;gc end with &quot; + mSize);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/2019/02/16/Android-集合-SparseArray-、ArrayMap/12402" alt="image.png"></p>
+<p>下一次进行 arrayCopy 的时候多余的 null 就不会进行复制，延迟删除机并一次性压缩就提高了效率。</p>
+<h5 id="2-append-方法"><a href="#2-append-方法" class="headerlink" title="2.append 方法"></a>2.append 方法</h5><p>put 方法是在数组中插入元素，那么 append 对应的就是在数组末尾追加元素<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public void append(int key, E value) &#123;</span><br><span class="line">        //如果 key 小于 存在的key</span><br><span class="line">        //就使用 put 进行插入</span><br><span class="line">        if (mSize != 0 &amp;&amp; key &lt;= mKeys[mSize - 1]) &#123;</span><br><span class="line">            put(key, value);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //判断是否需要 gc </span><br><span class="line">        if (mGarbage &amp;&amp; mSize &gt;= mKeys.length) &#123;</span><br><span class="line">            gc();</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        //调用 GrowingArrayUtils.append 在数组末尾追加元素</span><br><span class="line">        //内部也是使用 System.arrayCopy </span><br><span class="line">        mKeys = GrowingArrayUtils.append(mKeys, mSize, key);</span><br><span class="line">        mValues = GrowingArrayUtils.append(mValues, mSize, value);</span><br><span class="line">        mSize++;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h6 id="3-get-方法"><a href="#3-get-方法" class="headerlink" title="3.get 方法"></a>3.get 方法</h6><p>get 方法 方法就相对简单了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public E get(int key) &#123;</span><br><span class="line">        return get(key, null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Gets the Object mapped from the specified key, or the specified Object</span><br><span class="line">     * if no such mapping has been made.</span><br><span class="line">     */</span><br><span class="line">    @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">    public E get(int key, E valueIfKeyNotFound) &#123;</span><br><span class="line">        int i = ContainerHelpers.binarySearch(mKeys, mSize, key);</span><br><span class="line">        </span><br><span class="line">        //如果查找失败或者元素已经被删除</span><br><span class="line">        //就返回 null 或者默认的值</span><br><span class="line">        if (i &lt; 0 || mValues[i] == DELETED) &#123;</span><br><span class="line">            return valueIfKeyNotFound;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return (E) mValues[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h6 id="与-HashMap-的对比"><a href="#与-HashMap-的对比" class="headerlink" title="与 HashMap 的对比"></a>与 HashMap 的对比</h6><p>优点</p>
+<ul>
+<li>频繁的插入删除操作效率高,因为延迟删除标志 DELETE </li>
+<li>通过 gc 函数来清除，内存利用率高</li>
+<li>不用自动拆箱</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li>存取因二分查找的时间复杂度 O(log n)，数据较多的情况下，效率没有 HashMap 高</li>
+<li>key 只能是 int 或者 long</li>
+</ul>
+<p>因此 SparseArray 应用场景为 数据较少，并且<br>存取的 value 为指定类型的，比如 boolean、int、long，可以避免自动装箱和拆箱问题。</p>
+<h3 id="三-ArrayMap"><a href="#三-ArrayMap" class="headerlink" title="三.ArrayMap"></a>三.ArrayMap</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * ArrayMap is a generic key-&gt;value mapping data structure that is</span><br><span class="line"> * designed to be more memory efficient than a traditional &#123;@link java.util.HashMap&#125;.</span><br><span class="line"> * It keeps its mappings in an array data structure -- an integer array of hash</span><br><span class="line"> * codes for each item, and an Object array of the key/value pairs.  This allows it to</span><br><span class="line"> * avoid having to create an extra object for every entry put in to the map, and it</span><br><span class="line"> * also tries to control the growth of the size of these arrays more aggressively</span><br><span class="line"> * (since growing them only requires copying the entries in the array, not rebuilding</span><br><span class="line"> * a hash map).</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;Note that this implementation is not intended to be appropriate for data structures</span><br><span class="line"> * that may contain large numbers of items.  It is generally slower than a traditional</span><br><span class="line"> * HashMap, since lookups require a binary search and adds and removes require inserting</span><br><span class="line"> * and deleting entries in the array.  For containers holding up to hundreds of items,</span><br><span class="line"> * the performance difference is not significant, less than 50%.&lt;/p&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;Because this container is intended to better balance memory use, unlike most other</span><br><span class="line"> * standard Java containers it will shrink its array as items are removed from it.  Currently</span><br><span class="line"> * you have no control over this shrinking -- if you set a capacity and then remove an</span><br><span class="line"> * item, it may reduce the capacity to better match the current size.  In the future an</span><br><span class="line"> * explicit call to set the capacity should turn off this aggressive shrinking behavior.&lt;/p&gt;</span><br><span class="line"> */</span><br><span class="line">public final class ArrayMap&lt;K, V&gt; implements Map&lt;K, V&gt; &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-简介-1"><a href="#1-简介-1" class="headerlink" title="1.简介"></a>1.简介</h4><p>在源码中对 ArrayMap 的介绍主要关注在第一段，后面的前面关于 SparseArray 的介绍基本一样，这里就不再赘述，只关注第一段。</p>
+<p>ArrayMap 是一个简单的集合用于存储 键值对 。它比传统的键值对集合 HashMap 要在内存上更有效率，因为它维持的是一个数组的数据结构，一个整型数组用于保存每一项的 hash 值,一个 键值数组保存 键值对。因此这就使得 ArrayMap 不用创建额外的实体（HashMap 中需要创建 Entry ），在扩容的时候只需要复制就行了，不用重新 hash .</p>
+<p>对应的数据结构如图。<br><img src="/2019/02/16/Android-集合-SparseArray-、ArrayMap/12401" alt="image.png"></p>
+<h4 id="2-源码-1"><a href="#2-源码-1" class="headerlink" title="2.源码"></a>2.源码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">private static final boolean DEBUG = false;</span><br><span class="line">    private static final String TAG = &quot;ArrayMap&quot;;</span><br><span class="line"></span><br><span class="line">    //</span><br><span class="line">    private static final boolean CONCURRENT_MODIFICATION_EXCEPTIONS = true;</span><br><span class="line"></span><br><span class="line">    //缓存长度为 4 时的数组</span><br><span class="line">    private static final int BASE_SIZE = 4;</span><br><span class="line"></span><br><span class="line">    //缓存数组数量的最大值，也就是说最多只能缓存10个数组</span><br><span class="line">    private static final int CACHE_SIZE = 10;</span><br><span class="line"></span><br><span class="line">    //空数组</span><br><span class="line">    static final int[] EMPTY_IMMUTABLE_INTS = new int[0];</span><br><span class="line"></span><br><span class="line">    //空 ArrayMap</span><br><span class="line">    public static final ArrayMap EMPTY = new ArrayMap&lt;&gt;(-1);</span><br><span class="line"></span><br><span class="line">   //缓存数组</span><br><span class="line">   // mBaseCache 用于缓存长度为 4 的数组</span><br><span class="line">   //mBaseCacheSize 记录缓存的个数</span><br><span class="line">    static Object[] mBaseCache;</span><br><span class="line">    static int mBaseCacheSize;</span><br><span class="line">    </span><br><span class="line">    //mTwiceBaseCache 用于缓存长度为 8 的数组</span><br><span class="line">    //mTwiceBaseCacheSize 记录个数</span><br><span class="line">    static Object[] mTwiceBaseCache;</span><br><span class="line">    static int mTwiceBaseCacheSize;</span><br><span class="line"></span><br><span class="line">    //是否需要唯一的 hash 值</span><br><span class="line">    //因为 hashCode 不唯一</span><br><span class="line">    final boolean mIdentityHashCode;</span><br><span class="line">    int[] mHashes; //存放每一项的 hash 值</span><br><span class="line">    Object[] mArray; //key/value 数组</span><br><span class="line">    int mSize; //键值对大小</span><br><span class="line">    MapCollections&lt;K, V&gt; mCollections;</span><br></pre></td></tr></table></figure>
+<p>构造函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">public ArrayMap() &#123;</span><br><span class="line">    this(0, false);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public ArrayMap(int capacity) &#123;</span><br><span class="line">    this(capacity, false);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/** &#123;@hide&#125; */</span><br><span class="line">public ArrayMap(int capacity, boolean identityHashCode) &#123;</span><br><span class="line">    mIdentityHashCode = identityHashCode;</span><br><span class="line">    // If this is immutable, use the sentinal EMPTY_IMMUTABLE_INTS</span><br><span class="line">    // instance instead of the usual EmptyArray.INT. The reference</span><br><span class="line">    // is checked later to see if the array is allowed to grow.</span><br><span class="line">    if (capacity &lt; 0) &#123;</span><br><span class="line">        mHashes = EMPTY_IMMUTABLE_INTS;</span><br><span class="line">        mArray = EmptyArray.OBJECT;</span><br><span class="line">    &#125; else if (capacity == 0) &#123;</span><br><span class="line">        mHashes = EmptyArray.INT;</span><br><span class="line">        mArray = EmptyArray.OBJECT;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        allocArrays(capacity);</span><br><span class="line">    &#125;</span><br><span class="line">    mSize = 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public ArrayMap(ArrayMap&lt;K, V&gt; map) &#123;</span><br><span class="line">    this();</span><br><span class="line">    if (map != null) &#123;</span><br><span class="line">        putAll(map);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>无论是哪个构造函数，最后都会调用 两个参数的 ArrayMap(int capacity, boolean identityHashCode) </p>
+<ul>
+<li>identityHashCode,如果 true 则 hash 值是默认的 hashCode System.identityHashCode(key) 不管 key 的hashCode 是否被重写 。否则就是 key.hashCode() 这个 hashCode 就有可能使重写的情况。</li>
+</ul>
+<p>注意最后 如果设置的初始大小大于 0 ，则会调用  allocArrays 。allocArrays 这个方法就是从缓存的数组获取数组，避免重复的创建，既然有获取缓存当然有添加缓存，相应的添加缓存的方法就是 freeArrays 。</p>
+<h6 id="首先看缓存的数组是如何添加的"><a href="#首先看缓存的数组是如何添加的" class="headerlink" title="首先看缓存的数组是如何添加的"></a>首先看缓存的数组是如何添加的</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">static Object[] mBaseCache;</span><br><span class="line">static int mBaseCacheSize;</span><br><span class="line">static Object[] mTwiceBaseCache;</span><br><span class="line">static int mTwiceBaseCacheSize;</span><br><span class="line"></span><br><span class="line">//首先添加缓存</span><br><span class="line">private static void freeArrays(final int[] hashes, final Object[] array, final int size) &#123;</span><br><span class="line">    //当 hash 数组大小为 8 的时候</span><br><span class="line">    if (hashes.length == (BASE_SIZE*2)) &#123;</span><br><span class="line">        synchronized (ArrayMap.class) &#123;</span><br><span class="line">           //如果缓存的数组的个数小于 CACHE_SIZE 即 10 个</span><br><span class="line">           </span><br><span class="line">            if (mTwiceBaseCacheSize &lt; CACHE_SIZE) &#123;</span><br><span class="line">               //就将 旧的数组第一个元素设置为 mTwiceBaseCache</span><br><span class="line">                array[0] = mTwiceBaseCache;</span><br><span class="line">                </span><br><span class="line">               /第二个元素设置为 旧的 hash 数组</span><br><span class="line">                array[1] = hashes;</span><br><span class="line">                </span><br><span class="line">                //其他元素设置为 null</span><br><span class="line">                for (int i=(size&lt;&lt;1)-1; i&gt;=2; i--) &#123;</span><br><span class="line">                    array[i] = null;</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                //把 mTwiceBaseCache 指向就得数组</span><br><span class="line">                mTwiceBaseCache = array;</span><br><span class="line">                mTwiceBaseCacheSize++;</span><br><span class="line">                if (DEBUG) Log.d(TAG, &quot;Storing 2x cache &quot; + array</span><br><span class="line">                        + &quot; now have &quot; + mTwiceBaseCacheSize + &quot; entries&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    //当 hash 数组的大小为 4 的时候</span><br><span class="line">    //情况和上述的一样</span><br><span class="line">    &#125; else if (hashes.length == BASE_SIZE) &#123;</span><br><span class="line">        synchronized (ArrayMap.class) &#123;</span><br><span class="line">            if (mBaseCacheSize &lt; CACHE_SIZE) &#123;</span><br><span class="line">                array[0] = mBaseCache;</span><br><span class="line">                array[1] = hashes;</span><br><span class="line">                for (int i=(size&lt;&lt;1)-1; i&gt;=2; i--) &#123;</span><br><span class="line">                    array[i] = null;</span><br><span class="line">                &#125;</span><br><span class="line">                mBaseCache = array;</span><br><span class="line">                mBaseCacheSize++;</span><br><span class="line">                if (DEBUG) Log.d(TAG, &quot;Storing 1x cache &quot; + array</span><br><span class="line">                        + &quot; now have &quot; + mBaseCacheSize + &quot; entries&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意到能够添加到缓存的条件只有两种情况 hash 数组的长度为 4 或者 8<br>添加的情况如图：<br><img src="/2019/02/16/Android-集合-SparseArray-、ArrayMap/1240" alt="image.png"></p>
+<p>可以看出这是一个类似链表的结构，相应的获取缓存就是取出链表的头节点，并设置新的头节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">//获取缓存的方法</span><br><span class="line">private void allocArrays(final int size) &#123;</span><br><span class="line">        </span><br><span class="line">        if (mHashes == EMPTY_IMMUTABLE_INTS) &#123;</span><br><span class="line">            throw new UnsupportedOperationException(&quot;ArrayMap is immutable&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        if (size == (BASE_SIZE*2)) &#123;</span><br><span class="line">            synchronized (ArrayMap.class) &#123;</span><br><span class="line">                if (mTwiceBaseCache != null) &#123;</span><br><span class="line">                   //获取头结点数组</span><br><span class="line">                    final Object[] array = mTwiceBaseCache;</span><br><span class="line">                    mArray = array;</span><br><span class="line">                    //设置新的头节点</span><br><span class="line">                    mTwiceBaseCache = (Object[])array[0];</span><br><span class="line">                    mHashes = (int[])array[1];</span><br><span class="line">                    array[0] = array[1] = null;</span><br><span class="line">                    //缓存数减 1 </span><br><span class="line">                    mTwiceBaseCacheSize--;</span><br><span class="line">                    if (DEBUG) Log.d(TAG, &quot;Retrieving 2x cache &quot; + mHashes</span><br><span class="line">                            + &quot; now have &quot; + mTwiceBaseCacheSize + &quot; entries&quot;);</span><br><span class="line">                    return;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else if (size == BASE_SIZE) &#123;</span><br><span class="line">            synchronized (ArrayMap.class) &#123;</span><br><span class="line">                if (mBaseCache != null) &#123;</span><br><span class="line">                    final Object[] array = mBaseCache;</span><br><span class="line">                    mArray = array;</span><br><span class="line">                    mBaseCache = (Object[])array[0];</span><br><span class="line">                    mHashes = (int[])array[1];</span><br><span class="line">                    array[0] = array[1] = null;</span><br><span class="line">                    mBaseCacheSize--;</span><br><span class="line">                    if (DEBUG) Log.d(TAG, &quot;Retrieving 1x cache &quot; + mHashes</span><br><span class="line">                            + &quot; now have &quot; + mBaseCacheSize + &quot; entries&quot;);</span><br><span class="line">                    return;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">       //如果需要的长度既不是 4 也不是 8 就创建新的数组。</span><br><span class="line">       </span><br><span class="line">        mHashes = new int[size];</span><br><span class="line">        mArray = new Object[size&lt;&lt;1];</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="put-方法"><a href="#put-方法" class="headerlink" title="put 方法"></a>put 方法</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">public V put(K key, V value) &#123;</span><br><span class="line">        final int osize = mSize;</span><br><span class="line">        final int hash;</span><br><span class="line">        int index;</span><br><span class="line">        // key 允许为 null </span><br><span class="line">        //对应下标为 0 </span><br><span class="line">        if (key == null) &#123;</span><br><span class="line">            hash = 0;</span><br><span class="line">            index = indexOfNull();</span><br><span class="line">        //根据 hash 值获取下标</span><br><span class="line">        //这个过程 主要由 indexOf 完成</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            hash = mIdentityHashCode ? System.identityHashCode(key) : key.hashCode();</span><br><span class="line">            index = indexOf(key, hash);</span><br><span class="line">        &#125;</span><br><span class="line">        //如果下标存在就 设置并返回</span><br><span class="line">        if (index &gt;= 0) &#123;</span><br><span class="line">            index = (index&lt;&lt;1) + 1;</span><br><span class="line">            final V old = (V)mArray[index];</span><br><span class="line">            mArray[index] = value;</span><br><span class="line">            return old;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //取反获取需要插入的位置</span><br><span class="line">        index = ~index;</span><br><span class="line">        //如果数组已经满了</span><br><span class="line">        if (osize &gt;= mHashes.length) &#123;</span><br><span class="line">            final int n = osize &gt;= (BASE_SIZE*2) ? (osize+(osize&gt;&gt;1))</span><br><span class="line">                    : (osize &gt;= BASE_SIZE ? (BASE_SIZE*2) : BASE_SIZE);</span><br><span class="line"></span><br><span class="line">            if (DEBUG) Log.d(TAG, &quot;put: grow from &quot; + mHashes.length + &quot; to &quot; + n);</span><br><span class="line"></span><br><span class="line">            final int[] ohashes = mHashes;</span><br><span class="line">            final Object[] oarray = mArray;</span><br><span class="line">            //获取缓存，或者创建新的数组</span><br><span class="line">            allocArrays(n);</span><br><span class="line"></span><br><span class="line">            if (CONCURRENT_MODIFICATION_EXCEPTIONS &amp;&amp; osize != mSize) &#123;</span><br><span class="line">                throw new ConcurrentModificationException();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            //进行复制</span><br><span class="line">            if (mHashes.length &gt; 0) &#123;</span><br><span class="line">                if (DEBUG) Log.d(TAG, &quot;put: copy 0-&quot; + osize + &quot; to 0&quot;);</span><br><span class="line">                System.arraycopy(ohashes, 0, mHashes, 0, ohashes.length);</span><br><span class="line">                System.arraycopy(oarray, 0, mArray, 0, oarray.length);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            //尝试添加到缓存</span><br><span class="line">            freeArrays(ohashes, oarray, osize);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">         //如果在数组内部进行插入</span><br><span class="line">        if (index &lt; osize) &#123;</span><br><span class="line">            if (DEBUG) Log.d(TAG, &quot;put: move &quot; + index + &quot;-&quot; + (osize-index)</span><br><span class="line">                    + &quot; to &quot; + (index+1));</span><br><span class="line">            System.arraycopy(mHashes, index, mHashes, index + 1, osize - index);</span><br><span class="line">            System.arraycopy(mArray, index &lt;&lt; 1, mArray, (index + 1) &lt;&lt; 1, (mSize - index) &lt;&lt; 1);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (CONCURRENT_MODIFICATION_EXCEPTIONS) &#123;</span><br><span class="line">            if (osize != mSize || index &gt;= mHashes.length) &#123;</span><br><span class="line">                throw new ConcurrentModificationException();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //最后赋值</span><br><span class="line">        mHashes[index] = hash;</span><br><span class="line">        mArray[index&lt;&lt;1] = key;</span><br><span class="line">        mArray[(index&lt;&lt;1)+1] = value;</span><br><span class="line">        mSize++;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>通过 hash 获取对应下标的过程和 之前的有点不同，因为 hashCode 的不唯一性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">int indexOf(Object key, int hash) &#123;</span><br><span class="line">        final int N = mSize;</span><br><span class="line"></span><br><span class="line">        // Important fast case: if nothing is in here, nothing to look for.</span><br><span class="line">        if (N == 0) &#123;</span><br><span class="line">            return ~0;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //先使用二分进行查找</span><br><span class="line">        int index = binarySearchHashes(mHashes, N, hash);</span><br><span class="line"></span><br><span class="line">        // If the hash code wasn&apos;t found, then we have no entry for this key.</span><br><span class="line">        if (index &lt; 0) &#123;</span><br><span class="line">            return index;</span><br><span class="line">        &#125;</span><br><span class="line">         //如果查找成功，并且对应的 key 是相同的，即 hashCode 相同且 equals 返回 true </span><br><span class="line">        // If the key at the returned index matches, that&apos;s what we want.</span><br><span class="line">        if (key.equals(mArray[index&lt;&lt;1])) &#123;</span><br><span class="line">            return index;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //前面的 equals 返回 false 则继续查找</span><br><span class="line">        //先从index 往 数组后面找 </span><br><span class="line">        </span><br><span class="line">        // Search for a matching key after the index.</span><br><span class="line">        int end;</span><br><span class="line">        for (end = index + 1; end &lt; N &amp;&amp; mHashes[end] == hash; end++) &#123;</span><br><span class="line">            if (key.equals(mArray[end &lt;&lt; 1])) return end;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //再从 index 往数组前面找</span><br><span class="line">        // Search for a matching key before the index.</span><br><span class="line">        for (int i = index - 1; i &gt;= 0 &amp;&amp; mHashes[i] == hash; i--) &#123;</span><br><span class="line">            if (key.equals(mArray[i &lt;&lt; 1])) return i;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // Key not found -- return negative value indicating where a</span><br><span class="line">        // new entry for this key should go.  We use the end of the</span><br><span class="line">        // hash chain to reduce the number of array entries that will</span><br><span class="line">        // need to be copied when inserting.</span><br><span class="line">        //查找失败则返回插入的位置 ，相同的 hashCode </span><br><span class="line">        //插入是插在后面。</span><br><span class="line">        return ~end;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>对于get 方法就相对简单，这里就不做分析。</p>
+<h6 id="与-HashMap-的对比-1"><a href="#与-HashMap-的对比-1" class="headerlink" title="与 HashMap 的对比"></a>与 HashMap 的对比</h6><p>优点</p>
+<ul>
+<li>在数据量少时，内存利用率高，不用创建新的实体 Entry </li>
+<li>迭代效率高，使用数组下标，相比于HashMap迭代使用迭代器，要快<br>缺点</li>
+<li>存取因 二分查找的 O(log n ) 复杂度高，效率低</li>
+<li>ArrayMap 没有实现 Serializable，不利于在 Android 中借助 Bundle 传输。</li>
+</ul>
+<p>因此 适用场景元素数量较少但是查询多，插入数据和删除数据不频繁的情况。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android-基础/" rel="tag"># Android 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/14/SharedPreferences-ANR-总结/" rel="next" title="SharedPreferences ANR 总结">
+                <i class="fa fa-chevron-left"></i> SharedPreferences ANR 总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+ <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/d.jpg"
+                alt="海盗的帽子" />
+            
+              <p class="site-author-name" itemprop="name">海盗的帽子</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yishengma" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/m0_38089373" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-copyright"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-前言"><span class="nav-text">一.前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-SparseArray"><span class="nav-text">二.SparseArray</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-简介"><span class="nav-text">1.简介</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1"><span class="nav-text">(1).</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2"><span class="nav-text">(2).</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3"><span class="nav-text">(3).</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#4"><span class="nav-text">(4).</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-源码"><span class="nav-text">2.源码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-put-方法"><span class="nav-text">1.put 方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-append-方法"><span class="nav-text">2.append 方法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#3-get-方法"><span class="nav-text">3.get 方法</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#与-HashMap-的对比"><span class="nav-text">与 HashMap 的对比</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-ArrayMap"><span class="nav-text">三.ArrayMap</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-简介-1"><span class="nav-text">1.简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-源码-1"><span class="nav-text">2.源码</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#首先看缓存的数组是如何添加的"><span class="nav-text">首先看缓存的数组是如何添加的</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#put-方法"><span class="nav-text">put 方法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#与-HashMap-的对比-1"><span class="nav-text">与 HashMap 的对比</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-[object Object]"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">海盗的帽子</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://rawgit.com/yishengma/147d4f60feb7cdc79c355ad2da83d513/raw/d624cffa8a67b4da07048d59ba0031e2860b1b2b/md5.min.js"></script>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '15e7b5ecca662534768c',
+          clientSecret: '26dc23d2d7a013bbcce94772f42f2e434247c6ba',
+          repo: 'yishengma.github.io',
+          owner: 'yishengma',
+          admin: ['yishengma'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2LveBulvcfzvQ6MBGz9b3URY-gzGzoHsz", "7mcKtxSVSDUSpSxFfdxBmyaP");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
