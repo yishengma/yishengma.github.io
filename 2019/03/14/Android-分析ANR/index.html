@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16.ico?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android 基础," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.前言ANR 是 Android 开发中会遇到的一个经典问题，但是如果不是自己遇到 ANR 并实现解决是很难对 ANR 有深入的体会的，所以本文就产生 ANR 到如何定位做一个详细的记录。 二.产生 ANRANR 产生的原因无非就三种，网上也有很多介绍，这里就简单提及：  Input dispatching timed out ： Activity 输入分发（即触摸响应超时） 5s Broadc">
+<meta name="keywords" content="Android 基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android----分析ANR">
+<meta property="og:url" content="https://yishengma.github.io/2019/03/14/Android-分析ANR/index.html">
+<meta property="og:site_name" content="海盗的帽子的博客">
+<meta property="og:description" content="一.前言ANR 是 Android 开发中会遇到的一个经典问题，但是如果不是自己遇到 ANR 并实现解决是很难对 ANR 有深入的体会的，所以本文就产生 ANR 到如何定位做一个详细的记录。 二.产生 ANRANR 产生的原因无非就三种，网上也有很多介绍，这里就简单提及：  Input dispatching timed out ： Activity 输入分发（即触摸响应超时） 5s Broadc">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://yishengma.github.io/2019/03/14/Android-分析ANR/1240">
+<meta property="og:updated_time" content="2019-03-14T15:16:05.588Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android----分析ANR">
+<meta name="twitter:description" content="一.前言ANR 是 Android 开发中会遇到的一个经典问题，但是如果不是自己遇到 ANR 并实现解决是很难对 ANR 有深入的体会的，所以本文就产生 ANR 到如何定位做一个详细的记录。 二.产生 ANRANR 产生的原因无非就三种，网上也有很多介绍，这里就简单提及：  Input dispatching timed out ： Activity 输入分发（即触摸响应超时） 5s Broadc">
+<meta name="twitter:image" content="https://yishengma.github.io/2019/03/14/Android-分析ANR/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yishengma.github.io/2019/03/14/Android-分析ANR/"/>
+
+
+
+
+
+  <title>Android----分析ANR | 海盗的帽子的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">海盗的帽子的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2019/03/14/Android-分析ANR/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="海盗的帽子">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/d.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="海盗的帽子的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android----分析ANR</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-14T23:14:31+08:00">
+                2019-03-14
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-03-14T23:16:05+08:00">
+                2019-03-14
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/03/14/Android-分析ANR/" class="leancloud_visitors" data-flag-title="Android----分析ANR">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h4><p>ANR 是 Android 开发中会遇到的一个经典问题，但是如果不是自己遇到 ANR 并实现解决是很难对 ANR 有深入的体会的，所以本文就产生 ANR 到如何定位做一个详细的记录。</p>
+<h4 id="二-产生-ANR"><a href="#二-产生-ANR" class="headerlink" title="二.产生 ANR"></a>二.产生 ANR</h4><p>ANR 产生的原因无非就三种，网上也有很多介绍，这里就简单提及：</p>
+<ul>
+<li>Input dispatching timed out ： Activity 输入分发（即触摸响应超时） 5s</li>
+<li>Broadcast Timeout：广播 onReceiver 方法执行超时 10 s</li>
+<li>Service Timeout: 服务的 主线程方法执行超时 20s</li>
+</ul>
+<p>简单的总结就是在主线程做超时的任务，下面就模拟一个在主线程休眠引发 ANR 的场景<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends AppCompatActivity &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        findViewById(R.id.btn_anr).setOnClickListener(new View.OnClickListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onClick(View v) &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    Thread.sleep(20_000);</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当重复点击 Button 的时候就会产生 ANR . 分析 ANR 的途径主要是两个</p>
+<ul>
+<li>log 日志</li>
+<li>traces.txt 文件</li>
+</ul>
+<h5 id="1-log-日志-分析"><a href="#1-log-日志-分析" class="headerlink" title="1.log 日志 分析"></a>1.log 日志 分析</h5><blockquote>
+<p>查看 ANR log 日志的时候，log 过滤规则不能设置为仅限本应用，可以直接设置为 NO Filters</p>
+</blockquote>
+<p>ANR 的时候会产生如下的红色日志<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">// log 需要设置过滤规则为 No Filters</span><br><span class="line">03-14 19:52:05.513 1448-1527/? E/ActivityManager:</span><br><span class="line">//ANR 的主线程的组件</span><br><span class="line">ANR in piratehat.appstore (piratehat.appstore/piratehat.httpClient.MainActivity)</span><br><span class="line">//进程的 ID </span><br><span class="line">PID: 30106</span><br><span class="line">//ANR 的种类和原因，这里是 Input dispatching timed out</span><br><span class="line"> Reason: Input dispatching timed out (piratehat.appstore/piratehat.httpClient.HttpTestActivity, Waiting to send non-key event because the touched window has not finished processing certain input events that were delivered to it over 500.0ms ago.  Wait queue length: 2.  Wait queue head age: 11632.7ms.)</span><br><span class="line"> Load: 2.95 / 2.29 / 2.54</span><br><span class="line"> CPU usage from 51546ms to 0ms ago:</span><br><span class="line"> ...// 省略内核中的一些信息</span><br></pre></td></tr></table></figure></p>
+<p>从 log  日志中就可以看出关于 ANR 的几个信息：</p>
+<ul>
+<li>发生 ANR 的主线程的组件</li>
+<li>进程的 ID </li>
+<li>ANR 的种类和原因</li>
+</ul>
+<p>有这么几个信息还不足以定位到 ANR 的地方和具体的原因，因此还需要另一种途径，分析 traces.txt 文件</p>
+<h5 id="2-traces-txt-文件-分析"><a href="#2-traces-txt-文件-分析" class="headerlink" title="2.traces.txt 文件 分析"></a>2.traces.txt 文件 分析</h5><p>发生 ANR 除了有上面的 log 之外，还有下面针对 本应用的 log(可以设置 Show only selected application 查看)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//03-14 19:52:01.934 30106-30111/piratehat.appstore I/art: Wrote stack traces to &apos;/data/anr/traces.txt&apos;</span><br></pre></td></tr></table></figure></p>
+<p>每一次产生 ANR 的时候，Android 虚拟机就会 dump 出当前进程所有线程信息并存储到 traces.txt 这个文件。</p>
+<h6 id="那么怎么获取到这个文件呢？"><a href="#那么怎么获取到这个文件呢？" class="headerlink" title="那么怎么获取到这个文件呢？"></a>那么怎么获取到这个文件呢？</h6><p>网上有很多方式 dump 当前进程的 traces.txt，但是都行不通，最后自己 dump 出所有再去找到自己应用的。<br><img src="/2019/03/14/Android-分析ANR/1240" alt="image.png"><br>只要在 Terminal 命令输入窗口输入 adb pull data/anr 即可导出所有的 anr traces.txt 文件夹到 对应的目录下（这里是 AppStore 目录）<br>然后找到属于自己应用的 traces.txt 文件</p>
+<p>这个文件中可能会包含有其他进程的一些信息. 首先知道几个标识</p>
+<ul>
+<li>PID :进程 ID</li>
+<li>TID :线程 ID , 1 为 主线程</li>
+<li>UID :用户 ID , 0 为 root 权限<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">----- pid 30106 at 2019-03-14 19:52:01 -----</span><br><span class="line">Cmd line: piratehat.appstore</span><br><span class="line">Build fingerprint: &apos;Xiaomi/land/land:6.0.1/MMB29M/V9.5.4.0.MALCNFA:user/release-keys&apos;</span><br><span class="line">ABI: &apos;arm64&apos;</span><br><span class="line">Build type: optimized</span><br><span class="line">Zygote loaded classes=4192 post zygote classes=427</span><br><span class="line">Intern table: 55033 strong; 16 weak</span><br><span class="line">JNI: CheckJNI is on; globals=419 (plus 218 weak)</span><br><span class="line">Libraries: /data/app/piratehat.appstore-2/lib/arm64/libsupportjni.so /system/lib64/libandroid.so /system/lib64/libcompiler_rt.so /system/lib64/libjavacrypto.so /system/lib64/libjnigraphics.so /system/lib64/libmedia_jni.so /system/lib64/libmiuiclassproxy.so /system/lib64/libmiuinative.so /system/lib64/libqti_performance.so /system/lib64/libwebviewchromium_loader.so libjavacore.so (11)</span><br><span class="line"></span><br><span class="line">suspend all histogram:	Sum: 147us 99% C.I. 1us-8us Avg: 3.195us Max: 8us</span><br><span class="line">DALVIK THREADS (21):</span><br><span class="line">&quot;Signal Catcher&quot; daemon prio=5 tid=2 Runnable</span><br><span class="line">  | group=&quot;system&quot; sCount=0 dsCount=0 obj=0x12cae0a0 self=0x55a1e9ded0</span><br><span class="line">  | sysTid=30111 nice=0 cgrp=default sched=0/0 handle=0x7fa6e82450</span><br><span class="line">  | state=R schedstat=( 22837912 5312140 66 ) utm=2 stm=0 core=4 HZ=100</span><br><span class="line">  | stack=0x7fa6d86000-0x7fa6d88000 stackSize=1013KB</span><br><span class="line">  | held mutexes= &quot;mutator lock&quot;(shared held)</span><br><span class="line">  ....//这里省略一些 信息，下面也是一样</span><br><span class="line">  (no managed stack frames)</span><br><span class="line"></span><br><span class="line">&quot;main&quot; prio=5 tid=1 Sleeping</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x7542afb8 self=0x55a1dbb930</span><br><span class="line">  | sysTid=30106 nice=0 cgrp=default sched=1073741825/1 handle=0x7fab053fc8</span><br><span class="line">  | state=S schedstat=( 920246246 7424173 385 ) utm=73 stm=19 core=5 HZ=100</span><br><span class="line">  | stack=0x7fc946a000-0x7fc946c000 stackSize=8MB</span><br><span class="line">  | held mutexes=</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">&quot;JDWP&quot; daemon prio=5 tid=3 WaitingInMainDebuggerLoop</span><br><span class="line">  | group=&quot;system&quot; sCount=1 dsCount=0 obj=0x12cb90a0 self=0x55a2088380</span><br><span class="line">  | sysTid=30112 nice=0 cgrp=default sched=0/0 handle=0x7fa6d7c450</span><br><span class="line">  | state=S schedstat=( 2740050 224427 9 ) utm=0 stm=0 core=3 HZ=100</span><br><span class="line">  | stack=0x7fa6c80000-0x7fa6c82000 stackSize=1013KB</span><br><span class="line">  | held mutexes=</span><br><span class="line"> </span><br><span class="line">  </span><br><span class="line">  (no managed stack frames)</span><br><span class="line"></span><br><span class="line">&quot;ReferenceQueueDaemon&quot; daemon prio=5 tid=4 Waiting</span><br><span class="line">  | group=&quot;system&quot; sCount=1 dsCount=0 obj=0x12ca94c0 self=0x55a207b6b0</span><br><span class="line">  | sysTid=30113 nice=0 cgrp=default sched=0/0 handle=0x7fa6c74450</span><br><span class="line">  | state=S schedstat=( 730157 66354 11 ) utm=0 stm=0 core=1 HZ=100</span><br><span class="line">  | stack=0x7fa6b72000-0x7fa6b74000 stackSize=1037KB</span><br><span class="line">  | held mutexes=</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">&quot;FinalizerDaemon&quot; daemon prio=5 tid=5 Waiting</span><br><span class="line">  | group=&quot;system&quot; sCount=1 dsCount=0 obj=0x12ca9520 self=0x55a2236170</span><br><span class="line">  | sysTid=30114 nice=0 cgrp=default sched=0/0 handle=0x7fa6b68450</span><br><span class="line">  | state=S schedstat=( 1202655 63333 14 ) utm=0 stm=0 core=2 HZ=100</span><br><span class="line">  | stack=0x7fa6a66000-0x7fa6a68000 stackSize=1037KB</span><br><span class="line">  | held mutexes=</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">&quot;FinalizerWatchdogDaemon&quot; daemon prio=5 tid=6 Waiting</span><br><span class="line">  | group=&quot;system&quot; sCount=1 dsCount=0 obj=0x12ca9580 self=0x55a22369c0</span><br><span class="line">  | sysTid=30115 nice=0 cgrp=default sched=0/0 handle=0x7fa6a5c450</span><br><span class="line">  | state=S schedstat=( 964737 0 6 ) utm=0 stm=0 core=4 HZ=100</span><br><span class="line">  | stack=0x7fa695a000-0x7fa695c000 stackSize=1037KB</span><br><span class="line">  | held mutexes=</span><br><span class="line">  </span><br><span class="line">&quot;HeapTaskDaemon&quot; daemon prio=5 tid=7 Blocked</span><br><span class="line">  | group=&quot;system&quot; sCount=1 dsCount=0 obj=0x12ca95e0 self=0x55a2237210</span><br><span class="line">  | sysTid=30116 nice=0 cgrp=default sched=0/0 handle=0x7fa6950450</span><br><span class="line">  | state=S schedstat=( 943231 0 7 ) utm=0 stm=0 core=6 HZ=100</span><br><span class="line">  | stack=0x7fa684e000-0x7fa6850000 stackSize=1037KB</span><br><span class="line">  | held mutexes=</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">&quot;Binder:30106_1&quot; prio=5 tid=8 Native</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x12cbf0a0 self=0x55a2238a10</span><br><span class="line">  | sysTid=30117 nice=0 cgrp=default sched=0/0 handle=0x7fa6748450</span><br><span class="line">  | state=S schedstat=( 7228229 6658334 40 ) utm=0 stm=0 core=7 HZ=100</span><br><span class="line">  | stack=0x7fa664c000-0x7fa664e000 stackSize=1013KB</span><br><span class="line">  | held mutexes=</span><br><span class="line"> </span><br><span class="line">  (no managed stack frames)</span><br><span class="line"></span><br><span class="line">&quot;Binder:30106_2&quot; prio=5 tid=9 Native</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x12cc30a0 self=0x55a2239260</span><br><span class="line">  | sysTid=30118 nice=0 cgrp=default sched=0/0 handle=0x7fa6642450</span><br><span class="line">  | state=S schedstat=( 6283645 7792968 39 ) utm=0 stm=0 core=7 HZ=100</span><br><span class="line">  | stack=0x7fa6546000-0x7fa6548000 stackSize=1013KB</span><br><span class="line">  | held mutexes=</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">&quot;FileObserver&quot; prio=5 tid=10 Native</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x12ce3340 self=0x55a1f00ba0</span><br><span class="line">  | sysTid=30119 nice=0 cgrp=default sched=0/0 handle=0x7fa21fd450</span><br><span class="line">  | state=S schedstat=( 494896 0 2 ) utm=0 stm=0 core=3 HZ=100</span><br><span class="line">  | stack=0x7fa20fb000-0x7fa20fd000 stackSize=1037KB</span><br><span class="line">  | held mutexes=</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">&quot;Binder:30106_3&quot; prio=5 tid=11 Native</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x12d450a0 self=0x55a2249010</span><br><span class="line">  | sysTid=30124 nice=0 cgrp=default sched=0/0 handle=0x7fa20f8450</span><br><span class="line">  | state=S schedstat=( 4480311 4345883 32 ) utm=0 stm=0 core=6 HZ=100</span><br><span class="line">  | stack=0x7fa1ffc000-0x7fa1ffe000 stackSize=1013KB</span><br><span class="line">  | held mutexes=</span><br><span class="line">  </span><br><span class="line">  (no managed stack frames)</span><br><span class="line"></span><br><span class="line">&quot;Binder:30106_4&quot; prio=5 tid=12 Native</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x12d4c0a0 self=0x55a224a6f0</span><br><span class="line">  | sysTid=30127 nice=0 cgrp=default sched=0/0 handle=0x7fa1ff9450</span><br><span class="line">  | state=S schedstat=( 4391355 18013748 31 ) utm=0 stm=0 core=6 HZ=100</span><br><span class="line">  | stack=0x7fa1efd000-0x7fa1eff000 stackSize=1013KB</span><br><span class="line">  | held mutexes=</span><br><span class="line"> )</span><br><span class="line">  native: #10 pc 000000000001c644  /system/lib64/libc.so (__start_thread+16)</span><br><span class="line">  (no managed stack frames)</span><br><span class="line"></span><br><span class="line">&quot;Binder:30106_5&quot; prio=5 tid=13 Native</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x12d500a0 self=0x55a224ba60</span><br><span class="line">  | sysTid=30130 nice=0 cgrp=default sched=0/0 handle=0x7f9423e450</span><br><span class="line">  | state=S schedstat=( 3941615 3599219 32 ) utm=0 stm=0 core=7 HZ=100</span><br><span class="line">  | stack=0x7f94142000-0x7f94144000 stackSize=1013KB</span><br><span class="line">  | held mutexes=</span><br><span class="line"></span><br><span class="line">  (no managed stack frames)</span><br><span class="line"></span><br><span class="line">&quot;Binder:30106_6&quot; prio=5 tid=14 Native</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x12cae100 self=0x55a1f013f0</span><br><span class="line">  | sysTid=30151 nice=0 cgrp=default sched=0/0 handle=0x7f93cc3450</span><br><span class="line">  | state=S schedstat=( 3181774 4945416 16 ) utm=0 stm=0 core=5 HZ=100</span><br><span class="line">  | stack=0x7f93bc7000-0x7f93bc9000 stackSize=1013KB</span><br><span class="line">  | held mutexes=</span><br><span class="line"> </span><br><span class="line">  (no managed stack frames)</span><br><span class="line"></span><br><span class="line">&quot;Thread-47826&quot; prio=5 tid=16 Sleeping</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x12ca91c0 self=0x55a2259ac0</span><br><span class="line">  | sysTid=30156 nice=0 cgrp=default sched=0/0 handle=0x7f938b1450</span><br><span class="line">  | state=S schedstat=( 2956969195 115115680 18859 ) utm=207 stm=88 core=5 HZ=100</span><br><span class="line">  | stack=0x7f937af000-0x7f937b1000 stackSize=1037KB</span><br><span class="line">  | held mutexes=</span><br><span class="line"> </span><br><span class="line">&quot;Studio:VmStats&quot; prio=5 tid=17 TimedWaiting</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x12ca9220 self=0x55a2263f80</span><br><span class="line">  | sysTid=30157 nice=0 cgrp=default sched=0/0 handle=0x7f937a5450</span><br><span class="line">  | state=S schedstat=( 2314347878 48209793 7588 ) utm=203 stm=28 core=4 HZ=100</span><br><span class="line">  | stack=0x7f936a3000-0x7f936a5000 stackSize=1037KB</span><br><span class="line">  | held mutexes=</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">&quot;RenderThread&quot; prio=5 tid=19 Native</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x12f6a0a0 self=0x55a1eb9dd0</span><br><span class="line">  | sysTid=30161 nice=-4 cgrp=default sched=1073741825/1 handle=0x7f9354f450</span><br><span class="line">  | state=S schedstat=( 301889746 26133758 324 ) utm=16 stm=14 core=6 HZ=100</span><br><span class="line">  | stack=0x7f93453000-0x7f93455000 stackSize=1013KB</span><br><span class="line">  </span><br><span class="line">  (no managed stack frames)</span><br><span class="line"></span><br><span class="line">&quot;hwuiTask1&quot; prio=5 tid=20 Native</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x12f830a0 self=0x55a24701a0</span><br><span class="line">  | sysTid=30162 nice=-2 cgrp=default sched=0/0 handle=0x7f933a9450</span><br><span class="line">  | state=S schedstat=( 10214478 14752295 67 ) utm=1 stm=0 core=7 HZ=100</span><br><span class="line">  | stack=0x7f932ad000-0x7f932af000 stackSize=1013KB</span><br><span class="line">  | held mutexes=</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&quot;hwuiTask2&quot; prio=5 tid=21 Native</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x12f870a0 self=0x55a246d420</span><br><span class="line">  | sysTid=30163 nice=-2 cgrp=default sched=0/0 handle=0x7f932a5450</span><br><span class="line">  | state=S schedstat=( 834375 116302 6 ) utm=0 stm=0 core=2 HZ=100</span><br><span class="line">  | stack=0x7f931a9000-0x7f931ab000 stackSize=1013KB</span><br><span class="line">  | held mutexes=</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line">  (no managed stack frames)</span><br><span class="line"></span><br><span class="line">&quot;Studio:Agent&quot; prio=5 (not attached)</span><br><span class="line">  | sysTid=30148 nice=0 cgrp=default</span><br><span class="line">  | state=S schedstat=( 7029339016 4208610113 69915 ) utm=214 stm=488 core=7 HZ=100</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">&quot;Studio:Heartbea&quot; prio=5 (not attached)</span><br><span class="line">  | sysTid=30153 nice=0 cgrp=default</span><br><span class="line">  | state=S schedstat=( 6660169473 4244203001 68400 ) utm=238 stm=428 core=6 HZ=100</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">----- end 30106 -----</span><br><span class="line"></span><br><span class="line">----- pid 2256 at 2019-03-14 19:52:02 -----</span><br><span class="line">Cmd line: com.fingerprints.serviceext</span><br><span class="line"></span><br><span class="line">----- end 2256 -----</span><br><span class="line"></span><br><span class="line">----- pid 2378 at 2019-03-14 19:52:01 -----</span><br><span class="line">Cmd line: com.android.phone</span><br><span class="line"></span><br><span class="line">----- end 2378 -----</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">----- pid 443 at 2019-03-14 19:52:02 -----</span><br><span class="line">Cmd line: /system/bin/surfaceflinger</span><br><span class="line">ABI: &apos;arm64&apos;</span><br><span class="line"></span><br><span class="line">&quot;surfaceflinger&quot; sysTid=443</span><br><span class="line">  #00 pc 0000000000069c54  /system/lib64/libc.so (__epoll_pwait+8)</span><br><span class="line">  #01 pc 000000000001cca4  /system/lib64/libc.so (epoll_pwait+32)</span><br><span class="line">  #02 pc 000000000001be88  /system/lib64/libutils.so (_ZN7android6Looper9pollInnerEi+144)</span><br><span class="line">  #03 pc 000000000001c268  /system/lib64/libutils.so (_ZN7android6Looper8pollOnceEiPiS1_PPv+80)</span><br><span class="line">  #04 pc 000000000002d6d4  /system/lib64/libsurfaceflinger.so</span><br><span class="line">  #05 pc 0000000000030c48  /system/lib64/libsurfaceflinger.so (_ZN7android14SurfaceFlinger3runEv+20)</span><br><span class="line">  #06 pc 0000000000001190  /system/bin/surfaceflinger</span><br><span class="line">  #07 pc 000000000001976c  /system/lib64/libc.so (__libc_init+100)</span><br><span class="line">  #08 pc 0000000000000fcc  /system/bin/surfaceflinger</span><br><span class="line"></span><br><span class="line">&quot;Binder:443_1&quot; sysTid=507</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>从上面的信息可以看到一个 traces.txt 包含了多个进程的信息。<br>每个进程的信息又包含了其有的线程的信息，比如上面最后一个就是 surfaceflinger 进程的信息。</p>
+<p>那么如何找到自己的应用的进程呢？<br>因为每个进程都有自己的进程 ID ,(即 PID )，而在第一种 log 日志分析中已经知道我们的进程 ID 为 30106 ，因此全局搜索 30106 可以找到属于我们进程的 信息。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line">----- pid 30106 at 2019-03-14 19:52:01 -----</span><br><span class="line">Cmd line: piratehat.appstore</span><br><span class="line">Build fingerprint: &apos;Xiaomi/land/land:6.0.1/MMB29M/V9.5.4.0.MALCNFA:user/release-keys&apos;</span><br><span class="line">ABI: &apos;arm64&apos;</span><br><span class="line">Build type: optimized</span><br><span class="line">Zygote loaded classes=4192 post zygote classes=427</span><br><span class="line">Intern table: 55033 strong; 16 weak</span><br><span class="line">JNI: CheckJNI is on; globals=419 (plus 218 weak)</span><br><span class="line">Libraries: /data/app/piratehat.appstore-2/lib/arm64/libsupportjni.so /system/lib64/libandroid.so /system/lib64/libcompiler_rt.so /system/lib64/libjavacrypto.so /system/lib64/libjnigraphics.so /system/lib64/libmedia_jni.so /system/lib64/libmiuiclassproxy.so /system/lib64/libmiuinative.so /system/lib64/libqti_performance.so /system/lib64/libwebviewchromium_loader.so libjavacore.so (11)</span><br><span class="line"></span><br><span class="line">suspend all histogram:	Sum: 147us 99% C.I. 1us-8us Avg: 3.195us Max: 8us</span><br><span class="line">DALVIK THREADS (21):</span><br><span class="line">&quot;Signal Catcher&quot; daemon prio=5 tid=2 Runnable</span><br><span class="line">  | group=&quot;system&quot; sCount=0 dsCount=0 obj=0x12cae0a0 self=0x55a1e9ded0</span><br><span class="line">  | sysTid=30111 nice=0 cgrp=default sched=0/0 handle=0x7fa6e82450</span><br><span class="line">  | state=R schedstat=( 22837912 5312140 66 ) utm=2 stm=0 core=4 HZ=100</span><br><span class="line">  | stack=0x7fa6d86000-0x7fa6d88000 stackSize=1013KB</span><br><span class="line">  | held mutexes= &quot;mutator lock&quot;(shared held)</span><br><span class="line">  ....//这里省略一些 信息，下面也是一样</span><br><span class="line">  (no managed stack frames)</span><br><span class="line"></span><br><span class="line">// “main” ：线程名字</span><br><span class="line">// prio ： 线程优先级</span><br><span class="line">// tid ：线程</span><br><span class="line">&quot;main&quot; prio=5 tid=1 Sleeping</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x7542afb8 self=0x55a1dbb930</span><br><span class="line">  | sysTid=30106 nice=0 cgrp=default sched=1073741825/1 handle=0x7fab053fc8</span><br><span class="line">  | state=S schedstat=( 920246246 7424173 385 ) utm=73 stm=19 core=5 HZ=100</span><br><span class="line">  | stack=0x7fc946a000-0x7fc946c000 stackSize=8MB</span><br><span class="line">  | held mutexes=</span><br><span class="line"> </span><br><span class="line">//这是一个守护线程</span><br><span class="line">&quot;JDWP&quot; daemon prio=5 tid=3 WaitingInMainDebuggerLoop</span><br><span class="line">  ...</span><br><span class="line">  (no managed stack frames)</span><br><span class="line">//这是一个守护线程</span><br><span class="line">&quot;ReferenceQueueDaemon&quot; daemon prio=5 tid=4 Waiting</span><br><span class="line">  ... </span><br><span class="line"> </span><br><span class="line">//这是一个守护线程</span><br><span class="line">&quot;FinalizerDaemon&quot; daemon prio=5 tid=5 Waiting</span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">//这是一个守护线程</span><br><span class="line">&quot;FinalizerWatchdogDaemon&quot; daemon prio=5 tid=6 Waiting</span><br><span class="line"> ...</span><br><span class="line">  //这是一个守护线程</span><br><span class="line">&quot;HeapTaskDaemon&quot; daemon prio=5 tid=7 Blocked</span><br><span class="line"> ...</span><br><span class="line"> </span><br><span class="line">//这是一个 Binder 线程</span><br><span class="line">&quot;Binder:30106_1&quot; prio=5 tid=8 Native</span><br><span class="line">  ...</span><br><span class="line"> </span><br><span class="line">  (no managed stack frames)</span><br><span class="line">//这是一个 Binder 线程</span><br><span class="line">&quot;Binder:30106_2&quot; prio=5 tid=9 Native</span><br><span class="line">  ...</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">&quot;FileObserver&quot; prio=5 tid=10 Native</span><br><span class="line">  ...</span><br><span class="line">//这是一个 Binder 线程</span><br><span class="line">&quot;Binder:30106_3&quot; prio=5 tid=11 Native</span><br><span class="line">  ...</span><br><span class="line">  (no managed stack frames)</span><br><span class="line">//这是一个 Binder 线程</span><br><span class="line">&quot;Binder:30106_4&quot; prio=5 tid=12 Native</span><br><span class="line">  ...</span><br><span class="line">//这是一个 Binder 线程</span><br><span class="line">&quot;Binder:30106_5&quot; prio=5 tid=13 Native</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  (no managed stack frames)</span><br><span class="line">//这是一个 Binder 线程</span><br><span class="line">&quot;Binder:30106_6&quot; prio=5 tid=14 Native</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">&quot;Thread-47826&quot; prio=5 tid=16 Sleeping</span><br><span class="line">   ...</span><br><span class="line"> </span><br><span class="line">&quot;Studio:VmStats&quot; prio=5 tid=17 TimedWaiting</span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">&quot;RenderThread&quot; prio=5 tid=19 Native</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">&quot;hwuiTask1&quot; prio=5 tid=20 Native</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&quot;hwuiTask2&quot; prio=5 tid=21 Native</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line">  (no managed stack frames)</span><br><span class="line"></span><br><span class="line">&quot;Studio:Agent&quot; prio=5 (not attached)</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">&quot;Studio:Heartbea&quot; prio=5 (not attached)</span><br><span class="line">  ...</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">----- end 30106 -----</span><br></pre></td></tr></table></figure></p>
+<p>因为发生 ANR 的情况是在主线程中，所以 tid = 1 ,看主线程中的信息的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&quot;main&quot; prio=5 tid=1 Sleeping</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x7542afb8 self=0x55a1dbb930</span><br><span class="line">  | sysTid=30106 nice=0 cgrp=default sched=1073741825/1 handle=0x7fab053fc8</span><br><span class="line">  | state=S schedstat=( 920246246 7424173 385 ) utm=73 stm=19 core=5 HZ=100</span><br><span class="line">  | stack=0x7fc946a000-0x7fc946c000 stackSize=8MB</span><br><span class="line">  | held mutexes=</span><br><span class="line">    at java.lang.Thread.sleep!(Native method)</span><br><span class="line">  - sleeping on &lt;0x0735c84c&gt; (a java.lang.Object)</span><br><span class="line">  at java.lang.Thread.sleep(Thread.java:1031)</span><br><span class="line">  - locked &lt;0x0735c84c&gt; (a java.lang.Object)</span><br><span class="line">  at java.lang.Thread.sleep(Thread.java:985)</span><br><span class="line">  at piratehat.httpClient.HttpTestActivity$1.onClick(HttpTestActivity.java:27)</span><br><span class="line">  at android.view.View.performClick(View.java:5215)</span><br><span class="line">  at android.view.View$PerformClick.run(View.java:21193)</span><br><span class="line">  at android.os.Handler.handleCallback(Handler.java:742)</span><br><span class="line">  at android.os.Handler.dispatchMessage(Handler.java:95)</span><br><span class="line">  at android.os.Looper.loop(Looper.java:157)</span><br><span class="line">  at android.app.ActivityThread.main(ActivityThread.java:5571)</span><br><span class="line">  at java.lang.reflect.Method.invoke!(Native method)</span><br><span class="line">  at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:745)</span><br><span class="line">  at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:635)</span><br></pre></td></tr></table></figure></p>
+<p>就可以看到主线程中 ANR 的原因是因为 调用了 Sleep 方法，具体在 onClick 方法中，至此就找到了 ANR  的位置。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android-基础/" rel="tag"># Android 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/21/HTTP响应gzip-chunked分段压缩流的解压缩（java）/" rel="next" title="HTTP响应gzip+chunked分段压缩流的解压缩（java）">
+                <i class="fa fa-chevron-left"></i> HTTP响应gzip+chunked分段压缩流的解压缩（java）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+ <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/d.jpg"
+                alt="海盗的帽子" />
+            
+              <p class="site-author-name" itemprop="name">海盗的帽子</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yishengma" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/m0_38089373" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-copyright"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一-前言"><span class="nav-text">一.前言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二-产生-ANR"><span class="nav-text">二.产生 ANR</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-log-日志-分析"><span class="nav-text">1.log 日志 分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-traces-txt-文件-分析"><span class="nav-text">2.traces.txt 文件 分析</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#那么怎么获取到这个文件呢？"><span class="nav-text">那么怎么获取到这个文件呢？</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-[object Object]"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">海盗的帽子</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://rawgit.com/yishengma/147d4f60feb7cdc79c355ad2da83d513/raw/d624cffa8a67b4da07048d59ba0031e2860b1b2b/md5.min.js"></script>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '15e7b5ecca662534768c',
+          clientSecret: '26dc23d2d7a013bbcce94772f42f2e434247c6ba',
+          repo: 'yishengma.github.io',
+          owner: 'yishengma',
+          admin: ['yishengma'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2LveBulvcfzvQ6MBGz9b3URY-gzGzoHsz", "7mcKtxSVSDUSpSxFfdxBmyaP");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
