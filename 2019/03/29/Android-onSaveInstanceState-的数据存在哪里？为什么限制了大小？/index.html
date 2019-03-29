@@ -64,7 +64,7 @@
 
 
 
-  <meta name="keywords" content="框架," />
+  <meta name="keywords" content="Android Framework," />
 
 
 
@@ -75,21 +75,20 @@
 
 
 
-<meta name="description" content="一.前言OkHttp 的处理网络请求的时候会有两个队列。一个是正在执行的队列，一个是等待执行的队列。12private final Deque&amp;lt;AsyncCall&amp;gt; readyAsyncCalls = new ArrayDeque&amp;lt;&amp;gt;();private final Deque&amp;lt;AsyncCall&amp;gt; runningAsyncCalls = new ArrayDe">
-<meta name="keywords" content="框架">
+<meta name="description" content="一.问题来源对于 Activity 的 onSaveInstanceState 方法大家都不会陌生,当 Activity 在不正常销毁的情况下,就会调用 onSaveInstanceState 方法，并将 Activity 中需要保存的数据（比如 View 状态 或者我们自己的数据）保存到这个方法的参数 Bundle 中。 但是在实际使用的时候你可能会发现当保存的数据过大的时候就会看到如下的 lo">
+<meta name="keywords" content="Android Framework">
 <meta property="og:type" content="article">
-<meta property="og:title" content="OkHttp的任务队列----ArrayDeque">
-<meta property="og:url" content="https://yishengma.github.io/2018/11/10/OkHttp的任务队列-ArrayDeque/index.html">
+<meta property="og:title" content="Android----onSaveInstanceState 的数据存在哪里？为什么限制了大小？">
+<meta property="og:url" content="https://yishengma.github.io/2019/03/29/Android-onSaveInstanceState-的数据存在哪里？为什么限制了大小？/index.html">
 <meta property="og:site_name" content="海盗的帽子的博客">
-<meta property="og:description" content="一.前言OkHttp 的处理网络请求的时候会有两个队列。一个是正在执行的队列，一个是等待执行的队列。12private final Deque&amp;lt;AsyncCall&amp;gt; readyAsyncCalls = new ArrayDeque&amp;lt;&amp;gt;();private final Deque&amp;lt;AsyncCall&amp;gt; runningAsyncCalls = new ArrayDe">
+<meta property="og:description" content="一.问题来源对于 Activity 的 onSaveInstanceState 方法大家都不会陌生,当 Activity 在不正常销毁的情况下,就会调用 onSaveInstanceState 方法，并将 Activity 中需要保存的数据（比如 View 状态 或者我们自己的数据）保存到这个方法的参数 Bundle 中。 但是在实际使用的时候你可能会发现当保存的数据过大的时候就会看到如下的 lo">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://yishengma.github.io/2018/11/10/OkHttp的任务队列-ArrayDeque/1.png">
-<meta property="og:image" content="https://yishengma.github.io/2018/11/10/OkHttp的任务队列-ArrayDeque/2.png">
-<meta property="og:updated_time" content="2018-11-10T13:37:06.345Z">
+<meta property="og:image" content="https://yishengma.github.io/2019/03/29/Android-onSaveInstanceState-的数据存在哪里？为什么限制了大小？/1240">
+<meta property="og:updated_time" content="2019-03-29T14:08:40.023Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="OkHttp的任务队列----ArrayDeque">
-<meta name="twitter:description" content="一.前言OkHttp 的处理网络请求的时候会有两个队列。一个是正在执行的队列，一个是等待执行的队列。12private final Deque&amp;lt;AsyncCall&amp;gt; readyAsyncCalls = new ArrayDeque&amp;lt;&amp;gt;();private final Deque&amp;lt;AsyncCall&amp;gt; runningAsyncCalls = new ArrayDe">
-<meta name="twitter:image" content="https://yishengma.github.io/2018/11/10/OkHttp的任务队列-ArrayDeque/1.png">
+<meta name="twitter:title" content="Android----onSaveInstanceState 的数据存在哪里？为什么限制了大小？">
+<meta name="twitter:description" content="一.问题来源对于 Activity 的 onSaveInstanceState 方法大家都不会陌生,当 Activity 在不正常销毁的情况下,就会调用 onSaveInstanceState 方法，并将 Activity 中需要保存的数据（比如 View 状态 或者我们自己的数据）保存到这个方法的参数 Bundle 中。 但是在实际使用的时候你可能会发现当保存的数据过大的时候就会看到如下的 lo">
+<meta name="twitter:image" content="https://yishengma.github.io/2019/03/29/Android-onSaveInstanceState-的数据存在哪里？为什么限制了大小？/1240">
 
 
 
@@ -119,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="https://yishengma.github.io/2018/11/10/OkHttp的任务队列-ArrayDeque/"/>
+  <link rel="canonical" href="https://yishengma.github.io/2019/03/29/Android-onSaveInstanceState-的数据存在哪里？为什么限制了大小？/"/>
 
 
 
 
 
-  <title>OkHttp的任务队列----ArrayDeque | 海盗的帽子的博客</title>
+  <title>Android----onSaveInstanceState 的数据存在哪里？为什么限制了大小？ | 海盗的帽子的博客</title>
   
 
 
@@ -276,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2018/11/10/OkHttp的任务队列-ArrayDeque/">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2019/03/29/Android-onSaveInstanceState-的数据存在哪里？为什么限制了大小？/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="海盗的帽子">
@@ -293,7 +292,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">OkHttp的任务队列----ArrayDeque</h1>
+          <h1 class="post-title" itemprop="name headline">Android----onSaveInstanceState 的数据存在哪里？为什么限制了大小？</h1>
         
 
         <div class="post-meta">
@@ -305,8 +304,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-10T21:34:18+08:00">
-                2018-11-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-29T22:07:23+08:00">
+                2019-03-29
               </time>
             
 
@@ -321,8 +320,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-11-10T21:37:06+08:00">
-                2018-11-10
+              <time title="更新于" itemprop="dateModified" datetime="2019-03-29T22:08:40+08:00">
+                2019-03-29
               </time>
             
           </span>
@@ -335,7 +334,7 @@
 
           
           
-             <span id="/2018/11/10/OkHttp的任务队列-ArrayDeque/" class="leancloud_visitors" data-flag-title="OkHttp的任务队列----ArrayDeque">
+             <span id="/2019/03/29/Android-onSaveInstanceState-的数据存在哪里？为什么限制了大小？/" class="leancloud_visitors" data-flag-title="Android----onSaveInstanceState 的数据存在哪里？为什么限制了大小？">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -366,50 +365,31 @@
       
 
       
-        <h2 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h2><p>OkHttp 的处理网络请求的时候会有两个队列。一个是正在执行的队列，一个是等待执行的队列。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">private final Deque&lt;AsyncCall&gt; readyAsyncCalls = new ArrayDeque&lt;&gt;();</span><br><span class="line">private final Deque&lt;AsyncCall&gt; runningAsyncCalls = new ArrayDeque&lt;&gt;();</span><br></pre></td></tr></table></figure></p>
-<p>可以看到他们的实现都是 ArrayDeque ,这是一个底层是循环数组的实现，所谓循环数组就是当不需要扩容的时候，数组在逻辑上是首位相连的一个圆，没有固定的头尾，当数组满的时候就进行扩容。</p>
-<p><img src="/2018/11/10/OkHttp的任务队列-ArrayDeque/1.png" alt="image.png"><br>下面主要就 JDK1.8 的源码分析 ArrayDeque 的原理，后面也会提及JDK 10  。</p>
-<h2 id="二-ArrayDeque"><a href="#二-ArrayDeque" class="headerlink" title="二.ArrayDeque"></a>二.ArrayDeque</h2><h4 id="1-源码中的介绍"><a href="#1-源码中的介绍" class="headerlink" title="1.源码中的介绍"></a>1.源码中的介绍</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Resizable-array implementation of the &#123;@link Deque&#125; interface.  Array</span><br><span class="line"> * deques have no capacity restrictions; they grow as necessary to support</span><br><span class="line"> * usage.  They are not thread-safe; in the absence of external</span><br><span class="line"> * synchronization, they do not support concurrent access by multiple threads.</span><br><span class="line"> * Null elements are prohibited.  This class is likely to be faster than</span><br><span class="line"> * &#123;@link Stack&#125; when used as a stack, and faster than &#123;@link LinkedList&#125;</span><br><span class="line"> * when used as a queue.</span><br><span class="line"> </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>上面对 ArrayDeque 的介绍可以分几点：</p>
-<ul>
-<li>ArrayDeque 没有内容的限制，当需要的时候可以进行扩容。</li>
-<li>是不是线程安全的，在多线程的情况下不支持并发安全。</li>
-<li>不允许元素为 null。</li>
-<li>在某些情况下，作为栈使用比 Stack 快，作为队列使用比 LinkedList 快。</li>
-</ul>
-<p>下面就看看具体的实现。</p>
-<h4 id="2-源码分析"><a href="#2-源码分析" class="headerlink" title="2.源码分析"></a>2.源码分析</h4><p>内部的实现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">transient Object[] elements; // non-private to simplify nested class access</span><br><span class="line"></span><br><span class="line">    //头元素下标</span><br><span class="line">    transient int head;</span><br><span class="line"></span><br><span class="line">    //尾部元素下一个位置的下标</span><br><span class="line">    transient int tail;</span><br><span class="line"></span><br><span class="line">    //最小的初始容量</span><br><span class="line">    private static final int MIN_INITIAL_CAPACITY = 8;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    //默认初始容量为  16 </span><br><span class="line">     public ArrayDeque() &#123;</span><br><span class="line">        elements = new Object[16];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   // 当指定的容量不是 2 的倍数的时候，转换为最接近的数</span><br><span class="line">   //比如 17 最近的是 16 </span><br><span class="line">    public ArrayTest(int numElements) &#123;</span><br><span class="line">        allocateElements(numElements);</span><br><span class="line">    &#125;</span><br><span class="line">    private void allocateElements(int numElements) &#123;</span><br><span class="line">        int initialCapacity = MIN_INITIAL_CAPACITY;</span><br><span class="line">        // Find the best power of two to hold elements.</span><br><span class="line">        // Tests &quot;&lt;=&quot; because arrays aren&apos;t kept full.</span><br><span class="line">        if (numElements &gt;= initialCapacity) &#123;</span><br><span class="line">            initialCapacity = numElements;</span><br><span class="line">            initialCapacity |= (initialCapacity &gt;&gt;&gt;  1);</span><br><span class="line">            initialCapacity |= (initialCapacity &gt;&gt;&gt;  2);</span><br><span class="line">            initialCapacity |= (initialCapacity &gt;&gt;&gt;  4);</span><br><span class="line">            initialCapacity |= (initialCapacity &gt;&gt;&gt;  8);</span><br><span class="line">            initialCapacity |= (initialCapacity &gt;&gt;&gt; 16);</span><br><span class="line">            initialCapacity++;</span><br><span class="line"></span><br><span class="line">            if (initialCapacity &lt; 0)    // Too many elements, must back off</span><br><span class="line">                initialCapacity &gt;&gt;&gt;= 1; // Good luck allocating 2^30 elements</span><br><span class="line">        &#125;</span><br><span class="line">        elements = new Object[initialCapacity];</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>上面的源码可以看到一下几点：</p>
-<ul>
-<li>ArrayDeque 内部是基于数组实现的。维护一个头部小标和一个尾部后一个元素下标。</li>
-<li>默认初始量为 16 ，自己指定时也会转换为 2 的倍数。</li>
-</ul>
-<h5 id="获取队列头部元素"><a href="#获取队列头部元素" class="headerlink" title="获取队列头部元素"></a>获取队列头部元素</h5><p>element()， getFirst()，peek()，peekFirst() 操作，其都是调用 getFirst() 实现的，访问队列头部元素但不删除<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * @throws NoSuchElementException &#123;@inheritDoc&#125;</span><br><span class="line">    */</span><br><span class="line">   public E getFirst() &#123;</span><br><span class="line">       @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">       E result = (E) elements[head];</span><br><span class="line">       if (result == null)</span><br><span class="line">           throw new NoSuchElementException();</span><br><span class="line">       return result;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="删除队列头部"><a href="#删除队列头部" class="headerlink" title="删除队列头部"></a>删除队列头部</h4><p>remove()，removeFirst()，poll()，pollFirst() 操作，其都是调用 pollFirst() 实现的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public E pollFirst() &#123;</span><br><span class="line">       final Object[] elements = this.elements;</span><br><span class="line">       final int h = head;</span><br><span class="line">       @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">       E result = (E) elements[h];</span><br><span class="line">       // Element is null if deque empty</span><br><span class="line">       if (result != null) &#123;</span><br><span class="line">           elements[h] = null; // Must null out slot</span><br><span class="line">           head = (h + 1) &amp; (elements.length - 1);</span><br><span class="line">       &#125;</span><br><span class="line">       return result;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
-<p>对上面的步骤做一下解释：</p>
-<ul>
-<li>首先取出头部的元素，将其置为空。</li>
-<li>然后 head 这个下标就循环后移。</li>
-</ul>
-<p>这里的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">head = (h + 1) &amp; (elements.length - 1);</span><br></pre></td></tr></table></figure></p>
-<p>其实就跟<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">head =  (h + 1) % (elements.length)</span><br></pre></td></tr></table></figure></p>
-<p>是一样的作用，目的就是当 head 到达数组末尾的时候，+1 就能回到数组的起始下标 即 0 ，从而实现循环。之所以能用 &amp; 操作是因为在初始或者扩容的时候都要求数组的最后长度为 2 的倍数。比如默认长度 16 时， h + 1 的二进制为 0001 0000 ，length - 1二进制就为 0000 1111 ，相与就为 0 ，其他情况就正常加 1 .</p>
-<h5 id="添加元素"><a href="#添加元素" class="headerlink" title="添加元素"></a>添加元素</h5><p>添加元素到队列尾部的操作可以发现 add(E e)，offer(E e)，offerLast(E e)，addLast(E e) 操作都是调用 addLast(E e) 实现的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"> public void addLast(E e) &#123;</span><br><span class="line">        if (e == null)</span><br><span class="line">            throw new NullPointerException();</span><br><span class="line">        elements[tail] = e;</span><br><span class="line">        //判断头部下标和尾部下标是否重叠</span><br><span class="line">        if ( (tail = (tail + 1) &amp; (elements.length - 1)) == head)</span><br><span class="line">            //进行扩容</span><br><span class="line">            doubleCapacity();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">private void doubleCapacity() &#123;</span><br><span class="line">        assert head == tail;</span><br><span class="line">        int p = head;</span><br><span class="line">        int n = elements.length;</span><br><span class="line">        int r = n - p; // number of elements to the right of p </span><br><span class="line">        int newCapacity = n &lt;&lt; 1;</span><br><span class="line">        if (newCapacity &lt; 0)</span><br><span class="line">            throw new IllegalStateException(&quot;Sorry, deque too big&quot;);</span><br><span class="line">        Object[] a = new Object[newCapacity];</span><br><span class="line">        System.arraycopy(elements, p, a, 0, r);</span><br><span class="line">        System.arraycopy(elements, 0, a, r, p);</span><br><span class="line">        elements = a;</span><br><span class="line">        head = 0;</span><br><span class="line">        tail = n;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>首先，但添加的元素为 null 的时候就会抛出异常，说明 ArrayDeque 不能添加 null .</li>
-<li>添加完一个元素后就会判断 头部和尾部下标时候重叠，如果重叠就说明数组已经满了需要进行扩容。</li>
-<li>将数组容量直接 X2 ，然后将原本的元素调用  System.arraycopy 进行复制。</li>
-<li>重新指定 head ，tail 。</li>
-</ul>
-<p>具体的扩容可见下图：</p>
-<p><img src="/2018/11/10/OkHttp的任务队列-ArrayDeque/2.png" alt="image.png"></p>
-<h5 id="JDK-10-中源码"><a href="#JDK-10-中源码" class="headerlink" title="JDK 10 中源码"></a>JDK 10 中源码</h5><p>在JDK 10 对 ArrayDeque 的实现有些不同，就是不再直接扩容 X2 倍，而是根据需要 X2 或者增加原来的 1/2。因此对下标的循环加1 也就直接进行判断是否达到数组的尾部，是就直接置 0.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">static final int inc(int i, int modulus) &#123;</span><br><span class="line">        if (++i &gt;= modulus) i = 0;</span><br><span class="line">        return i;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="三-ArrayDeque-与-LinkedList"><a href="#三-ArrayDeque-与-LinkedList" class="headerlink" title="三.ArrayDeque 与 LinkedList"></a>三.ArrayDeque 与 LinkedList</h2><h4 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h4><p>LinkedList 实现了 List 接口又实现了 Deque 接口（Deque 是 Queue 的子接口），而 LinkedList 的实现是基于双向链表结构的，其容量没有限制，是非并发安全的队列，所以不仅可以当成列表使用，还可以当做双向队列使用，同时也可以当成栈使用（因为还实现了 pop 和 push 方法）。此外 LinkedList 的元素可以为 null 值</p>
-<p>ArrayDeque 是一个用循环数组实现的双端队列 Deque，满足可以同时在数组两端插入或删除元素的需求ArrayDeque 是非线程安全的，当多个线程同时使用的时候需要手动同步，不允许放 null 元素，没有索引位置，不能根据索引位置获取数组中的元素。</p>
-<h4 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h4><ul>
-<li>如果只需要 Deque 接口且从两端进行操作则一般来说 ArrayDeque 效率更高一些。</li>
-<li>如果同时需要根据索引位置进行操作或经常需要在中间进行插入和删除操作则应该优先选 LinkedList 效率高些。</li>
-</ul>
+        <h4 id="一-问题来源"><a href="#一-问题来源" class="headerlink" title="一.问题来源"></a>一.问题来源</h4><p>对于 Activity 的 onSaveInstanceState 方法大家都不会陌生,当 Activity 在不正常销毁的情况下,就会调用 onSaveInstanceState 方法，并将 Activity 中需要保存的数据（比如 View 状态 或者我们自己的数据）保存到这个方法的参数 Bundle 中。</p>
+<p>但是在实际使用的时候你可能会发现当保存的数据过大的时候就会看到如下的 log 日志<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javabinder !!! FAILED BINDER TRANSACTION !!!</span><br></pre></td></tr></table></figure></p>
+<p>甚至可能发生异常(在高版本下会抛出异常,低版本直接打印日志)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">android.os.TransactionTooLargeException</span><br></pre></td></tr></table></figure></p>
+<p>上面的信息都是表示 Bundle 传输的数据过大,那么问题来了, onSaveInstanceState 中 Bundle 的数据是存放在哪里，为什么又限制？</p>
+<h4 id="二-解决问题的过程"><a href="#二-解决问题的过程" class="headerlink" title="二.解决问题的过程"></a>二.解决问题的过程</h4><h5 id="1-官网"><a href="#1-官网" class="headerlink" title="1.官网"></a>1.官网</h5><p>在官网 有关于 <a href="https://developer.android.com/guide/components/activities/parcelables-and-bundles#java" target="_blank" rel="noopener">Parcelables and Bundles</a> 的一段介绍，其中就有提到 Bundles 的数据大小问题。</p>
+<p><img src="/2019/03/29/Android-onSaveInstanceState-的数据存在哪里？为什么限制了大小？/1240" alt="image.png"></p>
+<p>翻译一下： Binder 传输缓冲区是一个限制的大小的区域，大小为 1MB,这块缓冲区用于所有进程间的通信，也就是 Binder 通信。这些传输包括 onSaveInstanceState , startActivity 和其他与系统的交互，当传输的数据超过这个大小的时候就会抛出异常。</p>
+<p>特别是 onSaveInstanceState 方法，因其需要在 Activity 返回的时候提供数据，官网建议是数据大小不大于 50K.</p>
+<p>关于 startActivity 和其他系统交互需要使用 Binder 进行跨进程通信我们知道，但是你可能就有疑问 onSaveInstanceState 不是在自己进程中做 Activity 某些状态的保存，为什么需要 Binder 呢？</p>
+<blockquote>
+<p>关于 Binder 机制中 Binder 缓冲区的限制，网上有很多文章，这里就不进行说明了。</p>
+</blockquote>
+<h5 id="2-系统源码追踪"><a href="#2-系统源码追踪" class="headerlink" title="2.系统源码追踪"></a>2.系统源码追踪</h5><h6 id="ActivityThread"><a href="#ActivityThread" class="headerlink" title="ActivityThread"></a>ActivityThread</h6><p>在追 onSaveInstanceState 的方法源码的时候，想要找到关于 Binder 方面的内容，就顺着Activity 的方法追，很多人都是到 Application 的 接口中就迷路了.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public interface ActivityLifecycleCallbacks &#123;</span><br><span class="line">       void onActivityCreated(Activity activity, Bundle savedInstanceState);</span><br><span class="line">       void onActivityStarted(Activity activity);</span><br><span class="line">       void onActivityResumed(Activity activity);</span><br><span class="line">       void onActivityPaused(Activity activity);</span><br><span class="line">       void onActivityStopped(Activity activity);</span><br><span class="line">       void onActivitySaveInstanceState(Activity activity, Bundle outState);</span><br><span class="line">       void onActivityDestroyed(Activity activity);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>其实这是一个错误的方向，其实只要想到  onSaveInstanceState 有点类似于 Activity 中其他生命周期的方法，就可以发现 onSaveInstanceState 最开始也是有 ActivityThread 做统一管理的，那么 onSaveInstanceState 的调用 也就和 ActivityThread 有关。</p>
+<h6 id="Bundle-的创建"><a href="#Bundle-的创建" class="headerlink" title="Bundle 的创建"></a>Bundle 的创建</h6><p>在 ActivityThread 的源码中可以看到有这么个方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private void callCallActivityOnSaveInstanceState(ActivityClientRecord r) &#123;</span><br><span class="line">        r.state = new Bundle();</span><br><span class="line">        r.state.setAllowFds(false);</span><br><span class="line">        if (r.isPersistable()) &#123;</span><br><span class="line">            r.persistentState = new PersistableBundle();</span><br><span class="line">            mInstrumentation.callActivityOnSaveInstanceState(r.activity, r.state,</span><br><span class="line">                    r.persistentState);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            mInstrumentation.callActivityOnSaveInstanceState(r.activity, r.state);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中最后调用了 mInstrumentation.callActivityOnSaveInstanceState<br>那么就到 mInstrumentation 类中查找<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public void callActivityOnSaveInstanceState(Activity activity, Bundle outState,</span><br><span class="line">            PersistableBundle outPersistentState) &#123;</span><br><span class="line">        activity.performSaveInstanceState(outState, outPersistentState);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个方法中又调用了 activity.performSaveInstanceState 的方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">final void performSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) &#123;</span><br><span class="line">      onSaveInstanceState(outState, outPersistentState);</span><br><span class="line">      saveManagedDialogs(outState);</span><br><span class="line">      storeHasCurrentPermissionRequest(outState);</span><br><span class="line">      if (DEBUG_LIFECYCLE) Slog.v(TAG, &quot;onSaveInstanceState &quot; + this + &quot;: &quot; + outState +</span><br><span class="line">              &quot;, &quot; + outPersistentState);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  ...</span><br><span class="line">    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) &#123;</span><br><span class="line">      onSaveInstanceState(outState);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>最后调用的是 Activity onSaveInstanceState 方法 ,显然 callCallActivityOnSaveInstanceState 的 r.state 就是 onSaveInstanceState 的方法的中的参数 Bundle .而 r 就是 ActivityThread 的内部类 ActivityClientRecord<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">static final class ActivityClientRecord &#123;</span><br><span class="line">        IBinder token;</span><br><span class="line">        int ident;</span><br><span class="line">        Intent intent;</span><br><span class="line">        String referrer;</span><br><span class="line">        IVoiceInteractor voiceInteractor;</span><br><span class="line">        Bundle state; // 这个就是 r.state 也就是 onSaveInstanceState 的 Bundle </span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>到这里我们知道 Bundle 是怎样创建的，但是关于 Binder 传输的问题，这里也没有体现，那么究竟是在哪里涉及的 Binder 传输的呢？</p>
+<h6 id="onSaveInstanceState-调用时机"><a href="#onSaveInstanceState-调用时机" class="headerlink" title="onSaveInstanceState 调用时机"></a>onSaveInstanceState 调用时机</h6><p>这里先补充一个点就是 onSaveInstanceState 的方法的调用时机<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">* &lt;p&gt;If called, this method will occur before &#123;@link #onStop&#125;.  There are</span><br><span class="line">   * no guarantees about whether it will occur before or after &#123;@link #onPause&#125;.</span><br><span class="line">   *</span><br><span class="line">   * @param outState Bundle in which to place your saved state.</span><br><span class="line">   *</span><br><span class="line">   * @see #onCreate</span><br><span class="line">   * @see #onRestoreInstanceState</span><br><span class="line">   * @see #onPause</span><br><span class="line">   */</span><br><span class="line">  protected void onSaveInstanceState(Bundle outState) &#123;</span><br><span class="line">      outState.putBundle(WINDOW_HIERARCHY_TAG, mWindow.saveHierarchyState());</span><br><span class="line"></span><br><span class="line">      outState.putInt(LAST_AUTOFILL_ID, mLastAutofillId);</span><br><span class="line">      Parcelable p = mFragments.saveAllState();</span><br><span class="line">      if (p != null) &#123;</span><br><span class="line">          outState.putParcelable(FRAGMENTS_TAG, p);</span><br><span class="line">      &#125;</span><br><span class="line">      if (mAutoFillResetNeeded) &#123;</span><br><span class="line">          outState.putBoolean(AUTOFILL_RESET_NEEDED, true);</span><br><span class="line">          getAutofillManager().onSaveInstanceState(outState);</span><br><span class="line">      &#125;</span><br><span class="line">      getApplication().dispatchActivitySaveInstanceState(this, outState);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>从注释中可以看到这个方法的调用会在 onStop 前，那么我们就去 ActivityTread 中看看再 onStop 前发生了什么。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">private void handleStopActivity(IBinder token, boolean show, int configChanges, int seq) &#123;</span><br><span class="line"></span><br><span class="line">        ActivityClientRecord r = mActivities.get(token);</span><br><span class="line">        ....</span><br><span class="line">        StopInfo info = new StopInfo();</span><br><span class="line">        //</span><br><span class="line">        performStopActivityInner(r, info, show, true, &quot;handleStopActivity&quot;);</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line">        info.activity = r;</span><br><span class="line">        //注意这里 将 r.state 赋值给  info.state</span><br><span class="line">        info.state = r.state;</span><br><span class="line">        info.persistentState = r.persistentState;</span><br><span class="line">        </span><br><span class="line">        //然后调用 Handler 的 post 方法将这个 StopInfo 类传递给消息队列 </span><br><span class="line">        mH.post(info);</span><br><span class="line">        mSomeActivitiesChanged = true;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>StopInfo 是一个实现了 Runnable 接口的类，且内部也有Bundle 的引用 所以可以 将 ActivityClientRecord 的 Bundle 赋值给 StopInfo 的 Bundle<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">private static class StopInfo implements Runnable &#123;</span><br><span class="line">        ActivityClientRecord activity;</span><br><span class="line">        Bundle state;</span><br><span class="line">         ....</span><br><span class="line">            </span><br><span class="line">        </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后因为 StopInfo 被 Handle post 之后，那么就会执行其相应的 run 方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">private static class StopInfo implements Runnable &#123;</span><br><span class="line">        ActivityClientRecord activity;</span><br><span class="line">        Bundle state;</span><br><span class="line">        PersistableBundle persistentState;</span><br><span class="line">        CharSequence description;</span><br><span class="line"></span><br><span class="line">        @Override public void run() &#123;</span><br><span class="line">            // Tell activity manager we have been stopped.</span><br><span class="line">            try &#123;</span><br><span class="line">                //注意到这里将 state 作为参数调用了 ActivityManager.getService() 方法。</span><br><span class="line">                ActivityManager.getService().activityStopped(</span><br><span class="line">                    activity.token, state, persistentState, description);</span><br><span class="line">            &#125; catch (RemoteException ex) &#123;</span><br><span class="line">               </span><br><span class="line">                if (ex instanceof TransactionTooLargeException</span><br><span class="line">                        &amp;&amp; activity.loadedApk.getTargetSdkVersion() &lt; Build.VERSION_CODES.N) &#123;</span><br><span class="line">                    Log.e(TAG, &quot;App sent too much data in instance state, so it was ignored&quot;, ex);</span><br><span class="line">                    return;</span><br><span class="line">                &#125;</span><br><span class="line">                throw ex.rethrowFromSystemServer();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>到这里就可以明白了 onSaveInstanceState  中保存的 Bundle 信息是存在内存中的，且因为是涉及到 Activity 的状态的保存，就需要交由 ActivityManager 进程去做一个管理，所以就需要 Binder 传输做一个跨进程的通信将 Bundle 的数据传递给 ActivityManager。因此 onSaveInstanceState  也涉及到了 Binder 传输，自然而然就受到 Binder 缓冲区大小的限制，到这里问题就解决了。</p>
 
       
     </div>
@@ -427,7 +407,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/框架/" rel="tag"># 框架</a>
+            <a href="/tags/Android-Framework/" rel="tag"># Android Framework</a>
           
         </div>
       
@@ -440,8 +420,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/16/java集合-List/" rel="next" title="java集合----List">
-                <i class="fa fa-chevron-left"></i> java集合----List
+              <a href="/2019/03/14/Android-分析ANR/" rel="next" title="Android----分析ANR">
+                <i class="fa fa-chevron-left"></i> Android----分析ANR
               </a>
             
           </div>
@@ -449,10 +429,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/11/16/彻底理解-ListView-缓存机制/" rel="prev" title="彻底理解 ListView----缓存机制">
-                彻底理解 ListView----缓存机制 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -597,7 +573,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-前言"><span class="nav-text">一.前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-ArrayDeque"><span class="nav-text">二.ArrayDeque</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-源码中的介绍"><span class="nav-text">1.源码中的介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-源码分析"><span class="nav-text">2.源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#获取队列头部元素"><span class="nav-text">获取队列头部元素</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除队列头部"><span class="nav-text">删除队列头部</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#添加元素"><span class="nav-text">添加元素</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#JDK-10-中源码"><span class="nav-text">JDK 10 中源码</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-ArrayDeque-与-LinkedList"><span class="nav-text">三.ArrayDeque 与 LinkedList</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#区别"><span class="nav-text">区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用场景"><span class="nav-text">使用场景</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一-问题来源"><span class="nav-text">一.问题来源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二-解决问题的过程"><span class="nav-text">二.解决问题的过程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-官网"><span class="nav-text">1.官网</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-系统源码追踪"><span class="nav-text">2.系统源码追踪</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#ActivityThread"><span class="nav-text">ActivityThread</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Bundle-的创建"><span class="nav-text">Bundle 的创建</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#onSaveInstanceState-调用时机"><span class="nav-text">onSaveInstanceState 调用时机</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
