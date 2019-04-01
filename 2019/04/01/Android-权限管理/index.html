@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16.ico?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android 基础," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本篇部分内容引用自官网介绍 系统权限  一.什么是权限?1.简介Android 是一个权限分隔的操作系统,每个应用在操作系统中都有一个属于自己的标识（Linux 的用户 ID ）.Linux 据此将不同的应用以及应用与系统分隔开来。 在涉及到更加详细的功能的时候，比如对可以对某个组件进行访问，的时候可以通过权限机制进行特定的操作，并且可以通过 URI 权限授权临时的访问。 2.Android 的">
+<meta name="keywords" content="Android 基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android----权限管理">
+<meta property="og:url" content="https://yishengma.github.io/2019/04/01/Android-权限管理/index.html">
+<meta property="og:site_name" content="海盗的帽子的博客">
+<meta property="og:description" content="本篇部分内容引用自官网介绍 系统权限  一.什么是权限?1.简介Android 是一个权限分隔的操作系统,每个应用在操作系统中都有一个属于自己的标识（Linux 的用户 ID ）.Linux 据此将不同的应用以及应用与系统分隔开来。 在涉及到更加详细的功能的时候，比如对可以对某个组件进行访问，的时候可以通过权限机制进行特定的操作，并且可以通过 URI 权限授权临时的访问。 2.Android 的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://yishengma.github.io/2019/04/01/Android-权限管理/1240">
+<meta property="og:image" content="https://yishengma.github.io/2019/04/01/Android-权限管理/12401">
+<meta property="og:image" content="https://yishengma.github.io/2019/04/01/Android-权限管理/12402">
+<meta property="og:updated_time" content="2019-04-01T13:16:46.367Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android----权限管理">
+<meta name="twitter:description" content="本篇部分内容引用自官网介绍 系统权限  一.什么是权限?1.简介Android 是一个权限分隔的操作系统,每个应用在操作系统中都有一个属于自己的标识（Linux 的用户 ID ）.Linux 据此将不同的应用以及应用与系统分隔开来。 在涉及到更加详细的功能的时候，比如对可以对某个组件进行访问，的时候可以通过权限机制进行特定的操作，并且可以通过 URI 权限授权临时的访问。 2.Android 的">
+<meta name="twitter:image" content="https://yishengma.github.io/2019/04/01/Android-权限管理/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yishengma.github.io/2019/04/01/Android-权限管理/"/>
+
+
+
+
+
+  <title>Android----权限管理 | 海盗的帽子的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">海盗的帽子的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yishengma.github.io/2019/04/01/Android-权限管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="海盗的帽子">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/d.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="海盗的帽子的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android----权限管理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-01T21:14:57+08:00">
+                2019-04-01
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-04-01T21:16:46+08:00">
+                2019-04-01
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/04/01/Android-权限管理/" class="leancloud_visitors" data-flag-title="Android----权限管理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>本篇部分内容引用自官网介绍 <a href="https://developer.android.com/guide/topics/security/permissions?hl=zh-cn" target="_blank" rel="noopener">系统权限</a></p>
+</blockquote>
+<h3 id="一-什么是权限"><a href="#一-什么是权限" class="headerlink" title="一.什么是权限?"></a>一.什么是权限?</h3><h4 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h4><p>Android 是一个权限分隔的操作系统,每个应用在操作系统中都有一个属于自己的标识（Linux 的用户 ID ）.Linux 据此将不同的应用以及应用与系统分隔开来。</p>
+<p>在涉及到更加详细的功能的时候，比如对可以对某个组件进行访问，的时候可以通过权限机制进行特定的操作，并且可以通过 URI 权限授权临时的访问。</p>
+<h4 id="2-Android-的安全架构"><a href="#2-Android-的安全架构" class="headerlink" title="2.Android 的安全架构"></a>2.Android 的安全架构</h4><p>Android 的架构设计的一个特点是：在默认的情况下任何应用都没有权限执行对其他应用，操作系统或者用户不利影响的任何操作。包括读取或者写入用户的的私有数据（读取用户手机联系人或者相册），读取或者写入其他应用程序的文件，执行网络访问等。</p>
+<p>但是有的时候应用需要显示地共享资源和数据，那么就需要权限来获取应用提供的功能，应用以静态的方式声明他们需要的权限，然后 Android 系统提示用户同意。</p>
+<h4 id="3-什么是应用签名？"><a href="#3-什么是应用签名？" class="headerlink" title="3.什么是应用签名？"></a>3.什么是应用签名？</h4><p>Android 系统要求每一个应用程序必须经过数据签名才能安装到系统中，也就是说，如果一个 Android 程序没有经过数字签名，就不能安装到系统中。这个数字签名并不需要西像 HTTPS 协议一样有权威的机构进行发布，完全可以有应用程序的作者完成，用于建立这个应用的作者和应用程序之间的信任关系。</p>
+<blockquote>
+<p>在实际的开发中，应用可以直接在模拟器上或者真机上运行是因为 ADT 会自动的使用 debug 密钥为应用程序签名。</p>
+</blockquote>
+<h5 id="应用签名的好处"><a href="#应用签名的好处" class="headerlink" title="应用签名的好处"></a>应用签名的好处</h5><ul>
+<li>在应用升级的时候，签名证书相同，包名相同的应用才被认为是同一个应用，因此也可以避免一些伪装的程序安装到系统上。</li>
+<li>将应用程序模块化，Android 系统可以允许同一个证书签名的多个应用程序在一个进程里运行，系统实际把他们作为一个单个的应用程序，此时就可以把应用程序以模块的方式进行部署，而用户可以独立的升级其中的一个模块。</li>
+<li>代码或者数据共享：基于签名的权限机制，一个应用程序就可以为另一个以相同证书签名的应用程序公开自己的功能。以同一个证书对多个应用程序进行签名，利用基于签名的权限检查，就可以在应用程序间以安全的方式共享代码和数据了。</li>
+</ul>
+<h4 id="4-shareUserId-属性"><a href="#4-shareUserId-属性" class="headerlink" title="4.shareUserId 属性"></a>4.shareUserId 属性</h4><p>在安装的时候，Android 为每个软件包提供了唯一的 Linux 用户 ID .在不同的设备上，相同的软件包可能有不同的 UID ，重要的是每个软件包在指定设备上的 UID 是唯一的。</p>
+<p>另外，我们可以在每个应用程序的  <strong>AndroidManifest.xml</strong> 的 manifest 标记中使用 <strong>sharedUserId</strong> 属性，为它们分配相同的用户 ID。这样做以后，出于安全目的，两个软件包将被视为同一个应用，具有相同的用户 ID 和文件权限。但是为保持安全性，<strong>只有两个签署了相同签名</strong>（<strong>并且请求相同的 sharedUserId</strong>）的应用才被分配同一用户 ID。</p>
+<blockquote>
+<p>应用存储的任何数据都会被分配该应用的用户 ID，并且其他软件包通常无法访问这些数据</p>
+</blockquote>
+<h5 id="使用-shareUserId-示例"><a href="#使用-shareUserId-示例" class="headerlink" title="使用 shareUserId 示例"></a>使用 shareUserId 示例</h5><p>首先在 两个不同的应用里要指定同样的 shareUserId<br>进程 A<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">  package=&quot;apiratehat.androidsamplecode&quot;</span><br><span class="line"></span><br><span class="line">  android:sharedUserId=&quot;share.ContentProvider&quot; &gt;  &lt;!--设置sharedUserId, 名字中至少要有一个 . 符号--&gt;</span><br></pre></td></tr></table></figure></p>
+<p>进程 B<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    package=&quot;apiratehat.androidsamplecode2&quot;</span><br><span class="line"></span><br><span class="line">    android:sharedUserId=&quot;share.ContentProvider&quot; &gt;  &lt;!--设置sharedUserId,至少要有一个 . 符号--&gt;</span><br></pre></td></tr></table></figure></p>
+<p>然后再进程 A 中指定一个 注册一个 ContentProvider<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;provider</span><br><span class="line">     android:authorities=&quot;apiratehat.androidsamplecode&quot;</span><br><span class="line">     android:name=&quot;.permission.ShareIdContentProvider&quot;/&gt;</span><br></pre></td></tr></table></figure></p>
+<p>接着就可以在 进程 B  中获取到 进程 A 的 Context 对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Context context = null;</span><br><span class="line">    try &#123;</span><br><span class="line">    // 指定包名为 进程 A 的包名</span><br><span class="line">        context = createPackageContext(&quot;apiratehat.androidsamplecode&quot;, Context.CONTEXT_IGNORE_SECURITY|CONTEXT_INCLUDE_CODE);</span><br><span class="line">         &#125; catch (PackageManager.NameNotFoundException e) &#123;</span><br><span class="line">                    </span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>在参数中有两个 flag </p>
+</blockquote>
+<blockquote>
+<p>Context.CONTEXT_IGNORE_SECURITY  表示忽略所有的权限问题，必须指定</p>
+</blockquote>
+<blockquote>
+<p>CONTEXT_INCLUDE_CODE 表示可以调用 Context 的代码</p>
+</blockquote>
+<p>拿到对应的 Context 就可以执行对应的方法 比如访问 ContentProvider 或者通过反射获取在进程 A 环境下的其他类，达到 进程 B 和 进程 A 共享代码和数据的场景（常用在组件化开发上）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cursor cursor  =  context.getContentResolver().query(uri, null, null, null, null);</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>需要注意的是，使用 shareUserId 要求里两个软件包拥有相同的 签名，为了测试的方便，可以指定 DEBUG  时候的签名，网上有很多例子，这里就不再赘述。</p>
+</blockquote>
+<h4 id="4-权限"><a href="#4-权限" class="headerlink" title="4.权限"></a>4.权限</h4><p>在默认的情况下 Android 应用默认未关联权限，这意味着在不指定权限的情况下，一个应用无法执行对用户体验或者设备任何数据产生不利影响的任何操作。如果要要利用受保护的设备功能，必须在应用清单中包含一个或者多个<figure class="highlight plain"><figcaption><span>标记。比如要获取联系人就需要 指定</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">```</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.WRITE_CONTACTS&quot; /&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.READ_CONTACTS&quot; /&gt;</span><br></pre></td></tr></table></figure></p>
+<h5 id="权限的分类"><a href="#权限的分类" class="headerlink" title="权限的分类"></a>权限的分类</h5><ul>
+<li>危险权限，涉及到用户隐私信息的权限都是属于危险的权限，比如读写联系人信息，读写外部 SD  卡存储的信息就是正常权限。如果应用声明其需要正常权限，系统会自动向应用授予该权限。</li>
+<li>正常权限，访问对用户隐私或其他应用操作风险很小的区域，比如网络，蓝牙等，如果应用声明其需要正常权限，系统会自动向应用授予该权限。</li>
+</ul>
+<p>在 Android 5.0 之前（API 22） 之前，系统会在用户安装应用时要求用户授予权限。如果将新权限添加到更新的应用版本，系统会在用户更新应用时要求授予该权限。用户一旦安装应用，他们撤销权限的唯一方式是卸载应用。</p>
+<p>上面机制有个明显的缺点的就是用户需要授予授予所有的权限才能用使用，不能根据自己的需要选择性的授予某些权限，使用某些功能，因此在 Android 6.0 （API 23） 的时候，引入了运行时权限检查。</p>
+<p>在 Android 6.0 之后 (API 23 )之后，对于危险的权限，应用在运行时向用户请求权限。用户可随时调用权限，因此应用在每次运行时均需检查自身是否具备所需的权限。同时用户也就可以 在应用权限管理中更改应用的权限。</p>
+<h5 id="权限组"><a href="#权限组" class="headerlink" title="权限组"></a>权限组</h5><p>所有危险的 Android 系统权限都属于权限组。如果设备运行的是 Android 6.0（API 级别 23），并且应用的 targetSdkVersion 是 23 或更高版本，则当用户请求危险权限时系统会发生以下行为：</p>
+<ul>
+<li>如果应用请求其清单中列出的危险权限，而应用目前在权限组中没有任何权限，则系统会向用户显示一个对话框，描述应用要访问的权限组。对话框不描述该组内的具体权限。例如，如果应用请求 READ_CONTACTS 权限，系统对话框只说明该应用需要访问设备的联系信息。如果用户批准，系统将向应用授予其请求的权限。</li>
+<li>如果应用请求其清单中列出的危险权限，而应用在同一权限组中已有另一项危险权限，则系统会立即授予该权限，而无需与用户进行任何交互。例如，如果某应用已经请求并且被授予了 READ_CONTACTS 权限，然后它又请求 WRITE_CONTACTS，系统将立即授予该权限。</li>
+</ul>
+<p>如果设备运行的是 Android 5.1（API 级别 22）或更低版本，并且应用的 targetSdkVersion 是 22 或更低版本，则系统会在安装时要求用户授予权限。再次强调，系统只告诉用户应用需要的权限组，而不告知具体权限。</p>
+<p>在实际开发中，对应的权限管理 和 targetSdkVersion 还有 运行的设备有关。</p>
+<blockquote>
+<p>系统通过 targetSdkVersion 来保证 Android 的向前兼容性， 在  Android 5.0 之后的设备上，系统会判断你的 targetSdkVersion 是否小于 22 ，如果小于的话，那就按照 22 之前的 api 方法，如果大于等于 22 ，那么就按照之后的 api 方法来走，保证了程序运行的一致性。也就是向前兼容性.</p>
+</blockquote>
+<p>在测试，如果访问危险权限 </p>
+<h5 id="targetSdkVersion-22"><a href="#targetSdkVersion-22" class="headerlink" title="targetSdkVersion == 22"></a>targetSdkVersion == 22</h5><ul>
+<li>在 Android 6.0 的手机上（获取联系人数据），成功返回数据</li>
+<li>在 Android 5.0 的手机上（获取联系人数据），成功返回数据<h5 id="targetSdkVersion-27"><a href="#targetSdkVersion-27" class="headerlink" title="targetSdkVersion == 27"></a>targetSdkVersion == 27</h5></li>
+<li>在 Android 6.0 的手机上（获取联系人数据），抛出异常，因为 6.0 需要设置运行时权限管理</li>
+<li>在 Android 5.0 的手机上（获取联系人数据），成功返回数据</li>
+</ul>
+<h3 id="二-运行时权限管理"><a href="#二-运行时权限管理" class="headerlink" title="二.运行时权限管理"></a>二.运行时权限管理</h3><p>运行时权限管理一般涉及的方法有</p>
+<ul>
+<li>Build.VERSION.SDK_INT 设备 SDK 运行的版本，如果 设备是 Android 6.0 就返回 23</li>
+<li>Build.VERSION_CODES.xx Android 对应的版本的 API ，比如  Build.VERSION_CODES.M 就是 API 23 ,后面的字母是 Android 版本对应的 代号</li>
+<li>Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.M 就表示判断当前版本是否是 Android 6.0 及以上。</li>
+<li>ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED 用于检查对应的的权限是否授权</li>
+<li>requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 2); 请求对应的权限，后加 对应的请求号，每个权限对应一个请求号。</li>
+<li>onRequestPermissionsResult 请求权限后的结果回调</li>
+<li>shouldShowRequestPermissionRationale(xx) 是否有弹窗提示权限请求</li>
+</ul>
+<p>在进行权限请求的时候，如果是第一次请求，那么就会有类似如下的场景</p>
+<p><img src="/2019/04/01/Android-权限管理/1240" height="500" width="250"></p>
+<p>当我们拒绝的时候，如果再次申请权限，那么就会有多一个 “不再询问” 标识 </p>
+<p><img src="/2019/04/01/Android-权限管理/12401" height="500" width="250"></p>
+<p>如果没有点击不再询问，那么重新申请的时候就会弹出提示的窗口，如果点击了不再询问，那么以后都不会弹出申请框。因此为了良好的用户的体验，我们需要在这里设置一个提示，表示用户可以去设置中打开权限。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">public void click(View v) &#123;</span><br><span class="line">        //不需要申请权限的时候直接使用 5.0 版</span><br><span class="line">//        startActivityForResult(new Intent(</span><br><span class="line">//                Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI), 0);</span><br><span class="line"></span><br><span class="line">        //需要申请的权限的时候先判断权限</span><br><span class="line">        //只有 6.0 以上 ，才需要运行时权限， M 是版本代号 API 为 23</span><br><span class="line">        if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.M) &#123;</span><br><span class="line"></span><br><span class="line">            //检查权限 是否授权</span><br><span class="line">            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) &#123;</span><br><span class="line"></span><br><span class="line">                //请求授权</span><br><span class="line">                requestPermissions(new String[]&#123;Manifest.permission.READ_CONTACTS&#125;, 2);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line"></span><br><span class="line">                //授权了就 进行请求</span><br><span class="line">                startActivityForResult(new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI), 0);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) &#123;</span><br><span class="line">        super.onRequestPermissionsResult(requestCode, permissions, grantResults);</span><br><span class="line"></span><br><span class="line">        //                                                      //没有点击 不再询问返回 true ，点击不再询问后就返回 false</span><br><span class="line">        if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.M &amp;&amp; !shouldShowRequestPermissionRationale(permissions[0]))&#123;</span><br><span class="line">            showMissingPermissionDialog();</span><br><span class="line">        &#125;</span><br><span class="line">      </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onActivityResult(int requestCode, int resultCode, Intent data) &#123;</span><br><span class="line">        super.onActivityResult(requestCode, resultCode, data);</span><br><span class="line"></span><br><span class="line">        if (resultCode == Activity.RESULT_OK) &#123;</span><br><span class="line">          //</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    //// 显示缺失权限提示</span><br><span class="line">    private void showMissingPermissionDialog() &#123;</span><br><span class="line">        AlertDialog.Builder builder = new AlertDialog.Builder(PermissionActivity.this);</span><br><span class="line">        builder.setTitle(&quot;帮助&quot;);</span><br><span class="line">        builder.setMessage(&quot;当前应用缺少必要的权限，请打开 “设置” -&gt; “权限” 打开所需权限&quot;);</span><br><span class="line"></span><br><span class="line">        // 拒绝, 退出应用</span><br><span class="line">        builder.setNegativeButton(&quot;退出&quot;, new DialogInterface.OnClickListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onClick(DialogInterface dialog, int which) &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        builder.setPositiveButton(&quot;设置&quot;, new DialogInterface.OnClickListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onClick(DialogInterface dialog, int which) &#123;</span><br><span class="line">                startAppSettings();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        builder.show();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 启动应用的设置</span><br><span class="line">    private void startAppSettings() &#123;</span><br><span class="line">        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);</span><br><span class="line">        intent.setData(Uri.parse(&quot;package:&quot; + getPackageName()));</span><br><span class="line">        startActivity(intent);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/2019/04/01/Android-权限管理/12402" height="500" width="250"></p>
+<h3 id="三-自定义权限"><a href="#三-自定义权限" class="headerlink" title="三.自定义权限"></a>三.自定义权限</h3><p>当要自定义自己的权限的时候，必须先使用一个或多个 <permission> 元素在 AndroidManifest.xml 中声明它们。<br>比如想要控制谁可以开始自己应用中一个 Activity 的应用可如下所示声明此操作的权限：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    package=&quot;com.example.myapp&quot; &gt;</span><br><span class="line">    &lt;permission android:name=&quot;com.example.myapp.permission.DEADLY_ACTIVITY&quot;</span><br><span class="line">        android:label=&quot;@string/permlab_deadlyActivity&quot;</span><br><span class="line">        android:description=&quot;@string/permdesc_deadlyActivity&quot;</span><br><span class="line">        android:permissionGroup=&quot;android.permission-group.COST_MONEY&quot;</span><br><span class="line">        android:protectionLevel=&quot;dangerous&quot; /&gt;</span><br><span class="line">    ...</span><br><span class="line">&lt;/manifest&gt;</span><br></pre></td></tr></table></figure></permission></p>
+<blockquote>
+<p>注：系统不允许多个apk  使用同一名称声明权限，除非所有 apk  都使用同一签名 。如果已经有一个 apk 声明权限，则系统不允许用户安装具有相同权限名称的其他软件，除非这些软件包使用与第一个软件包相同的签名。为避免命名冲突，建议对自定义权限使用相反域名样式命名，例如 com.example.myapp.ENGAGE_HYPERSPACE。</p>
+</blockquote>
+<p>其中几个属性介绍如下</p>
+<h6 id="protectionLevel"><a href="#protectionLevel" class="headerlink" title="protectionLevel"></a>protectionLevel</h6><p>保护级别一共有四种</p>
+<ul>
+<li>normal 如果应用声明了此权限，也不会提示安装应用的用户授权。比如网络请求等都是属于这个级别</li>
+<li>dangerous 这种级别的权限风险更高，拥有此权限可能会访问用户私人数据或者控制设备，给用户带来负面影响，这种类型的权限一般不会默认授权<br>，比如读写 SD ，联系人信息就属于这种。</li>
+<li>signature：这种权限级别，只有当发请求的应用和接收此请求的应用使用同一签名文件，并且声明了该权限才会授权，并且是默认授权，不会提示用户授权</li>
+<li>signatureOrSystem：这种权限应该尽量避免使用，偏向系统级</li>
+</ul>
+<h6 id="android-permissionGroup"><a href="#android-permissionGroup" class="headerlink" title="android:permissionGroup"></a>android:permissionGroup</h6><p>属性是可选属性，只是用于帮助系统向用户显示权限。大多数情况下，您要将此设为标准系统组（列在 android.Manifest.permission_group 中），但您也可以自己定义一个组。建议使用现有的组，因为这样可简化向用户显示的权限 UI。</p>
+<h6 id="android-description-android-label"><a href="#android-description-android-label" class="headerlink" title="android:description/android:label"></a>android:description/android:label</h6><p>需要为权限提供标签和描述。这些是用户在查看权限列表或单一权限详细信息时可以看到的字符串资源。</p>
+<h3 id="四-给四大组件设置权限"><a href="#四-给四大组件设置权限" class="headerlink" title="四.给四大组件设置权限"></a>四.给四大组件设置权限</h3><p>通过 AndroidManifest.xml 添加权限，可以限制访问系统或应用的组件。只要在所需的组件上包含 android:permission 属性，就可以达到限制只有拥有的权限的进程才能访问，没有权限的进程就不能访问。</p>
+<h4 id="Activity"><a href="#Activity" class="headerlink" title="Activity"></a>Activity</h4><p>在 <activity> 标记中添加 android:permission 可以限制只有声明这个权限的进程才能通过   在 Context.startActivity() 和 Activity.startActivityForResult() 启动 Activity 。如果没有权限就会抛出 SecurityException。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;permission android:name=&quot;apiratehat.androidsamplecode.permission.DEADLY_ACTIVITY&quot;</span><br><span class="line">        android:label=&quot;@string/apply&quot;</span><br><span class="line">        android:description=&quot;@string/apply&quot;</span><br><span class="line">        android:permissionGroup=&quot;android.permission-group.COST_MONEY&quot;</span><br><span class="line">        android:protectionLevel=&quot;dangerous&quot; /&gt;</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">  &lt;activity</span><br><span class="line">            android:permission=&quot;apiratehat.androidsamplecode.permission.DEADLY_ACTIVITY&quot;</span><br><span class="line">            android:name=&quot;.permission.PermissionActivity&quot;&gt;</span><br><span class="line"></span><br><span class="line">        &lt;/activity&gt;</span><br></pre></td></tr></table></figure></activity></p>
+<h4 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h4><p>应用于 <service> 标记）限制谁可以启动或绑定到相关的服务。在 Context.startService()、Context.stopService() 和 Context.bindService() 时会检查权限；如果调用方没有所需的权限，则调用会抛出 SecurityException。</service></p>
+<h4 id="BroadcastReceiver-发送"><a href="#BroadcastReceiver-发送" class="headerlink" title="BroadcastReceiver /发送"></a>BroadcastReceiver /发送</h4><h6 id="接收"><a href="#接收" class="headerlink" title="接收"></a>接收</h6><p>BroadcastReceiver 权限（应用于 <receiver> 标记）限制谁可以发送广播给自己。在 Context.sendBroadcast() 返回后检查权限，因为系统会尝试将提交的广播传递到指定的接收方。因此，没有权限不会导致调用方抛出异常；只是不会传递 intent。 Context.registerReceiver() 也可以提供权限来控制谁可以广播到接收方。</receiver></p>
+<h6 id="发送"><a href="#发送" class="headerlink" title="发送"></a>发送</h6><p>在发送的时候，可以在调用 Context.sendBroadcast() 时提供权限来限制允许哪些 BroadcastReceiver 对象接收广播。</p>
+<h4 id="ContentProvider"><a href="#ContentProvider" class="headerlink" title="ContentProvider"></a>ContentProvider</h4><p>应用于 <provider> 标记）限制某个进程可以访问 ContentProvider 中的数据。（更加详细的操作还可以通过 Uri 做限制）与其他组件不同，ContentProvider 还可以设置两个单独的权限属性：android:readPermission 限制谁可以读取提供程序，android:writePermission 限制谁可以写入提供程序。而且如果 ContentProvider  有读取和写入权限保护，仅拥有写入权限并不表示可以读取提供程序。第一次检索提供程序时将会检查权限（如果没有任何权限，将会抛出 SecurityException），对提供程序执行操作时也会检查权限。使用 ContentResolver.query() 需要拥有读取权限；使用 ContentResolver.insert()、ContentResolver.update()、ContentResolver.delete() 需要写入权限。在所有这些情况下，没有所需的权限将导致调用抛出 SecurityException。</provider></p>
+<h3 id="五-Uri-权限"><a href="#五-Uri-权限" class="headerlink" title="五.Uri 权限"></a>五.Uri 权限</h3><p>ContentProvider 可能需要通过读取和写入权限保护自己的某段数据或者部分数据， per-URI 权限机制：比如在启动 Activity 或返回结果给 Activity 时，调用方可以设置 Intent.FLAG_GRANT_READ_URI_PERMISSION 和/或 Intent.FLAG_GRANT_WRITE_URI_PERMISSION。这可以让 接收 的Activity 有权限去访问 intent 中的特定数据 URI，而不管它是否具有访问 intent 对应的内容提供程序中数据的任何权限，换句话说就是 Activity A 有访问 APP C ContentProvider 的权限，但是 Activity B 没有，Activity A 可以通过 设置 这个临时访问的标志启动 Activity B ,这个时候 Activity B 就可以拿到 Intent 临时访问 APP C 的 ContentProvider 。</p>
+<p>官方建议内容提供程序实施此功能，并且通过 android:grantUriPermissions 属性或 <grant-uri-permissions> 标记声明支持 Uri 权限。</grant-uri-permissions></p>
+<p>在 Context.grantUriPermission()、Context.revokeUriPermission() 和 Context.checkUriPermission() 方法中可以找到更多信息。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android-基础/" rel="tag"># Android 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/29/Android-onSaveInstanceState-的数据存在哪里？为什么限制了大小？/" rel="next" title="Android----onSaveInstanceState 的数据存在哪里？为什么限制了大小？">
+                <i class="fa fa-chevron-left"></i> Android----onSaveInstanceState 的数据存在哪里？为什么限制了大小？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+ <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/d.jpg"
+                alt="海盗的帽子" />
+            
+              <p class="site-author-name" itemprop="name">海盗的帽子</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yishengma" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/m0_38089373" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-copyright"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-什么是权限"><span class="nav-text">一.什么是权限?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-简介"><span class="nav-text">1.简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Android-的安全架构"><span class="nav-text">2.Android 的安全架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-什么是应用签名？"><span class="nav-text">3.什么是应用签名？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#应用签名的好处"><span class="nav-text">应用签名的好处</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-shareUserId-属性"><span class="nav-text">4.shareUserId 属性</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#使用-shareUserId-示例"><span class="nav-text">使用 shareUserId 示例</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-权限"><span class="nav-text">4.权限</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#权限的分类"><span class="nav-text">权限的分类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#权限组"><span class="nav-text">权限组</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#targetSdkVersion-22"><span class="nav-text">targetSdkVersion == 22</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#targetSdkVersion-27"><span class="nav-text">targetSdkVersion == 27</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-运行时权限管理"><span class="nav-text">二.运行时权限管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-自定义权限"><span class="nav-text">三.自定义权限</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#protectionLevel"><span class="nav-text">protectionLevel</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#android-permissionGroup"><span class="nav-text">android:permissionGroup</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#android-description-android-label"><span class="nav-text">android:description/android:label</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四-给四大组件设置权限"><span class="nav-text">四.给四大组件设置权限</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Activity"><span class="nav-text">Activity</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Service"><span class="nav-text">Service</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BroadcastReceiver-发送"><span class="nav-text">BroadcastReceiver /发送</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#接收"><span class="nav-text">接收</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#发送"><span class="nav-text">发送</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ContentProvider"><span class="nav-text">ContentProvider</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五-Uri-权限"><span class="nav-text">五.Uri 权限</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-[object Object]"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">海盗的帽子</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://rawgit.com/yishengma/147d4f60feb7cdc79c355ad2da83d513/raw/d624cffa8a67b4da07048d59ba0031e2860b1b2b/md5.min.js"></script>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '15e7b5ecca662534768c',
+          clientSecret: '26dc23d2d7a013bbcce94772f42f2e434247c6ba',
+          repo: 'yishengma.github.io',
+          owner: 'yishengma',
+          admin: ['yishengma'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2LveBulvcfzvQ6MBGz9b3URY-gzGzoHsz", "7mcKtxSVSDUSpSxFfdxBmyaP");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
